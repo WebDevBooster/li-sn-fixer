@@ -1,0 +1,24 @@
+{
+    "manifest_version" : 2,
+    "name" : "Linkedin SN Fixer",
+    "description" : "Browser add-on to fix various stupidities and annoyances in Linkedin Sales Navigator.",
+    "version" : "1.0.0",
+    "page_action" : {
+        "default_title" : "LNSNFixer",
+        "default_popup" : "popup.html"
+    },
+    "content_scripts" : [
+        {
+            "matches" : ["https://www.linkedin.com/sales/*"],
+            "css" : ["mystyles_A.css"],
+            "js" : ["jquery.min.js","myscript_A.js"]
+        }
+    ],
+    "background" : {
+        "scripts" : ["event_script.js"],
+        "persistent" : false
+    },
+    "permissions" : [
+        "tabs"
+    ]
+}

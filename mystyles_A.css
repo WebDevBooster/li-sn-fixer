@@ -1,0 +1,5 @@
+/* profile header */
+#profile-card-section > svg {
+    /* Fix the height because the retards have it jumping up and down on page load */
+    height: 201px;
+}
