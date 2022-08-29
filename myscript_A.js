@@ -10,6 +10,10 @@ $( document ).ready(function() {
         item.click();
     }
 
+    function highlight() {
+        document.querySelector("#content-main").innerHTML = document.querySelector("#content-main").innerHTML.replace(/crypto/ig,"<mark>CRYPTO</mark>");
+    }
+
     function expandAboutSection() {
         if (aboutBtn) {
             clearInterval(aboutOpener);
