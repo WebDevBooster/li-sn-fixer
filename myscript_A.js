@@ -51,7 +51,11 @@ $( document ).ready(function() {
             });
         }
 
-        // document.querySelector("#content-main").innerHTML = currentHTML.replace(/crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
+        document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(/crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
+
+        document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(/crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
+
+        // document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(/(<\/?(?:img)[^>]*>)|crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
     }
 
     function expandAboutSection() {
