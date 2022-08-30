@@ -57,6 +57,11 @@ $( document ).ready(function() {
             $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                 const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
             });
+        } else {
+            body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
+            $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
+            });
         }
 
         document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(/crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
