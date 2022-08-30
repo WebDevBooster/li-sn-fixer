@@ -43,7 +43,7 @@ $( document ).ready(function() {
             $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                 const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
             });
-        } else if (!keyword1Array && keyword2Array && emailsArray) {
+        } else if (keyword1Array || keyword2Array && emailsArray) {
             body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
             body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
             $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
@@ -52,7 +52,7 @@ $( document ).ready(function() {
                     const playEmailPromise = document.querySelector('#LNSNF-email').play();
                 }, 500);
             });
-        } else if (!keyword1Array && keyword2Array) {
+        } else if (keyword1Array || keyword2Array) {
             body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
             $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                 const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
