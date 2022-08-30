@@ -23,7 +23,7 @@ $( document ).ready(function() {
         function highlight() {
             let body = $( "body" );
             let currentHTML = document.querySelector("#content-main").innerHTML;
-            let keyword1Array = currentHTML.match(/crypto/gi);
+            let keyword1Array = currentHTML.match(/blockchain/gi);
             let keyword2Array = currentHTML.match(/enthusiast/gi);
             let emailsArray = currentHTML.match(/@/g);
             aboutSection = document.querySelector("#about-section");
@@ -67,10 +67,10 @@ $( document ).ready(function() {
                 });
             }
 
-            document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(/crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
+            document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(/blockchain/gi,`<mark style="font-weight: normal;">Blockchain</mark>`);
 
             if (aboutSection) {
-                document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(/crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
+                document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(/blockchain/gi,`<mark style="font-weight: normal;">Blockchain</mark>`);
             }
 
             // document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(/(<\/?(?:img)[^>]*>)|crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
