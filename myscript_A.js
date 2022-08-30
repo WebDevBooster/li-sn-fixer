@@ -106,9 +106,9 @@ $( document ).ready(function() {
 
     if (listURL) {
         function changeBgColor(element, index) {
-            console.log($(element));
-            if (!$(element).children("div.save-to-list-dropdown")) {
-                //element.style.backgroundColor = "pink";
+            // most "out-of-network" profiles are useless for me
+            if ($(element).has("div[class^=_out-of-network]").length) {
+                element.style.backgroundColor = "pink";
             }
         }
 
@@ -116,11 +116,11 @@ $( document ).ready(function() {
             const listArray = document.querySelectorAll("li.artdeco-list__item");
 
             if (listArray.length) {
-                //listArray.forEach(changeBgColor);
+                listArray.forEach(changeBgColor);
             }
         }
 
-        setTimeout(handleListItems, 5000);
+        setInterval(handleListItems, 2000);
     }
 
 });
