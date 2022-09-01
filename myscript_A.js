@@ -25,8 +25,11 @@ $( document ).ready(function() {
         function highlight() {
             let body = $( "body" );
             let currentHTML = document.querySelector("#content-main").innerHTML;
-            let keyword1Array = currentHTML.match(/blockchain/gi);
-            let keyword2Array = currentHTML.match(/enthusiast/gi);
+            const keyword1Regex = /Web3|Web 3\.0|Web 3/gi;
+            const keyword1Replacement = "Web3";
+            const keyword2Regex = /enthusiast/gi;
+            let keyword1Array = currentHTML.match(keyword1Regex);
+            let keyword2Array = currentHTML.match(keyword2Regex);
             let emailsArray = currentHTML.match(/@/g);
             aboutSection = document.querySelector("#about-section");
 
@@ -69,10 +72,10 @@ $( document ).ready(function() {
                 });
             }
 
-            document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(/blockchain/gi,`<mark style="font-weight: normal;">Blockchain</mark>`);
+            document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
 
             if (aboutSection) {
-                document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(/blockchain/gi,`<mark style="font-weight: normal;">Blockchain</mark>`);
+                document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
             }
 
             // document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(/(<\/?(?:img)[^>]*>)|crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
