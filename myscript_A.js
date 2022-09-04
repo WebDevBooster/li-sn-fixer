@@ -133,11 +133,25 @@ $( document ).ready(function() {
             }
         }
 
+        function hideSection(element) {
+            element.style.display = "none";
+        }
+
         function handleListItems() {
             const listArray = document.querySelectorAll("li.artdeco-list__item");
+            const aboutSectionsArray = document.querySelectorAll("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div:nth-of-type(2)");
+            const yearsArray = document.querySelectorAll("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div > div > div:nth-of-type(2) > div:nth-of-type(4)");
 
             if (listArray.length) {
                 listArray.forEach(changeBgColor);
+            }
+
+            if (aboutSectionsArray.length) {
+                aboutSectionsArray.forEach(hideSection);
+            }
+
+            if (yearsArray.length) {
+                yearsArray.forEach(hideSection);
             }
         }
 
