@@ -25,9 +25,21 @@ $( document ).ready(function() {
         function highlight() {
             let body = $( "body" );
             let currentHTML = document.querySelector("#content-main").innerHTML;
-            const keyword1Regex = /Web3|Web 3\.0|Web 3/gi;
-            const keyword1Replacement = "Web3";
-            const keyword2Regex = /enthusiast/gi;
+            const keyword1Regex = /Crypto/gi;
+            const keyword1Replacement = "Crypto";
+            // const keyword1Regex = /NFT/gi;
+            // const keyword1Replacement = "NFT";
+
+            // const keyword1Regex = /Blockchain/gi;
+            // const keyword1Replacement = "Blockchain";
+            // const keyword1Regex = /Web3|Web 3\.0|Web 3/gi;
+            // const keyword1Replacement = "Web3";
+
+            // const keyword2Regex = /enthusiast/gi;
+            const keyword2Regex = /consultant|advisor|analyst/gi;
+            // const keyword2Regex = /miner/gi;
+            // const keyword2Regex = /investor/gi;
+
             let keyword1Array = currentHTML.match(keyword1Regex);
             let keyword2Array = currentHTML.match(keyword2Regex);
             let emailsArray = currentHTML.match(/@/g);
@@ -114,6 +126,10 @@ $( document ).ready(function() {
             // most "out-of-network" profiles are useless for me
             if ($(element).has("div[class^=_out-of-network]").length) {
                 element.style.backgroundColor = "pink";
+            }
+
+            if ($(element).has("li-icon[aria-label^=Viewed]").length) {
+                element.style.backgroundColor = "cornsilk";
             }
         }
 
