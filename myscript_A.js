@@ -1,11 +1,16 @@
 $( document ).ready(function() {
 
+    function hideSection(element) {
+        element.style.display = "none";
+    }
+
     let profileURL = document.location.href.match(/linkedin\.com\/sales\/lead/);
 
     if (profileURL) {
         let aboutSection;
         let aboutBtn = document.querySelector("#about-section [id$=-clamped-content] > span:nth-child(2)");
         let experienceBtns = document.querySelectorAll("#experience-section [id$=-clamped-content] > span:nth-child(2)");
+        let introSection;
 
         setTimeout(function () {
             aboutSection = document.querySelector("#about-section");
@@ -17,6 +22,19 @@ $( document ).ready(function() {
         // expanding all experience sections might be triggering Linkedin to rate-limit me.
         // So, I'm gonna disable this for now.
         // const ExperienceOpener = setInterval(expandExperienceSections, 700);
+
+        const introSectionRemover = setInterval(hideIntroSection, 700);
+        function hideIntroSection() {
+            introSection = document.querySelector("section[class^=_introductions-section]");
+
+            if (!!introSection) {
+                console.log(`We've got intro section! Hiding...`);
+                hideSection(introSection);
+                clearInterval(introSectionRemover);
+            } else {
+                console.log(`We don't have intro section yet!`);
+            }
+        }
 
         function expandExperienceBtn(item) {
             item.click();
@@ -138,10 +156,6 @@ $( document ).ready(function() {
             if ($(element).has("li-icon[aria-label^=Viewed]").length) {
                 element.style.backgroundColor = "cornsilk";
             }
-        }
-
-        function hideSection(element) {
-            element.style.display = "none";
         }
 
         function handleListItems() {
