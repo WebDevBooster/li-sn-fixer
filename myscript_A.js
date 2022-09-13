@@ -25,20 +25,25 @@ $( document ).ready(function() {
         function highlight() {
             let body = $( "body" );
             let currentHTML = document.querySelector("#content-main").innerHTML;
-            // const keyword1Regex = /Crypto/gi;
-            // const keyword1Replacement = "Crypto";
+            const keyword1Regex = /Crypto/gi;
+            const keyword1Replacement = "Crypto";
             // const keyword1Regex = /NFT/gi;
             // const keyword1Replacement = "NFT";
 
-            const keyword1Regex = /Blockchain/gi;
-            const keyword1Replacement = "Blockchain";
+            // const keyword1Regex = /Blockchain|web3|web 3/gi;
+            // const keyword1Replacement = "Blockchain";
             // const keyword1Regex = /Web3|Web 3\.0|Web 3/gi;
             // const keyword1Replacement = "Web3";
 
             // const keyword2Regex = /enthusiast/gi;
+            // const keyword2Regex = /Strategist|Evangelist|Aficionado/gi;
+            // const keyword2Regex = /expert/gi;
             // const keyword2Regex = /consultant|advisor|analyst|specialist/gi;
-            const keyword2Regex = /consultant|advisor|evangelist/gi;
+            // const keyword2Regex = /consultant|advisor|analyst|specialist|expert|investor/gi;
+            // const keyword2Regex = /consultant|advisor|evangelist/gi;
+            // const keyword2Regex = /consultant|advisor/gi;
             // const keyword2Regex = /collector|investor|owner/gi;
+            const keyword2Regex = /trader|investor|miner/gi;
             // const keyword2Regex = /miner/gi;
             // const keyword2Regex = /investor/gi;
 
@@ -92,7 +97,7 @@ $( document ).ready(function() {
                 document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
             }
 
-            // document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(/(<\/?(?:img)[^>]*>)|crypto/gi,`<mark style="font-weight: normal;">Crypto</mark>`);
+            document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
         }
 
         function expandAboutSection() {
