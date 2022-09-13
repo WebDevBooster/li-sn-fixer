@@ -11,6 +11,7 @@ $( document ).ready(function() {
         let aboutBtn = document.querySelector("#about-section [id$=-clamped-content] > span:nth-child(2)");
         let experienceBtns = document.querySelectorAll("#experience-section [id$=-clamped-content] > span:nth-child(2)");
         let introSection;
+        let relationshipSection;
 
         setTimeout(function () {
             aboutSection = document.querySelector("#about-section");
@@ -23,7 +24,9 @@ $( document ).ready(function() {
         // So, I'm gonna disable this for now.
         // const ExperienceOpener = setInterval(expandExperienceSections, 700);
 
-        const introSectionRemover = setInterval(hideIntroSection, 700);
+        const introSectionRemover = setInterval(hideIntroSection, 650);
+        const relationshipSectionRemover = setInterval(hideRelationshipSection, 700);
+
         function hideIntroSection() {
             introSection = document.querySelector("section[class^=_introductions-section]");
 
@@ -33,6 +36,18 @@ $( document ).ready(function() {
                 clearInterval(introSectionRemover);
             } else {
                 console.log(`We don't have intro section yet!`);
+            }
+        }
+
+        function hideRelationshipSection() {
+            relationshipSection = document.querySelector("#relationship-section");
+
+            if (!!relationshipSection) {
+                console.log(`We've got relationship section! Hiding...`);
+                hideSection(relationshipSection);
+                clearInterval(relationshipSectionRemover);
+            } else {
+                console.log(`We don't have relationship section yet!`);
             }
         }
 
