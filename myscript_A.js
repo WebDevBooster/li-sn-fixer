@@ -130,7 +130,17 @@ $( document ).ready(function() {
                 document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
             }
 
+            // remove irrelevant crap
+            $("#experience-section img").each(function (key, value) {
+                console.log("title: ", $(value).attr('title'));
+                $(value).attr("title", "--");
+                $(value).attr("alt", "--");
+            });
+            $("div[id^=similar-leads-account-insights-outlet]").remove();
+            $("section[class^=_search-links-section]").remove();
+
             document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
+
         }
 
         function expandAboutSection() {
