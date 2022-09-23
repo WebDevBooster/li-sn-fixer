@@ -10,6 +10,7 @@ $( document ).ready(function() {
         let aboutSection;
         let aboutBtn = document.querySelector("#about-section [id$=-clamped-content] > span:nth-child(2)");
         let experienceBtns = document.querySelectorAll("#experience-section [id$=-clamped-content] > span:nth-child(2)");
+        let allPositionsBtn = $("section#experience-section > button");
         let introSection;
         let relationshipSection;
 
@@ -23,6 +24,7 @@ $( document ).ready(function() {
         // expanding all experience sections might be triggering Linkedin to rate-limit me.
         // So, I'm gonna disable this for now.
         // const ExperienceOpener = setInterval(expandExperienceSections, 700);
+        const positionsOpener = setInterval(expandAllPositions, 700);
 
         const introSectionRemover = setInterval(hideIntroSection, 650);
         const relationshipSectionRemover = setInterval(hideRelationshipSection, 700);
@@ -172,6 +174,20 @@ $( document ).ready(function() {
                 }, 550);
             }
         }
+
+        function expandAllPositions() {
+            if (allPositionsBtn.length) {
+                clearInterval(positionsOpener);
+                console.log("allPositionsBtn found");
+                allPositionsBtn.click();
+            } else {
+                setTimeout(function () {
+                    allPositionsBtn = $("section#experience-section > button");
+                }, 650);
+            }
+        }
+
+
     }
 
     let listURL = document.location.href.match(/linkedin\.com\/sales\/search\/people/);
