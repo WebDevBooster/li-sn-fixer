@@ -58,8 +58,11 @@ $( document ).ready(function() {
         function highlight() {
             let body = $( "body" );
             let currentHTML = document.querySelector("#content-main").innerHTML;
-            const keyword1Regex = /Crypto/gi;
+            // const keyword1Regex = /Crypto/gi;
+            // const keyword1Replacement = "Crypto";
+            const keyword1Regex = /blockchain|web3|web 3|crypto|nft/gi;
             const keyword1Replacement = "Crypto";
+
             // const keyword1Regex = /NFT/gi;
             // const keyword1Replacement = "NFT";
 
@@ -72,11 +75,11 @@ $( document ).ready(function() {
             // const keyword2Regex = /Strategist|Evangelist|Aficionado/gi;
             // const keyword2Regex = /expert/gi;
             // const keyword2Regex = /consultant|advisor|analyst|specialist/gi;
-            // const keyword2Regex = /consultant|advisor|analyst|specialist|expert|investor/gi;
+            const keyword2Regex = /consultant|advisor|analyst|specialist|expert|investor/gi;
             // const keyword2Regex = /consultant|advisor|evangelist/gi;
             // const keyword2Regex = /consultant|advisor/gi;
             // const keyword2Regex = /collector|investor|owner/gi;
-            const keyword2Regex = /trader|investor|miner/gi;
+            // const keyword2Regex = /trader|investor|miner/gi;
             // const keyword2Regex = /miner/gi;
             // const keyword2Regex = /investor/gi;
 
@@ -124,11 +127,13 @@ $( document ).ready(function() {
                 });
             }
 
+/*
             document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
 
             if (aboutSection) {
                 document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
             }
+*/
 
             // remove irrelevant crap
             $("#experience-section img").each(function (key, value) {
@@ -139,7 +144,7 @@ $( document ).ready(function() {
             $("div[id^=similar-leads-account-insights-outlet]").remove();
             $("section[class^=_search-links-section]").remove();
 
-            document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
+            //document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
 
         }
 
