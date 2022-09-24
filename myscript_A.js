@@ -62,7 +62,7 @@ $( document ).ready(function() {
             let currentHTML = document.querySelector("#content-main").innerHTML;
             // const keyword1Regex = /Crypto/gi;
             // const keyword1Replacement = "Crypto";
-            const keyword1Regex = /blockchain|web3|web 3|crypto|nft/gi;
+            const keyword1Regex = /blockchain|web3|web 3|crypto|nft|\bdefi\b/gi;
             const keyword1Replacement = "Crypto";
 
             // const keyword1Regex = /NFT/gi;
@@ -77,16 +77,22 @@ $( document ).ready(function() {
             // const keyword2Regex = /Strategist|Evangelist|Aficionado/gi;
             // const keyword2Regex = /expert/gi;
             // const keyword2Regex = /consultant|advisor|analyst|specialist/gi;
-            const keyword2Regex = /consultant|advisor|analyst|specialist|expert|investor/gi;
+            // const keyword2Regex = /consultant|advisor|analyst|specialist|expert|investor/gi;
             // const keyword2Regex = /consultant|advisor|evangelist/gi;
             // const keyword2Regex = /consultant|advisor/gi;
             // const keyword2Regex = /collector|investor|owner/gi;
             // const keyword2Regex = /trader|investor|miner/gi;
             // const keyword2Regex = /miner/gi;
-            // const keyword2Regex = /investor/gi;
+            const keyword2Regex = /investor/gi;
+            const keyword3Regex = /\bseed\b|\bpreseed\b/gi;
+            const keyword4Regex = /\bearly stage\b/gi;
+            const keyword5Regex = /\bangel\b/gi;
 
             let keyword1Array = currentHTML.match(keyword1Regex);
             let keyword2Array = currentHTML.match(keyword2Regex);
+            let keyword3Array = currentHTML.match(keyword3Regex);
+            let keyword4Array = currentHTML.match(keyword4Regex);
+            let keyword5Array = currentHTML.match(keyword5Regex);
             let emailsArray = currentHTML.match(/@/g);
             aboutSection = document.querySelector("#about-section");
 
@@ -99,7 +105,7 @@ $( document ).ready(function() {
                     const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
                     setTimeout(function () {
                         const playEmailPromise = document.querySelector('#LNSNF-email').play();
-                    }, 500);
+                    }, 400);
                 });
             } else if (keyword1Array && keyword2Array) {
                 body.append('<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
@@ -115,7 +121,7 @@ $( document ).ready(function() {
                     const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
                     setTimeout(function () {
                         const playEmailPromise = document.querySelector('#LNSNF-email').play();
-                    }, 500);
+                    }, 400);
                 });
             } else if (keyword1Array || keyword2Array) {
                 body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
@@ -126,6 +132,37 @@ $( document ).ready(function() {
                 body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                     const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
+                });
+            }
+
+            if (keyword3Array) {
+                body.append('<audio id="LNSNF-kw3" autoplay><source src="https://alexbooster.com/media/seed.mp3"></audio>');
+                // User interaction/click required to play audio after page load:
+                // https://developer.chrome.com/blog/autoplay/
+                $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    setTimeout(function () {
+                        const playKW3Promise = document.querySelector('#LNSNF-kw3').play();
+                    }, 500);
+                });
+            }
+            if (keyword4Array) {
+                body.append('<audio id="LNSNF-kw4" autoplay><source src="https://alexbooster.com/media/early.mp3"></audio>');
+                // User interaction/click required to play audio after page load:
+                // https://developer.chrome.com/blog/autoplay/
+                $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    setTimeout(function () {
+                        const playKW4Promise = document.querySelector('#LNSNF-kw4').play();
+                    }, 1500);
+                });
+            }
+            if (keyword5Array) {
+                body.append('<audio id="LNSNF-kw5" autoplay><source src="https://alexbooster.com/media/angel.mp3"></audio>');
+                // User interaction/click required to play audio after page load:
+                // https://developer.chrome.com/blog/autoplay/
+                $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    setTimeout(function () {
+                        const playKW5Promise = document.querySelector('#LNSNF-kw5').play();
+                    }, 2000);
                 });
             }
 
