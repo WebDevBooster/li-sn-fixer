@@ -242,9 +242,7 @@ $( document ).ready(function() {
 
             // Hide non-premium profiles (for now I'm only targeting premium profiles)
             if ($(element).has("a[data-anonymize=person-name]").length && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length) {
-                element.style.backgroundColor = "red";
-                element.style.height = "2px";
-                element.style.padding = "0";
+                element.style.backgroundColor = "#0073b1";
             }
         }
 
