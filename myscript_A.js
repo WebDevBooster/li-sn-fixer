@@ -59,7 +59,7 @@ $( document ).ready(function() {
 
         function highlight() {
             let body = $( "body" );
-            let currentHTML = document.querySelector("#content-main").innerHTML;
+            let currentHTML = document.querySelector("#content-main div[class^=_main-column]").innerHTML;
             // const keyword1Regex = /Crypto/gi;
             // const keyword1Replacement = "Crypto";
             const keyword1Regex = /blockchain|web3|web 3|crypto|nft|\bdefi\b/gi;
