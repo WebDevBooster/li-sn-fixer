@@ -85,7 +85,7 @@ $( document ).ready(function() {
             // const keyword2Regex = /miner/gi;
             const keyword2Regex = /investor/gi;
             const keyword3Regex = /\bseed\b|\bpreseed\b/gi;
-            const keyword4Regex = /\bearly stage\b/gi;
+            const keyword4Regex = /\bearly stage\b|\bearly-stage\b/gi;
             const keyword5Regex = /\bangel\b/gi;
 
             let keyword1Array = currentHTML.match(keyword1Regex);
