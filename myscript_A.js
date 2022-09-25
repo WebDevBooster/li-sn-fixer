@@ -230,7 +230,7 @@ $( document ).ready(function() {
     let listURL = document.location.href.match(/linkedin\.com\/sales\/search\/people/);
 
     if (listURL) {
-        function changeBgColor(element, index) {
+        function manipulateListElement(element, index) {
             // most "out-of-network" profiles are useless for me
             if ($(element).has("div[class^=_out-of-network]").length) {
                 element.style.backgroundColor = "pink";
@@ -238,6 +238,13 @@ $( document ).ready(function() {
 
             if ($(element).has("li-icon[aria-label^=Viewed]").length) {
                 element.style.backgroundColor = "cornsilk";
+            }
+
+            // Hide non-premium profiles (for now I'm only targeting premium profiles)
+            if ($(element).has("a[data-anonymize=person-name]").length && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length) {
+                element.style.backgroundColor = "red";
+                element.style.height = "2px";
+                element.style.padding = "0";
             }
         }
 
@@ -247,7 +254,7 @@ $( document ).ready(function() {
             const yearsArray = document.querySelectorAll("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div > div > div:nth-of-type(2) > div:nth-of-type(4)");
 
             if (listArray.length) {
-                listArray.forEach(changeBgColor);
+                listArray.forEach(manipulateListElement);
             }
 
             if (aboutSectionsArray.length) {
