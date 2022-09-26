@@ -264,7 +264,7 @@ $( document ).ready(function() {
             }
         }
 
-        setInterval(handleListItems, 2000);
+        setInterval(handleListItems, 1000);
     }
 
 });
