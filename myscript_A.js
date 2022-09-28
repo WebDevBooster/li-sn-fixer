@@ -7,6 +7,32 @@ $( document ).ready(function() {
     let profileURL = document.location.href.match(/linkedin\.com\/sales\/lead/);
 
     if (profileURL) {
+        let badgesList = document.querySelector("section[class^=_header] ul[class^=_badges]");
+        let badgeChecker = setInterval(checkBadges, 10);
+
+        function autoCloseTabIfNoOpenBadge () {
+            let openBadge = document.querySelector("section[class^=_header] ul[class^=_badges] li > span[class^=_open-badge]");
+
+            if (openBadge) {
+                console.log(`open badge is there!`);
+            } else {
+                console.log(`no open badge there!`);
+                window.close();
+            }
+        }
+
+        function checkBadges () {
+            if (badgesList) {
+                console.log(`badges list is there!`);
+                autoCloseTabIfNoOpenBadge();
+                clearInterval(badgeChecker);
+            } else {
+                console.log(`no badges list at the moment`);
+                badgesList = document.querySelector("section[class^=_header] ul[class^=_badges]");
+            }
+        }
+
+
         let aboutSection;
         let aboutBtn = document.querySelector("#about-section [id$=-clamped-content] > span:nth-child(2)");
         let experienceBtns = document.querySelectorAll("#experience-section [id$=-clamped-content] > span:nth-child(2)");
@@ -86,7 +112,7 @@ $( document ).ready(function() {
             const keyword2Regex = /investor/gi;
             const keyword3Regex = /\bseed\b|\bpreseed\b/gi;
             const keyword4Regex = /\bearly stage\b|\bearly-stage\b/gi;
-            const keyword5Regex = /\bangel\b/gi;
+            const keyword5Regex = /\bangel investor\b/gi;
 
             let keyword1Array = currentHTML.match(keyword1Regex);
             let keyword2Array = currentHTML.match(keyword2Regex);
@@ -135,6 +161,7 @@ $( document ).ready(function() {
                 });
             }
 
+/*
             if (keyword3Array) {
                 body.append('<audio id="LNSNF-kw3" autoplay><source src="https://alexbooster.com/media/seed.mp3"></audio>');
                 // User interaction/click required to play audio after page load:
@@ -155,6 +182,8 @@ $( document ).ready(function() {
                     }, 1500);
                 });
             }
+*/
+
             if (keyword5Array) {
                 body.append('<audio id="LNSNF-kw5" autoplay><source src="https://alexbooster.com/media/angel.mp3"></audio>');
                 // User interaction/click required to play audio after page load:
