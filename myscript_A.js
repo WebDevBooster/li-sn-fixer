@@ -7,9 +7,22 @@ $( document ).ready(function() {
     let profileURL = document.location.href.match(/linkedin\.com\/sales\/lead/);
 
     if (profileURL) {
+        let aboutSection;
+        const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/gi;
         let badgesList = document.querySelector("section[class^=_header] ul[class^=_badges]");
         let badgeChecker = setInterval(checkBadges, 10);
 
+        function hasEmail() {
+            let headerSectionHTML = document.querySelector("section[class^=_header]").innerHTML;
+            let detailsSectionHTML = document.querySelector("section[class^=_details-section]").innerHTML;
+            let aboutSectionHTML = document.querySelector("#about-section").innerHTML;
+            let emailMatchesInHeader = headerSectionHTML.match(emailRegex);
+            let emailMatchesInDetails = detailsSectionHTML.match(emailRegex);
+            let emailMatchesInAbout = aboutSectionHTML.match(emailRegex);
+            
+            return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInAbout);
+        }
+        
         function autoCloseTabIfNoOpenBadge () {
             let openBadge = document.querySelector("section[class^=_header] ul[class^=_badges] li > span[class^=_open-badge]");
 
@@ -17,7 +30,11 @@ $( document ).ready(function() {
                 console.log(`open badge is there!`);
             } else {
                 console.log(`no open badge there!`);
-                window.close();
+                if (hasEmail()) {
+                    console.log(`We have EMAIL!!!`);
+                } else {
+                    window.close();
+                }
             }
         }
 
@@ -33,7 +50,6 @@ $( document ).ready(function() {
         }
 
 
-        let aboutSection;
         let aboutBtn = document.querySelector("#about-section [id$=-clamped-content] > span:nth-child(2)");
         let experienceBtns = document.querySelectorAll("#experience-section [id$=-clamped-content] > span:nth-child(2)");
         let allPositionsBtn = $("section#experience-section > button");
