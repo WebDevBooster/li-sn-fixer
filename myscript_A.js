@@ -135,10 +135,9 @@ $( document ).ready(function() {
             let keyword3Array = currentHTML.match(keyword3Regex);
             let keyword4Array = currentHTML.match(keyword4Regex);
             let keyword5Array = currentHTML.match(keyword5Regex);
-            let emailsArray = currentHTML.match(/@/g);
             aboutSection = document.querySelector("#about-section");
 
-            if (keyword1Array && keyword2Array && emailsArray) {
+            if (keyword1Array && keyword2Array && hasEmail()) {
                 body.append('<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
                 body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
                 // User interaction/click required to play audio after page load:
@@ -156,7 +155,7 @@ $( document ).ready(function() {
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                     const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
                 });
-            } else if ((keyword1Array || keyword2Array) && emailsArray) {
+            } else if ((keyword1Array || keyword2Array) && hasEmail()) {
                 body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
                 body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
