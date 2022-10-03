@@ -13,14 +13,22 @@ $( document ).ready(function() {
         let badgeChecker = setInterval(checkBadges, 10);
 
         function hasEmail() {
+            let aboutSection = document.querySelector("#about-section");
             let headerSectionHTML = document.querySelector("section[class^=_header]").innerHTML;
             let detailsSectionHTML = document.querySelector("section[class^=_details-section]").innerHTML;
-            let aboutSectionHTML = document.querySelector("#about-section").innerHTML;
             let emailMatchesInHeader = headerSectionHTML.match(emailRegex);
             let emailMatchesInDetails = detailsSectionHTML.match(emailRegex);
-            let emailMatchesInAbout = aboutSectionHTML.match(emailRegex);
-            
-            return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInAbout);
+
+            // sometimes there's no about section
+            if (aboutSection) {
+                let aboutSectionHTML = aboutSection.innerHTML;
+                let emailMatchesInAbout = aboutSectionHTML.match(emailRegex);
+                if (headerSectionHTML && detailsSectionHTML && aboutSectionHTML) {
+                    return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInAbout);
+                }
+            } else if (headerSectionHTML && detailsSectionHTML) {
+                return !!(emailMatchesInHeader || emailMatchesInDetails);
+            }
         }
         
         function autoCloseTabIfNoOpenBadge () {
@@ -28,6 +36,9 @@ $( document ).ready(function() {
 
             if (openBadge) {
                 console.log(`open badge is there!`);
+                if (hasEmail()) {
+                    console.log(`EMAIL found!`);
+                }
             } else {
                 console.log(`no open badge there!`);
                 if (hasEmail()) {
