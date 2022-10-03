@@ -136,8 +136,8 @@ $( document ).ready(function() {
             // const keyword2Regex = /collector|investor|owner/gi;
             // const keyword2Regex = /trader|investor|miner/gi;
             // const keyword2Regex = /miner/gi;
-            // const keyword2Regex = /investor/gi;
-            const keyword2Regex = /entrepreneur/gi;
+            const keyword2Regex = /investor/gi;
+            // const keyword2Regex = /entrepreneur/gi;
             const keyword3Regex = /\bseed\b|\bpreseed\b/gi;
             const keyword4Regex = /\bearly stage\b|\bearly-stage\b/gi;
             const keyword5Regex = /\bangel investor\b/gi;
@@ -224,6 +224,7 @@ $( document ).ready(function() {
                 });
             }
 
+/*
             if (keyword6Array) {
                 body.append('<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
                 // User interaction/click required to play audio after page load:
@@ -234,6 +235,7 @@ $( document ).ready(function() {
                     }, 1000);
                 });
             }
+*/
 
 /*
             document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
