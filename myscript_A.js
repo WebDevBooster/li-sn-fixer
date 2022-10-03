@@ -136,16 +136,19 @@ $( document ).ready(function() {
             // const keyword2Regex = /collector|investor|owner/gi;
             // const keyword2Regex = /trader|investor|miner/gi;
             // const keyword2Regex = /miner/gi;
-            const keyword2Regex = /investor/gi;
+            // const keyword2Regex = /investor/gi;
+            const keyword2Regex = /entrepreneur/gi;
             const keyword3Regex = /\bseed\b|\bpreseed\b/gi;
             const keyword4Regex = /\bearly stage\b|\bearly-stage\b/gi;
             const keyword5Regex = /\bangel investor\b/gi;
+            const keyword6Regex = /entrepreneur/gi;
 
             let keyword1Array = currentHTML.match(keyword1Regex);
             let keyword2Array = currentHTML.match(keyword2Regex);
             let keyword3Array = currentHTML.match(keyword3Regex);
             let keyword4Array = currentHTML.match(keyword4Regex);
             let keyword5Array = currentHTML.match(keyword5Regex);
+            let keyword6Array = currentHTML.match(keyword6Regex);
             aboutSection = document.querySelector("#about-section");
 
             if (keyword1Array && keyword2Array && hasEmail()) {
@@ -218,6 +221,17 @@ $( document ).ready(function() {
                     setTimeout(function () {
                         const playKW5Promise = document.querySelector('#LNSNF-kw5').play();
                     }, 2000);
+                });
+            }
+
+            if (keyword6Array) {
+                body.append('<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
+                // User interaction/click required to play audio after page load:
+                // https://developer.chrome.com/blog/autoplay/
+                $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    setTimeout(function () {
+                        const playKW6Promise = document.querySelector('#LNSNF-kw6').play();
+                    }, 1000);
                 });
             }
 
