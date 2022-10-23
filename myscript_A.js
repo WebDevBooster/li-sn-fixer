@@ -140,7 +140,7 @@ $( document ).ready(function() {
             // const keyword2Regex = /entrepreneur/gi;
             const keyword3Regex = /\bseed\b|\bpreseed\b/gi;
             const keyword4Regex = /\bearly stage\b|\bearly-stage\b/gi;
-            const keyword5Regex = /\bangel investor\b/gi;
+            const keyword5Regex = /\bangel investor\b|\bangel investing\b|\bangel-investor\b|\bBusiness Angel\b|\bBusinessangel\b|\bBusiness-Angel\b/gi;
             const keyword6Regex = /entrepreneur/gi;
 
             let keyword1Array = currentHTML.match(keyword1Regex);
@@ -190,7 +190,7 @@ $( document ).ready(function() {
                 });
             }
 
-/*
+
             if (keyword3Array) {
                 body.append('<audio id="LNSNF-kw3" autoplay><source src="https://alexbooster.com/media/seed.mp3"></audio>');
                 // User interaction/click required to play audio after page load:
@@ -198,9 +198,11 @@ $( document ).ready(function() {
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                     setTimeout(function () {
                         const playKW3Promise = document.querySelector('#LNSNF-kw3').play();
-                    }, 500);
+                    }, 100);
                 });
             }
+
+
             if (keyword4Array) {
                 body.append('<audio id="LNSNF-kw4" autoplay><source src="https://alexbooster.com/media/early.mp3"></audio>');
                 // User interaction/click required to play audio after page load:
@@ -208,10 +210,10 @@ $( document ).ready(function() {
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                     setTimeout(function () {
                         const playKW4Promise = document.querySelector('#LNSNF-kw4').play();
-                    }, 1500);
+                    }, 500);
                 });
             }
-*/
+
 
             if (keyword5Array) {
                 body.append('<audio id="LNSNF-kw5" autoplay><source src="https://alexbooster.com/media/angel.mp3"></audio>');
@@ -220,9 +222,10 @@ $( document ).ready(function() {
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                     setTimeout(function () {
                         const playKW5Promise = document.querySelector('#LNSNF-kw5').play();
-                    }, 2000);
+                    }, 1000);
                 });
             }
+
 
 /*
             if (keyword6Array) {
@@ -303,9 +306,9 @@ $( document ).ready(function() {
     if (listURL) {
         function manipulateListElement(element, index) {
             // most "out-of-network" profiles are useless for me
-            if ($(element).has("div[class^=_out-of-network]").length) {
-                element.style.backgroundColor = "pink";
-            }
+            // if ($(element).has("div[class^=_out-of-network]").length) {
+            //     element.style.backgroundColor = "pink";
+            // }
 
             if ($(element).has("li-icon[aria-label^=Viewed]").length) {
                 element.style.backgroundColor = "cornsilk";
