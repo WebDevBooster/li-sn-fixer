@@ -199,6 +199,16 @@ $( document ).ready(function() {
                     modifyClipboard();
                     const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
                 });
+            } else if (hasEmail()) {
+                body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
+                body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
+                $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    modifyClipboard();
+                    const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
+                    setTimeout(function () {
+                        const playEmailPromise = document.querySelector('#LNSNF-email').play();
+                    }, 400);
+                });
             } else {
                 body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
