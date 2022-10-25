@@ -88,7 +88,7 @@ $( document ).ready(function() {
         const aboutOpener = setInterval(expandAboutSection, 500);
         // expanding all experience sections might be triggering Linkedin to rate-limit me.
         // So, I'm gonna disable this for now.
-        // const ExperienceOpener = setInterval(expandExperienceSections, 700);
+        const ExperienceOpener = setInterval(expandExperienceSections, 700);
         const positionsOpener = setInterval(expandAllPositions, 700);
 
         const introSectionRemover = setInterval(hideIntroSection, 650);
