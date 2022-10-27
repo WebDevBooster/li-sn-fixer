@@ -26,7 +26,12 @@ $( document ).ready(function() {
             inExperience: null,
             uniqueEmails: []
         }
+        let firstCheckedEmail = "";
+        let allProfileEmails = "";
         let jobList = [];
+        let jobsToExport = "";
+        let profileURL = "";
+        let isFemale = "FALSE";
 
         function removeDuplicatesInArray(array) {
             return [... new Set(array.map(e => e.toLowerCase()))];
@@ -201,48 +206,50 @@ $( document ).ready(function() {
         function collectProfileData() {
             const profileHeader = $( "#profile-card-section section[class^=_header]" );
             const headlineDiv = $( "#profile-card-section div span[data-anonymize=headline]" );
-            const menuTrigger = $( "button[id^=hue-menu-trigger]" );
 
-            if (profileHeader.length && headlineDiv.length && menuTrigger.length) {
+            if (profileHeader.length && headlineDiv.length) {
                 clearInterval(triggerChecker);
                 setTimeout(checkForEmails, 50);
                 setTimeout(appendCollectedEmails, 111);
-
-/*
-                // I thought this was producing warnings (in the console) but the same warnings appear
-                // even when I disable my add-on. So, has nothing to do with that.
-                headlineDiv.click(function () {
-                    console.log(`Headline click registered!!!`);
-                    menuTrigger.click();
-                    setTimeout(function () {
-                        let linkedinProfileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
-                        console.log(`profile URL: ${linkedinProfileURL}`);
-                    }, 33);
-                });
-*/
-
+                setTimeout(copyDataToClipboard, 333);
             }
         }
         
         const triggerChecker = setInterval(collectProfileData, 250);
 
-        async function modifyClipboard() {
-            console.log(`jobList from modifyClipboard()`);
-            console.log(jobList);
+        function copyDataToClipboard() {
+            const copyBtn = $("#SNF-copy");
+            const copyFemaleBtn = $("#SNF-femcopy");
+            const menuTrigger = $( "button[id^=hue-menu-trigger]" );
 
-            // Sales Navigator lead URLs have a lot of crap appended to them.
-            // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
-            const leadURL = currentURL.substring(0, 75);
-            const trimmedLeadURL = `${leadURL},name`;
-            const fullName = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
-            const profileHeadline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim();
-            const profileURL = await navigator.clipboard.readText();
+            function makeClipboard() {
+                menuTrigger.click();
+                setTimeout(function () {
+                    profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
+                    console.log(`profile URL: ${profileURL}`);
+                    modifyClipboard();
+                }, 33);
+            }
+
+            if (copyBtn && copyFemaleBtn && menuTrigger.length) {
+                copyBtn.click(function () {
+                    makeClipboard();
+                });
+
+                copyFemaleBtn.click(function () {
+                    isFemale = "TRUE";
+                    makeClipboard();
+                });
+            }
+        }
+
+        function getEmailsToExport() {
             const checkedEmailElements = $("#SNF-data input[id^=SNF]:checked");
             const checkedEmailsArray = checkedEmailElements.map(function () {
                 return $(this).val();
             }).toArray();
-            const firstCheckedEmail = checkedEmailElements[0].value;
-            let allProfileEmails = profileEmails.uniqueEmails;
+            firstCheckedEmail = checkedEmailElements[0].value;
+            allProfileEmails = profileEmails.uniqueEmails;
 
             if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allProfileEmails.length) {
                 allProfileEmails = checkedEmailsArray.join("; ");
@@ -251,8 +258,29 @@ $( document ).ready(function() {
             } else {
                 allProfileEmails = "";
             }
+        }
 
-            await navigator.clipboard.writeText(`${trimmedLeadURL}\t${fullName}\t\t${profileURL}\t${firstCheckedEmail}\t\t${allProfileEmails}`);
+        function getJobsToExport() {
+            let newJobList = [];
+            jobList.forEach(function (currentValue) {
+                newJobList.push(`${currentValue["title"]} ➤ ${currentValue["company"]}`);
+            });
+            return jobsToExport = newJobList.join(" ✚✚ ");
+        }
+
+        async function modifyClipboard() {
+            const gender = isFemale;
+            // Sales Navigator lead URLs have a lot of crap appended to them.
+            // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
+            const leadURL = currentURL.substring(0, 75);
+            const trimmedLeadURL = `${leadURL},name`;
+            const fullName = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
+            const profileHeadline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim();
+
+            getEmailsToExport();
+            getJobsToExport();
+
+            await navigator.clipboard.writeText(`${gender}\t${trimmedLeadURL}\t${fullName}\t${profileHeadline}\t${profileURL}\t${firstCheckedEmail}\t${allProfileEmails}\t${jobsToExport}`);
         }
         
         function autoCloseTabIfNoOpenBadgeOrEmail () {
@@ -552,7 +580,7 @@ $( document ).ready(function() {
                 console.log(jobList);
             }
         }
-
+        
     }
 
     const searchPageTest = currentURL.match(/linkedin\.com\/sales\/search\/people/);
