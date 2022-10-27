@@ -272,7 +272,7 @@ $( document ).ready(function() {
             // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
             const leadURL = `${currentURL.substring(0, 75)},name`;
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
-            const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim();
+            const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim().normalize("NFKC");
 
             getEmailsToExport();
             getJobsToExport();
