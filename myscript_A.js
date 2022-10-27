@@ -406,7 +406,6 @@ $( document ).ready(function() {
                 // User interaction/click required to play audio after page load:
                 // https://developer.chrome.com/blog/autoplay/
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
-                    modifyClipboard();
                     const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
                     setTimeout(function () {
                         const playEmailPromise = document.querySelector('#LNSNF-email').play();
@@ -417,14 +416,12 @@ $( document ).ready(function() {
                 // User interaction/click required to play audio after page load:
                 // https://developer.chrome.com/blog/autoplay/
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
-                    modifyClipboard();
                     const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
                 });
             } else if ((keyword1Array || keyword2Array) && hasEmail()) {
                 body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
                 body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
-                    modifyClipboard();
                     const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
                     setTimeout(function () {
                         const playEmailPromise = document.querySelector('#LNSNF-email').play();
@@ -433,14 +430,12 @@ $( document ).ready(function() {
             } else if (keyword1Array || keyword2Array) {
                 body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
-                    modifyClipboard();
                     const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
                 });
             } else if (hasEmail()) {
                 body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
                 body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
-                    modifyClipboard();
                     const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
                     setTimeout(function () {
                         const playEmailPromise = document.querySelector('#LNSNF-email').play();
@@ -449,7 +444,6 @@ $( document ).ready(function() {
             } else {
                 body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
                 $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
-                    modifyClipboard();
                     const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
                 });
             }
