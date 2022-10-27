@@ -252,7 +252,7 @@ $( document ).ready(function() {
 
             if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allProfileEmails.length) {
                 allProfileEmails = checkedEmailsArray.join("; ");
-            } else if (checkedEmailsArray.length === allProfileEmails.length) {
+            } else if (checkedEmailsArray.length === allProfileEmails.length && checkedEmailsArray.length !== 1) {
                 allProfileEmails = allProfileEmails.join("; ");
             } else {
                 allProfileEmails = "";
