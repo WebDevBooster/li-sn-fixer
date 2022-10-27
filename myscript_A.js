@@ -248,12 +248,16 @@ $( document ).ready(function() {
                 return $(this).val();
             }).toArray();
             firstEmail = checkedEmailElements[0].value;
-            allEmails = profileEmails.uniqueEmails;
+            let allEmailsArray = [];
+            profileEmails.uniqueEmails.forEach(function (currentValue) {
+                currentValue = cleanUp(currentValue);
+                allEmailsArray.push(currentValue[0]);
+            });
 
-            if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allEmails.length) {
+            if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allEmailsArray.length) {
                 allEmails = checkedEmailsArray.join("; ");
-            } else if (checkedEmailsArray.length === allEmails.length && checkedEmailsArray.length !== 1) {
-                allEmails = allEmails.join("; ");
+            } else if (checkedEmailsArray.length === allEmailsArray.length && checkedEmailsArray.length !== 1) {
+                allEmails = allEmailsArray.join("; ");
             } else {
                 allEmails = "";
             }
