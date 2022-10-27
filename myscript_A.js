@@ -222,7 +222,7 @@ $( document ).ready(function() {
             const copyFemaleBtn = $("#SNF-femcopy");
             const menuTrigger = $( "#profile-card-section section[class^=_header] div[class^=_actions-container] section[class^=_actions-bar] button[id^=hue-menu-trigger]" );
 
-            function makeClipboard() {
+            function copyToClipboard() {
                 menuTrigger.click();
                 setTimeout(function () {
                     profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
@@ -233,12 +233,12 @@ $( document ).ready(function() {
 
             if (copyBtn && copyFemaleBtn && menuTrigger.length) {
                 copyBtn.click(function () {
-                    makeClipboard();
+                    copyToClipboard();
                 });
 
                 copyFemaleBtn.click(function () {
                     isFemale = "TRUE";
-                    makeClipboard();
+                    copyToClipboard();
                 });
             }
         }
