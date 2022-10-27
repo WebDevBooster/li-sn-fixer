@@ -267,7 +267,9 @@ $( document ).ready(function() {
             await fillJobList();
             let newJobList = [];
             jobList.forEach(function (currentValue) {
-                newJobList.push(`${currentValue["title"]} ➤ ${currentValue["company"]}`);
+                if (currentValue["title"] && currentValue["company"]) {
+                    newJobList.push(`${currentValue["title"]} ➤ ${currentValue["company"]}`);
+                }
             });
             return jobs = newJobList.join(" ✚✚ ");
         }
