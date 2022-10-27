@@ -269,7 +269,6 @@ $( document ).ready(function() {
         }
 
         async function modifyClipboard() {
-            const gender = isFemale;
             // Sales Navigator lead URLs have a lot of crap appended to them.
             // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
             const leadURL = currentURL.substring(0, 75);
@@ -280,7 +279,7 @@ $( document ).ready(function() {
             getEmailsToExport();
             getJobsToExport();
 
-            await navigator.clipboard.writeText(`${gender}\t${trimmedLeadURL}\t${fullName}\t${profileHeadline}\t${profileURL}\t${firstCheckedEmail}\t${allProfileEmails}\t${jobsToExport}`);
+            await navigator.clipboard.writeText(`${isFemale}\t${trimmedLeadURL}\t${fullName}\t${profileHeadline}\t${profileURL}\t${firstCheckedEmail}\t${allProfileEmails}\t${jobsToExport}`);
         }
         
         function autoCloseTabIfNoOpenBadgeOrEmail () {
