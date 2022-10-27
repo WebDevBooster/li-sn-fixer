@@ -26,10 +26,10 @@ $( document ).ready(function() {
             inExperience: null,
             uniqueEmails: []
         }
-        let firstCheckedEmail = "";
-        let allProfileEmails = "";
+        let firstEmail = "";
+        let allEmails = "";
         let jobList = [];
-        let jobsToExport = "";
+        let jobs = "";
         let profileURL = "";
         let isFemale = "FALSE";
 
@@ -247,15 +247,15 @@ $( document ).ready(function() {
             const checkedEmailsArray = checkedEmailElements.map(function () {
                 return $(this).val();
             }).toArray();
-            firstCheckedEmail = checkedEmailElements[0].value;
-            allProfileEmails = profileEmails.uniqueEmails;
+            firstEmail = checkedEmailElements[0].value;
+            allEmails = profileEmails.uniqueEmails;
 
-            if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allProfileEmails.length) {
-                allProfileEmails = checkedEmailsArray.join("; ");
-            } else if (checkedEmailsArray.length === allProfileEmails.length && checkedEmailsArray.length !== 1) {
-                allProfileEmails = allProfileEmails.join("; ");
+            if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allEmails.length) {
+                allEmails = checkedEmailsArray.join("; ");
+            } else if (checkedEmailsArray.length === allEmails.length && checkedEmailsArray.length !== 1) {
+                allEmails = allEmails.join("; ");
             } else {
-                allProfileEmails = "";
+                allEmails = "";
             }
         }
 
@@ -264,21 +264,20 @@ $( document ).ready(function() {
             jobList.forEach(function (currentValue) {
                 newJobList.push(`${currentValue["title"]} ➤ ${currentValue["company"]}`);
             });
-            return jobsToExport = newJobList.join(" ✚✚ ");
+            return jobs = newJobList.join(" ✚✚ ");
         }
 
         async function modifyClipboard() {
             // Sales Navigator lead URLs have a lot of crap appended to them.
             // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
-            const leadURL = currentURL.substring(0, 75);
-            const trimmedLeadURL = `${leadURL},name`;
-            const fullName = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
-            const profileHeadline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim();
+            const leadURL = `${currentURL.substring(0, 75)},name`;
+            const name = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
+            const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim();
 
             getEmailsToExport();
             getJobsToExport();
 
-            await navigator.clipboard.writeText(`${isFemale}\t${trimmedLeadURL}\t${fullName}\t${profileHeadline}\t${profileURL}\t${firstCheckedEmail}\t${allProfileEmails}\t${jobsToExport}`);
+            await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headline}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}`);
         }
         
         function autoCloseTabIfNoOpenBadgeOrEmail () {
