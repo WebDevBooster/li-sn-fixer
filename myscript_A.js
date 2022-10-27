@@ -9,52 +9,261 @@ $( document ).ready(function() {
 
     if (salesLeadPageTest) {
         let aboutSection;
-        const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/gi;
+        // This is a normal email regex that I used to collect the first 20K~ investor leads (until 25/10/2022):
+        // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/gi;
+        // This is an improved email regex that also catches cases like:
+        // handle(at)domain.com or handle [at] domain.com or even "handle @ gmail .com" etc.
+        const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|((me|mac|aol|live|sap|msn)\.com)|((berkeley|alum\.mit|cornell|georgetown|alumni\.harvard|alumni\.stanford)\.edu))))/gi;
+
         let badgesList = document.querySelector("section[class^=_header] ul[class^=_badges]");
         let badgeChecker = setInterval(checkBadges, 10);
 
+        let profileEmails = {
+            inHeader: null,
+            inContact: null,
+            inCurrentRoles: null,
+            inAbout: null,
+            inExperience: null,
+            uniqueEmails: []
+        }
+        let jobList = [];
+
+        function removeDuplicatesInArray(array) {
+            return [... new Set(array.map(e => e.toLowerCase()))];
+        }
+
+        function checkForEmails() {
+            let emailList = [];
+
+            let headerSection = $("#profile-card-section > section[class^=_header]");
+            if (headerSection) {
+                profileEmails.inHeader = headerSection.html().match(emailRegex); // null if none, array if some
+                if (profileEmails.inHeader) {
+                    profileEmails.inHeader = removeDuplicatesInArray(profileEmails.inHeader);
+                    profileEmails.inHeader = profileEmails.inHeader.filter( (el) => !emailList.includes(el) );
+                    emailList = emailList.concat(profileEmails.inHeader);
+                    emailList = removeDuplicatesInArray(emailList);
+                }
+            }
+
+            let contactSection = $("#profile-card-section > section[class^=_details-section] > section");
+            if (contactSection) {
+                profileEmails.inContact = contactSection.html().match(emailRegex);
+                if (profileEmails.inContact) {
+                    profileEmails.inContact = removeDuplicatesInArray(profileEmails.inContact);
+                    profileEmails.inContact = profileEmails.inContact.filter( (el) => !emailList.includes(el) );
+                    emailList = emailList.concat(profileEmails.inContact);
+                    emailList = removeDuplicatesInArray(emailList);
+                }
+            }
+
+            let currentRolesSection = $("#profile-card-section > section[class^=_details-section] > div[class^=_current-role-container]");
+            if (currentRolesSection) {
+                profileEmails.inCurrentRoles = currentRolesSection.html().match(emailRegex);
+                if (profileEmails.inCurrentRoles) {
+                    profileEmails.inCurrentRoles = removeDuplicatesInArray(profileEmails.inCurrentRoles);
+                    profileEmails.inCurrentRoles = profileEmails.inCurrentRoles.filter( (el) => !emailList.includes(el) );
+                    emailList = emailList.concat(profileEmails.inCurrentRoles);
+                    emailList = removeDuplicatesInArray(emailList);
+                }
+            }
+
+            let aboutSection = $("#about-section");
+            if (aboutSection) {
+                profileEmails.inAbout = aboutSection.html().match(emailRegex);
+                if (profileEmails.inAbout) {
+                    profileEmails.inAbout = removeDuplicatesInArray(profileEmails.inAbout);
+                    profileEmails.inAbout = profileEmails.inAbout.filter( (el) => !emailList.includes(el) );
+                    emailList = emailList.concat(profileEmails.inAbout);
+                    emailList = removeDuplicatesInArray(emailList);
+                }
+            }
+
+            let experienceSection = $("#experience-section");
+            if (experienceSection) {
+                profileEmails.inExperience = experienceSection.html().match(emailRegex);
+                if (profileEmails.inExperience) {
+                    profileEmails.inExperience = removeDuplicatesInArray(profileEmails.inExperience);
+                    profileEmails.inExperience = profileEmails.inExperience.filter( (el) => !emailList.includes(el) );
+                    emailList = emailList.concat(profileEmails.inExperience);
+                    emailList = removeDuplicatesInArray(emailList);
+                }
+            }
+
+            profileEmails.uniqueEmails = emailList;
+
+            return profileEmails;
+        }
+
         function hasEmail() {
-            let aboutSection = document.querySelector("#about-section");
             let headerSectionHTML = document.querySelector("section[class^=_header]").innerHTML;
             let detailsSectionHTML = document.querySelector("section[class^=_details-section]").innerHTML;
             let emailMatchesInHeader = headerSectionHTML.match(emailRegex);
             let emailMatchesInDetails = detailsSectionHTML.match(emailRegex);
+            let aboutSection = document.querySelector("#about-section");
+            let experienceSection = document.querySelector("section[class^=_experiences-section]");
 
-            // sometimes there's no about section
-            if (aboutSection) {
+            // sometimes there's no about or no experience section
+            if (aboutSection && experienceSection) {
+                let aboutSectionHTML = aboutSection.innerHTML;
+                let emailMatchesInAbout = aboutSectionHTML.match(emailRegex);
+                let experienceSectionHTML = experienceSection.innerHTML;
+                let emailMatchesInExperience = experienceSectionHTML.match(emailRegex);
+
+                if (headerSectionHTML && detailsSectionHTML && aboutSectionHTML && experienceSectionHTML) {
+                    return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInAbout || emailMatchesInExperience);
+                }
+            } else if (aboutSection) {
                 let aboutSectionHTML = aboutSection.innerHTML;
                 let emailMatchesInAbout = aboutSectionHTML.match(emailRegex);
                 if (headerSectionHTML && detailsSectionHTML && aboutSectionHTML) {
                     return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInAbout);
+                }
+            } else if (experienceSection) {
+                let experienceSectionHTML = experienceSection.innerHTML;
+                let emailMatchesInExperience = experienceSectionHTML.match(emailRegex);
+                if (headerSectionHTML && detailsSectionHTML && experienceSectionHTML) {
+                    return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInExperience);
                 }
             } else if (headerSectionHTML && detailsSectionHTML) {
                 return !!(emailMatchesInHeader || emailMatchesInDetails);
             }
         }
 
+        function cleanUp(element) {
+            const original = element;
+            let cleaned = element.replace(/\s/g, "");
+            cleaned = cleaned.replace(/(\(|\[|\{|\<)(at|@)(\)|\]|\}|\>)/, "@");
+            if (cleaned === original) {
+                return [cleaned, ``, ``];
+            } else {
+                return [cleaned, `⭐`, `<br>♦ ${original}`];
+            }
+        }
+
+        function addHTMLElements(array, sectionName) {
+            if (array) {
+                let newElements = [];
+                array.forEach(function (currentValue, index) {
+                    currentValue = cleanUp(currentValue);
+                    const checkmark = index === 0 ? "checked" : "";
+                    newElements.push(`
+                        <label for="SNF-${sectionName}-checkbox${index}">
+                        <input id="SNF-${sectionName}-checkbox${index}" value="${currentValue[0]}" type="checkbox" ${checkmark}>
+                        <span id="SNF-${sectionName}-email${index}">${currentValue[0]}${currentValue[1]}${currentValue[2]}</span>
+                        </label>`);
+                });
+                return newElements.join("");
+            } else {
+                return "¯\\_( ツ)_/¯";
+            }
+        }
+
+        function appendCollectedEmails() {
+            const profileHeader = $( "#profile-card-section section[class^=_header]" );
+
+            const headerElements = addHTMLElements(profileEmails.inHeader, "header");
+            const contactElements = addHTMLElements(profileEmails.inContact, "contact");
+            const rolesElements = addHTMLElements(profileEmails.inCurrentRoles, "roles");
+            const aboutElements = addHTMLElements(profileEmails.inAbout, "about");
+            const experienceElements = addHTMLElements(profileEmails.inExperience, "experience");
+
+            profileHeader.append(`
+                <section id="SNF-data">
+                    <div>
+                        <button id="SNF-copy" class="copy-btn" type="button">Copy</button>
+                        <button id="SNF-femcopy" class="copy-btn" type="button">Fem Copy</button>
+                    </div>
+                    <div>
+                    <span>H: </span>
+                    ${headerElements}
+                    </div>
+                    <div>
+                    <span>C: </span>
+                    ${contactElements}
+                    </div>
+                    <div>
+                    <span>Roles: </span>
+                    ${rolesElements}
+                    </div>
+                    <div>
+                    <span>About: </span>
+                    ${aboutElements}
+                    </div>
+                    <div>
+                    <span>Experience: </span>
+                    ${experienceElements}
+                    </div>
+                </section>
+                `);
+        }
+
+        function collectProfileData() {
+            const profileHeader = $( "#profile-card-section section[class^=_header]" );
+            const headlineDiv = $( "#profile-card-section div span[data-anonymize=headline]" );
+            const menuTrigger = $( "button[id^=hue-menu-trigger]" );
+
+            if (profileHeader.length && headlineDiv.length && menuTrigger.length) {
+                clearInterval(triggerChecker);
+                setTimeout(checkForEmails, 50);
+                setTimeout(appendCollectedEmails, 111);
+
+/*
+                // I thought this was producing warnings (in the console) but the same warnings appear
+                // even when I disable my add-on. So, has nothing to do with that.
+                headlineDiv.click(function () {
+                    console.log(`Headline click registered!!!`);
+                    menuTrigger.click();
+                    setTimeout(function () {
+                        let linkedinProfileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
+                        console.log(`profile URL: ${linkedinProfileURL}`);
+                    }, 33);
+                });
+*/
+
+            }
+        }
+        
+        const triggerChecker = setInterval(collectProfileData, 250);
+
         async function modifyClipboard() {
+            console.log(`jobList from modifyClipboard()`);
+            console.log(jobList);
+
             // Sales Navigator lead URLs have a lot of crap appended to them.
             // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
             const leadURL = currentURL.substring(0, 75);
             const trimmedLeadURL = `${leadURL},name`;
             const fullName = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
+            const profileHeadline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim();
             const profileURL = await navigator.clipboard.readText();
+            const checkedEmailElements = $("#SNF-data input[id^=SNF]:checked");
+            const checkedEmailsArray = checkedEmailElements.map(function () {
+                return $(this).val();
+            }).toArray();
+            const firstCheckedEmail = checkedEmailElements[0].value;
+            let allProfileEmails = profileEmails.uniqueEmails;
 
-            await navigator.clipboard.writeText(`${trimmedLeadURL}\t${fullName}\t\t${profileURL}`);
+            if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allProfileEmails.length) {
+                allProfileEmails = checkedEmailsArray.join("; ");
+            } else if (checkedEmailsArray.length === allProfileEmails.length) {
+                allProfileEmails = allProfileEmails.join("; ");
+            } else {
+                allProfileEmails = "";
+            }
+
+            await navigator.clipboard.writeText(`${trimmedLeadURL}\t${fullName}\t\t${profileURL}\t${firstCheckedEmail}\t\t${allProfileEmails}`);
         }
         
-        function autoCloseTabIfNoOpenBadge () {
+        function autoCloseTabIfNoOpenBadgeOrEmail () {
             let openBadge = document.querySelector("section[class^=_header] ul[class^=_badges] li > span[class^=_open-badge]");
 
             if (openBadge) {
-                console.log(`open badge is there!`);
-                if (hasEmail()) {
-                    console.log(`EMAIL found!`);
-                }
+                // console.log(`open badge is there!`);
             } else {
-                console.log(`no open badge there!`);
+                // console.log(`no open badge there!`);
                 if (hasEmail()) {
-                    console.log(`We have EMAIL!!!`);
+                    // console.log(`We have EMAIL!!!`);
                 } else {
                     window.close();
                 }
@@ -63,11 +272,11 @@ $( document ).ready(function() {
 
         function checkBadges () {
             if (badgesList) {
-                console.log(`badges list is there!`);
-                autoCloseTabIfNoOpenBadge();
+                // console.log(`badges list is there!`);
+                autoCloseTabIfNoOpenBadgeOrEmail();
                 clearInterval(badgeChecker);
             } else {
-                console.log(`no badges list at the moment`);
+                // console.log(`no badges list at the moment`);
                 badgesList = document.querySelector("section[class^=_header] ul[class^=_badges]");
             }
         }
@@ -98,11 +307,11 @@ $( document ).ready(function() {
             introSection = document.querySelector("section[class^=_introductions-section]");
 
             if (!!introSection) {
-                console.log(`We've got intro section! Hiding...`);
+                // console.log(`We've got intro section! Hiding...`);
                 hideSection(introSection);
                 clearInterval(introSectionRemover);
             } else {
-                console.log(`We don't have intro section yet!`);
+                // console.log(`We don't have intro section yet!`);
             }
         }
 
@@ -110,11 +319,11 @@ $( document ).ready(function() {
             relationshipSection = document.querySelector("#relationship-section");
 
             if (!!relationshipSection) {
-                console.log(`We've got relationship section! Hiding...`);
+                // console.log(`We've got relationship section! Hiding...`);
                 hideSection(relationshipSection);
                 clearInterval(relationshipSectionRemover);
             } else {
-                console.log(`We don't have relationship section yet!`);
+                // console.log(`We don't have relationship section yet!`);
             }
         }
 
@@ -275,12 +484,15 @@ $( document ).ready(function() {
             }
 */
 
-            // remove irrelevant crap
+            // Remove irrelevant crap from image attributes
+            // because when I apply the highlight effect,
+            // if those attributes contain my keywords, it messes up the page HTML.
             $("#experience-section img").each(function (key, value) {
-                console.log("title: ", $(value).attr('title'));
+                // console.log("img title: ", $(value).attr('title'));
                 $(value).attr("title", "--");
                 $(value).attr("alt", "--");
             });
+
             $("div[id^=similar-leads-account-insights-outlet]").remove();
             $("section[class^=_search-links-section]").remove();
 
@@ -318,6 +530,7 @@ $( document ).ready(function() {
                 clearInterval(positionsOpener);
                 console.log("allPositionsBtn found");
                 allPositionsBtn.click();
+                fillJobList();
             } else {
                 setTimeout(function () {
                     allPositionsBtn = $("section#experience-section > button");
@@ -325,6 +538,20 @@ $( document ).ready(function() {
             }
         }
 
+        function fillJobList() {
+            let jobElements = $("#experience-section ul[class^=_experience-list] li[class^=_experience-entry]");
+
+            if (jobElements) {
+                jobElements.each(function () {
+                    let job = {};
+                    job["title"] = $(this).find("h2[data-anonymize=job-title]").text().trim();
+                    job["company"] = $(this).find("p[data-anonymize=company-name]").text().trim();
+                    jobList.push(job);
+                });
+                console.log(`jobList`);
+                console.log(jobList);
+            }
+        }
 
     }
 

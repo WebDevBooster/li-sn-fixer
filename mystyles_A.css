@@ -2,5 +2,77 @@
 #profile-card-section > svg,
 #profile-card-section > img {
     /* Fix the height because the retards have it jumping up and down on page load */
-    height: 201px;
+    /*height: 201px;*/
+    /*shrink the height to make more space*/
+    height: 110px;
 }
+
+#content-main.lead.desktop {
+    margin-top: -120px;
+    z-index: 9999;
+}
+
+#SNF-data {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 20px 20px 0;
+}
+
+#SNF-data .copy-btn {
+    background-color: #0073b1;
+    border: 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    outline-width: 2px;
+    padding: 0 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    display: inline;
+    border-radius: 5px;
+    font-size: 1.4rem;
+}
+
+#SNF-data button.copy-btn:nth-of-type(2) {
+    margin-left: 10px;
+}
+
+#SNF-data div {
+    padding: 4px 0 0 10px;
+}
+
+#SNF-data div:nth-of-type(3) {
+    background-color: lightgoldenrodyellow;
+}
+#SNF-data div:nth-of-type(4) {
+    background-color: lavender;
+}
+#SNF-data div:nth-of-type(5) {
+    background-color: aquamarine;
+}
+#SNF-data div:last-of-type {
+    background-color: beige;
+}
+
+#SNF-data div label {
+    /*user-select: none;*/
+    display: inline-block;
+    margin-right: 15px;
+}
+
+#SNF-data div span {
+    font-size: 16px;
+}
+
+#SNF-data div > span {
+    vertical-align: top;
+}
+
