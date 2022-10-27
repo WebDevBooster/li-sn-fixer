@@ -263,7 +263,8 @@ $( document ).ready(function() {
             }
         }
 
-        function getJobsToExport() {
+        async function getJobsToExport() {
+            await fillJobList();
             let newJobList = [];
             jobList.forEach(function (currentValue) {
                 newJobList.push(`${currentValue["title"]} ➤ ${currentValue["company"]}`);
@@ -279,7 +280,7 @@ $( document ).ready(function() {
             const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim().normalize("NFKC");
 
             getEmailsToExport();
-            getJobsToExport();
+            await getJobsToExport();
 
             await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headline}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}`);
         }
@@ -553,7 +554,6 @@ $( document ).ready(function() {
                 clearInterval(positionsOpener);
                 // console.log("allPositionsBtn found");
                 allPositionsBtn.click();
-                fillJobList();
             } else {
                 setTimeout(function () {
                     allPositionsBtn = $("section#experience-section > button");
@@ -561,7 +561,7 @@ $( document ).ready(function() {
             }
         }
 
-        function fillJobList() {
+        async function fillJobList() {
             let jobElements = $("#experience-section ul[class^=_experience-list] li[class^=_experience-entry]");
 
             if (jobElements) {
