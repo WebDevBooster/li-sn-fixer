@@ -226,7 +226,6 @@ $( document ).ready(function() {
                 menuTrigger.click();
                 setTimeout(function () {
                     profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
-                    console.log(`profile URL: ${profileURL}`);
                     modifyClipboard();
                 }, 33);
             }
@@ -524,7 +523,7 @@ $( document ).ready(function() {
         function expandAboutSection() {
             if (aboutBtn) {
                 clearInterval(aboutOpener);
-                console.log("aboutBtn.click()...");
+                // console.log("aboutBtn.click()...");
                 aboutBtn.click();
                 setTimeout(highlight, 500);
             } else {
@@ -537,7 +536,7 @@ $( document ).ready(function() {
         function expandExperienceSections() {
             if (experienceBtns.length) {
                 clearInterval(ExperienceOpener);
-                console.log("triggering experienceBtns.forEach...");
+                // console.log("triggering experienceBtns.forEach...");
                 experienceBtns.forEach(expandExperienceBtn);
             } else {
                 setTimeout(function () {
@@ -549,7 +548,7 @@ $( document ).ready(function() {
         function expandAllPositions() {
             if (allPositionsBtn.length) {
                 clearInterval(positionsOpener);
-                console.log("allPositionsBtn found");
+                // console.log("allPositionsBtn found");
                 allPositionsBtn.click();
                 fillJobList();
             } else {
@@ -569,8 +568,6 @@ $( document ).ready(function() {
                     job["company"] = $(this).find("p[data-anonymize=company-name]").text().trim();
                     jobList.push(job);
                 });
-                console.log(`jobList`);
-                console.log(jobList);
             }
         }
         
