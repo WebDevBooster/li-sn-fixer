@@ -280,11 +280,12 @@ $( document ).ready(function() {
             const leadURL = `${currentURL.substring(0, 75)},name`;
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
             const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim().normalize("NFKC");
+            const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > div:nth-child(1)" ).text().trim();
 
             getEmailsToExport();
             await getJobsToExport();
 
-            await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headline}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}`);
+            await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headline}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}`);
         }
         
         function autoCloseTabIfNoOpenBadgeOrEmail () {
