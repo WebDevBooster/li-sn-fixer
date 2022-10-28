@@ -180,7 +180,7 @@ $( document ).ready(function() {
                 <section id="SNF-data">
                     <div>
                         <button id="SNF-copy" class="copy-btn" type="button">Copy</button>
-                        <button id="SNF-femcopy" class="copy-btn" type="button">Fem Copy</button>
+                        <button id="SNF-femcopy" class="copy-btn" type="button">FemC</button>
                     </div>
                     <div>
                     <span>H: </span>
