@@ -27,7 +27,8 @@
     cursor: pointer;
     font-weight: 600;
     font-family: inherit;
-    height: 90px;
+    min-height: 90px;
+    height: 100%;
     line-height: 32px;
     overflow: hidden;
     outline-width: 2px;
@@ -49,34 +50,36 @@
     margin-left: 10px;
 }
 
-#SNF-data div {
-    padding: 4px 0 0 10px;
+#SNF-data div:nth-of-type(2),
+#SNF-data div:nth-of-type(2) div {
+    padding-left: 10px;
 }
 
-#SNF-data div:nth-of-type(3) {
-    background-color: lightgoldenrodyellow;
+#SNF-data div div:nth-of-type(2) {
+    background-color: bisque;
 }
-#SNF-data div:nth-of-type(4) {
+#SNF-data div div:nth-of-type(3) {
     background-color: lavender;
 }
-#SNF-data div:nth-of-type(5) {
+#SNF-data div div:nth-of-type(4) {
     background-color: aquamarine;
 }
-#SNF-data div:last-of-type {
+#SNF-data div div:last-of-type {
     background-color: beige;
 }
 
-#SNF-data div label {
+#SNF-data div div label {
     /*user-select: none;*/
-    display: inline-block;
+    display: block;
     margin-right: 15px;
+    padding: 6px 0;
 }
 
-#SNF-data div span {
+#SNF-data div div span {
     font-size: 16px;
 }
 
-#SNF-data div > span {
-    vertical-align: top;
+#SNF-data div div > span {
+    text-transform: capitalize;
 }
 

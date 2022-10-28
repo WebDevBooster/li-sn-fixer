@@ -152,6 +152,7 @@ $( document ).ready(function() {
         function addHTMLElements(array, sectionName) {
             if (array) {
                 let newElements = [];
+                newElements[0] = `<span>${sectionName}:</span>`;
                 array.forEach(function (currentValue, index) {
                     currentValue = cleanUp(currentValue);
                     const checkmark = index === 0 ? "checked" : "";
@@ -163,7 +164,8 @@ $( document ).ready(function() {
                 });
                 return newElements.join("");
             } else {
-                return "¯\\_( ツ)_/¯";
+                // return "¯\\_( ツ)_/¯";
+                return "";
             }
         }
 
@@ -183,24 +185,21 @@ $( document ).ready(function() {
                         <button id="SNF-femcopy" class="copy-btn" type="button">FemC</button>
                     </div>
                     <div>
-                    <span>H: </span>
+                    <div>
                     ${headerElements}
                     </div>
                     <div>
-                    <span>C: </span>
                     ${contactElements}
                     </div>
                     <div>
-                    <span>Roles: </span>
                     ${rolesElements}
                     </div>
                     <div>
-                    <span>About: </span>
                     ${aboutElements}
                     </div>
                     <div>
-                    <span>Experience: </span>
                     ${experienceElements}
+                    </div>
                     </div>
                 </section>
                 `);
