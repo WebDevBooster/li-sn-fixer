@@ -20,7 +20,7 @@
 }
 
 #SNF-data .copy-btn {
-    background-color: #0073b1;
+    background-color: #2f7b15;
     border: 0;
     box-sizing: border-box;
     color: #fff;
@@ -39,6 +39,10 @@
     display: inline;
     border-radius: 5px;
     font-size: 1.4rem;
+}
+
+#SNF-data #SNF-femcopy.copy-btn {
+    background-color: purple;
 }
 
 #SNF-data button.copy-btn:nth-of-type(2) {
