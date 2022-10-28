@@ -246,23 +246,28 @@ $( document ).ready(function() {
         }
 
         function getEmailsToExport() {
-            const checkedEmailElements = $("#SNF-data input[id^=SNF]:checked");
-            const checkedEmailsArray = checkedEmailElements.map(function () {
-                return $(this).val();
-            }).toArray();
-            firstEmail = checkedEmailElements[0].value;
-            let allEmailsArray = [];
-            profileEmails.uniqueEmails.forEach(function (currentValue) {
-                currentValue = cleanUp(currentValue);
-                allEmailsArray.push(currentValue[0]);
-            });
-
-            if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allEmailsArray.length) {
-                allEmails = checkedEmailsArray.join("; ");
-            } else if (checkedEmailsArray.length === allEmailsArray.length && checkedEmailsArray.length !== 1) {
-                allEmails = allEmailsArray.join("; ");
-            } else {
+            if (!profileEmails.uniqueEmails.length) {
+                firstEmail = "";
                 allEmails = "";
+            } else {
+                const checkedEmailElements = $("#SNF-data input[id^=SNF]:checked");
+                const checkedEmailsArray = checkedEmailElements.map(function () {
+                    return $(this).val();
+                }).toArray();
+                firstEmail = checkedEmailElements[0].value;
+                let allEmailsArray = [];
+                profileEmails.uniqueEmails.forEach(function (currentValue) {
+                    currentValue = cleanUp(currentValue);
+                    allEmailsArray.push(currentValue[0]);
+                });
+
+                if (checkedEmailsArray.length > 1 && checkedEmailsArray.length < allEmailsArray.length) {
+                    allEmails = checkedEmailsArray.join("; ");
+                } else if (checkedEmailsArray.length === allEmailsArray.length && checkedEmailsArray.length !== 1) {
+                    allEmails = allEmailsArray.join("; ");
+                } else {
+                    allEmails = "";
+                }
             }
         }
 
@@ -282,7 +287,7 @@ $( document ).ready(function() {
             // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
             const leadURL = `${currentURL.substring(0, 75)},name`;
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().trim();
-            const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim().normalize("NFKC");
+            const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text().trim().normalize("NFKC").replace(/\r?\n|\r/gm, "");
             const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > div:nth-child(1)" ).text().trim();
 
             getEmailsToExport();
