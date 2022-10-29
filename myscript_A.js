@@ -1,24 +1,54 @@
 $( document ).ready(function() {
+const body = $("body");
+const docReadyTime = performance.now();
 
-    function hideSection(element) {
-        element.style.display = "none";
-    }
+var checkForEmailsInAboutSectionTime1, checkForEmailsInAboutSectionTime2;
+var highlightFunctionTime;
 
-    const currentURL = document.location.href;
-    const salesLeadPageTest = currentURL.match(/linkedin\.com\/sales\/lead/);
+// MutationObserver wrapped in to a jQuery extension method
+// from this post: https://stackoverflow.com/a/19401707/8270343
+$.fn.classChange = function(cb) {
+    return $(this).each((_, el) => {
+        new MutationObserver(mutations => {
+            mutations.forEach(mutation => cb && cb(mutation.target, $(mutation.target).prop(mutation.attributeName)));
+        }).observe(el, {
+            attributes: true,
+            attributeFilter: ['class'] // only listen for class attribute changes
+        });
+    });
+}
+/////////////////////////////
 
-    if (salesLeadPageTest) {
+
+
+function hideSection(element) {
+    element.style.display = "none";
+}
+
+const currentURL = document.location.href;
+const salesLeadPageTest = currentURL.match(/linkedin\.com\/sales\/lead/);
+
+if (salesLeadPageTest) {
+body.classChange(function (el, newClass) {
+    if (newClass === "ember-application boot-complete") {
+        // When the "ember-application boot-complete" class is added to body,
+        // we can be sure that all the HTML has actually been loaded.
+        const bootCompleteTime = performance.now();
+        console.log(`OK, ember-application boot-complete in ${bootCompleteTime - docReadyTime} ms after docReady.`);
+        /////////////////////////////
+
+
         let aboutSection;
         // This is a normal email regex that I used to collect the first 20K~ investor leads (until 25/10/2022):
         // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/gi;
         // This is an improved email regex that also catches cases like:
         // handle(at)domain.com or handle [at] domain.com or even "handle @ gmail .com" etc.
         // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|((me|mac|aol|live|sap|msn)\.com)|((berkeley|alum\.mit|cornell|georgetown|alumni\.harvard|alumni\.stanford)\.edu))))/gi;
-        // version 3:
+        // emailRegex version 3:
         const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\.(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
 
 
-        let badgesList = document.querySelector("section[class^=_header] ul[class^=_badges]");
+        let badgesList = $("section[class^=_header] ul[class^=_badges]");
         let badgeChecker = setInterval(checkBadges, 10);
 
         let profileEmails = {
@@ -78,6 +108,17 @@ $( document ).ready(function() {
 
             let aboutSection = $("#about-section");
             if (aboutSection) {
+                /*
+                            checkForEmailsInAboutSectionTime1 = performance.now();
+                            console.log(`aboutSection.html() before email matching:`);
+                            console.log(aboutSection.html());
+                            checkForEmailsInAboutSectionTime2 = performance.now();
+                            console.log(`checkForEmailsInAboutSectionTime1: ${checkForEmailsInAboutSectionTime1 - docReadyTime} ms`);
+                            console.log(`checkForEmailsInAboutSectionTime2: ${checkForEmailsInAboutSectionTime2 - docReadyTime} ms`);
+                */
+
+                const ellipsisButton = $("#about-section ");
+
                 profileEmails.inAbout = aboutSection.html().match(emailRegex);
                 if (profileEmails.inAbout) {
                     profileEmails.inAbout = removeDuplicatesInArray(profileEmails.inAbout);
@@ -157,10 +198,10 @@ $( document ).ready(function() {
                     currentValue = cleanUp(currentValue);
                     const checkmark = index === 0 ? "checked" : "";
                     newElements.push(`
-                        <label for="SNF-${sectionName}-checkbox${index}">
-                        <input id="SNF-${sectionName}-checkbox${index}" value="${currentValue[0]}" type="checkbox" ${checkmark}>
-                        <span id="SNF-${sectionName}-email${index}">${currentValue[0]}${currentValue[1]}${currentValue[2]}</span>
-                        </label>`);
+                    <label for="SNF-${sectionName}-checkbox${index}">
+                    <input id="SNF-${sectionName}-checkbox${index}" value="${currentValue[0]}" type="checkbox" ${checkmark}>
+                    <span id="SNF-${sectionName}-email${index}">${currentValue[0]}${currentValue[1]}${currentValue[2]}</span>
+                    </label>`);
                 });
                 return newElements.join("");
             } else {
@@ -179,30 +220,30 @@ $( document ).ready(function() {
             const experienceElements = addHTMLElements(profileEmails.inExperience, "experience");
 
             profileHeader.append(`
-                <section id="SNF-data">
-                    <div>
-                        <button id="SNF-copy" class="copy-btn" type="button">Copy</button>
-                        <button id="SNF-femcopy" class="copy-btn" type="button">FemC</button>
-                    </div>
-                    <div>
-                    <div>
-                    ${headerElements}
-                    </div>
-                    <div>
-                    ${contactElements}
-                    </div>
-                    <div>
-                    ${rolesElements}
-                    </div>
-                    <div>
-                    ${aboutElements}
-                    </div>
-                    <div>
-                    ${experienceElements}
-                    </div>
-                    </div>
-                </section>
-                `);
+            <section id="SNF-data">
+                <div>
+                    <button id="SNF-copy" class="copy-btn" type="button">Copy</button>
+                    <button id="SNF-femcopy" class="copy-btn" type="button">FemC</button>
+                </div>
+                <div>
+                <div>
+                ${headerElements}
+                </div>
+                <div>
+                ${contactElements}
+                </div>
+                <div>
+                ${rolesElements}
+                </div>
+                <div>
+                ${aboutElements}
+                </div>
+                <div>
+                ${experienceElements}
+                </div>
+                </div>
+            </section>
+            `);
         }
 
         function collectProfileData() {
@@ -216,7 +257,7 @@ $( document ).ready(function() {
                 setTimeout(copyDataToClipboard, 333);
             }
         }
-        
+
         const triggerChecker = setInterval(collectProfileData, 250);
 
         function copyDataToClipboard() {
@@ -296,9 +337,9 @@ $( document ).ready(function() {
 
             await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headline}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}`);
         }
-        
+
         function autoCloseTabIfNoOpenBadgeOrEmail () {
-            let openBadge = document.querySelector("section[class^=_header] ul[class^=_badges] li > span[class^=_open-badge]");
+            let openBadge = $("section[class^=_header] ul[class^=_badges] li > span[class^=_open-badge]");
 
             if (openBadge) {
                 // console.log(`open badge is there!`);
@@ -314,24 +355,25 @@ $( document ).ready(function() {
 
         function checkBadges () {
             if (badgesList) {
-                // console.log(`badges list is there!`);
+                const badgesListTime = performance.now();
+                console.log(`badges list is there! (${badgesListTime - docReadyTime} ms after docReady)`);
                 autoCloseTabIfNoOpenBadgeOrEmail();
                 clearInterval(badgeChecker);
             } else {
-                // console.log(`no badges list at the moment`);
-                badgesList = document.querySelector("section[class^=_header] ul[class^=_badges]");
+                console.log(`no badges list at the moment`);
+                // badgesList = $("section[class^=_header] ul[class^=_badges]");
             }
         }
 
 
-        let aboutBtn = document.querySelector("#about-section [id$=-clamped-content] > span:nth-child(2)");
+        let aboutBtn = $("#about-section div > span:nth-child(2) > button[class^=_ellipsis-button]");
         let experienceBtns = document.querySelectorAll("#experience-section [id$=-clamped-content] > span:nth-child(2)");
         let allPositionsBtn = $("section#experience-section > button");
         let introSection;
         let relationshipSection;
 
         setTimeout(function () {
-            aboutSection = document.querySelector("#about-section");
+            aboutSection = $("#about-section");
             if (!aboutSection) {
                 highlight();
             }
@@ -374,6 +416,10 @@ $( document ).ready(function() {
         }
 
         function highlight() {
+            highlightFunctionTime = performance.now();
+            console.log(`highlight function called 
+${highlightFunctionTime - docReadyTime} ms 
+after docReadyTime`);
             let body = $( "body" );
             let currentHTML = document.querySelector("#content-main div[class^=_main-column]").innerHTML;
             // const keyword1Regex = /Crypto/gi;
@@ -499,26 +545,26 @@ $( document ).ready(function() {
             }
 
 
-/*
-            if (keyword6Array) {
-                body.append('<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
-                // User interaction/click required to play audio after page load:
-                // https://developer.chrome.com/blog/autoplay/
-                $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
-                    setTimeout(function () {
-                        const playKW6Promise = document.querySelector('#LNSNF-kw6').play();
-                    }, 1000);
-                });
-            }
-*/
+            /*
+                    if (keyword6Array) {
+                        body.append('<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
+                        // User interaction/click required to play audio after page load:
+                        // https://developer.chrome.com/blog/autoplay/
+                        $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                            setTimeout(function () {
+                                const playKW6Promise = document.querySelector('#LNSNF-kw6').play();
+                            }, 1000);
+                        });
+                    }
+            */
 
-/*
-            document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
+            /*
+                    document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
 
-            if (aboutSection) {
-                document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
-            }
-*/
+                    if (aboutSection) {
+                        document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
+                    }
+            */
 
             // Remove irrelevant crap from image attributes
             // because when I apply the highlight effect,
@@ -536,18 +582,30 @@ $( document ).ready(function() {
 
         }
 
+        var timeBeforeAboutBtnClick,
+            timeAfterAboutBtnClick;
+
         function expandAboutSection() {
             if (aboutBtn) {
                 clearInterval(aboutOpener);
                 // console.log("aboutBtn.click()...");
+                timeBeforeAboutBtnClick = performance.now();
                 aboutBtn.click();
                 setTimeout(highlight, 500);
             } else {
                 setTimeout(function () {
-                    aboutBtn = document.querySelector("#about-section [id$=-clamped-content] > span:nth-child(2)");
+                    aboutBtn = $("#about-section div > span:nth-child(2) > button[class^=_ellipsis-button]");
                 }, 450);
             }
         }
+
+        $( "body" ).delegate("#about-section [id$=-clamped-content] > span:nth-child(2)", "click", function () {
+            timeAfterAboutBtnClick = performance.now();
+            console.log(`aboutBtn was auto-clicked!!!
+${timeAfterAboutBtnClick - timeBeforeAboutBtnClick} ms to get here after click.
+${timeAfterAboutBtnClick - docReadyTime} ms after docReadyTime.
+        =======`);
+        });
 
         function expandExperienceSections() {
             if (experienceBtns.length) {
@@ -585,10 +643,18 @@ $( document ).ready(function() {
                 });
             }
         }
-        
-    }
 
-    const searchPageTest = currentURL.match(/linkedin\.com\/sales\/search\/people/);
+
+    } // End of the "ember-application boot-complete" wrapper.
+});
+// End of the body.classChange observer
+
+
+}
+// End of the salesLeadPage functions
+
+
+const searchPageTest = currentURL.match(/linkedin\.com\/sales\/search\/people/);
 
     if (searchPageTest) {
         function manipulateListElement(element, index) {
