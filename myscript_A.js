@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 const body = $("body");
-const docReadyTime = performance.now();
+const readyTime = performance.now();
 
 var checkForEmailsInAboutSectionTime1, checkForEmailsInAboutSectionTime2;
 var highlightFunctionTime;
@@ -14,6 +14,27 @@ $.fn.classChange = function(cb) {
         }).observe(el, {
             attributes: true,
             attributeFilter: ['class'] // only listen for class attribute changes
+        });
+    });
+}
+
+// From this post: https://stackoverflow.com/a/61511955/8270343
+function waitFor(selector) {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                resolve(document.querySelector(selector));
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
         });
     });
 }
@@ -34,7 +55,12 @@ body.classChange(function (el, newClass) {
         // When the "ember-application boot-complete" class is added to body,
         // we can be sure that all the HTML has actually been loaded.
         const bootCompleteTime = performance.now();
-        console.log(`OK, ember-application boot-complete in ${bootCompleteTime - docReadyTime} ms after docReady.`);
+        console.log(`OK, ember-application boot-complete in ${bootCompleteTime - readyTime} ms after docReady.`);
+        if (document.querySelector("#about-section")) {
+            console.log(`#about-section HTML:`);
+            console.log(document.querySelector("#about-section").innerHTML);
+        }
+
         /////////////////////////////
 
 
@@ -48,8 +74,24 @@ body.classChange(function (el, newClass) {
         const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\.(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
 
 
-        let badgesList = $("section[class^=_header] ul[class^=_badges]");
-        let badgeChecker = setInterval(checkBadges, 10);
+        const badgesList = "section[class^=_header] ul[class^=_badges]";
+        waitFor(badgesList).then((el) => {
+            const badgesTime = performance.now();
+            console.log(`badgesList is ready (${(badgesTime - readyTime).toFixed(2)} ms after readyTime)`);
+            console.log(`innerHTML ${el.innerHTML}`);
+
+            if (document.querySelector("#about-section")) {
+                console.log(`#about-section HTML:`);
+                console.log(document.querySelector("#about-section").innerHTML);
+            }
+            if (document.querySelector("#experience-section")) {
+                console.log(`#experience-section HTML:`);
+                console.log(document.querySelector("#experience-section").innerHTML);
+            }
+
+        });
+        // let badgesList = $("section[class^=_header] ul[class^=_badges]");
+        // let badgeChecker = setInterval(checkBadges, 10);
 
         let profileEmails = {
             inHeader: null,
@@ -113,8 +155,8 @@ body.classChange(function (el, newClass) {
                             console.log(`aboutSection.html() before email matching:`);
                             console.log(aboutSection.html());
                             checkForEmailsInAboutSectionTime2 = performance.now();
-                            console.log(`checkForEmailsInAboutSectionTime1: ${checkForEmailsInAboutSectionTime1 - docReadyTime} ms`);
-                            console.log(`checkForEmailsInAboutSectionTime2: ${checkForEmailsInAboutSectionTime2 - docReadyTime} ms`);
+                            console.log(`checkForEmailsInAboutSectionTime1: ${checkForEmailsInAboutSectionTime1 - readyTime} ms`);
+                            console.log(`checkForEmailsInAboutSectionTime2: ${checkForEmailsInAboutSectionTime2 - readyTime} ms`);
                 */
 
                 const ellipsisButton = $("#about-section ");
@@ -355,8 +397,8 @@ body.classChange(function (el, newClass) {
 
         function checkBadges () {
             if (badgesList) {
-                const badgesListTime = performance.now();
-                console.log(`badges list is there! (${badgesListTime - docReadyTime} ms after docReady)`);
+                // const badgesListTime = performance.now();
+                // console.log(`badges list is there! (${badgesListTime - readyTime} ms after docReady)`);
                 autoCloseTabIfNoOpenBadgeOrEmail();
                 clearInterval(badgeChecker);
             } else {
@@ -418,8 +460,8 @@ body.classChange(function (el, newClass) {
         function highlight() {
             highlightFunctionTime = performance.now();
             console.log(`highlight function called 
-${highlightFunctionTime - docReadyTime} ms 
-after docReadyTime`);
+${highlightFunctionTime - readyTime} ms 
+after readyTime`);
             let body = $( "body" );
             let currentHTML = document.querySelector("#content-main div[class^=_main-column]").innerHTML;
             // const keyword1Regex = /Crypto/gi;
@@ -603,7 +645,7 @@ after docReadyTime`);
             timeAfterAboutBtnClick = performance.now();
             console.log(`aboutBtn was auto-clicked!!!
 ${timeAfterAboutBtnClick - timeBeforeAboutBtnClick} ms to get here after click.
-${timeAfterAboutBtnClick - docReadyTime} ms after docReadyTime.
+${timeAfterAboutBtnClick - readyTime} ms after readyTime.
         =======`);
         });
 
