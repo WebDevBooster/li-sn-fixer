@@ -73,7 +73,14 @@ waitFor(experienceSectionHeadline).then((el) => {
     // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|((me|mac|aol|live|sap|msn)\.com)|((berkeley|alum\.mit|cornell|georgetown|alumni\.harvard|alumni\.stanford)\.edu))))/gi;
 
     // emailRegex version 3:
-    const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\.(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
+    // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\.(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
+
+    // emailRegex version 4:
+    // const atRegex = /(@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)/gi;
+    // const subdomainDomainDotRegex = /(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})/gi;
+    // const newSubdomainDomainDotRegex = /(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})/gi;
+    const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
+
 
     // Quick check to see if there are any emails
     function hasEmail() {
@@ -82,7 +89,7 @@ waitFor(experienceSectionHeadline).then((el) => {
         const emailMatchesInDetails = detailsSection.html().match(emailRegex);
         const emailMatchesInExperience = experienceSection.html().match(emailRegex);
         // aboutSection is optional
-        if (aboutSection) {
+        if (aboutSection.length) {
             const emailMatchesInAbout = aboutSection.html().match(emailRegex);
             return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInAbout || emailMatchesInExperience);
         } else {
@@ -181,12 +188,14 @@ waitFor(experienceSectionHeadline).then((el) => {
         }
 
         const aboutSection = $("#about-section");
-        profileEmails.inAbout = aboutSection.html().match(emailRegex);
-        if (profileEmails.inAbout) {
-            profileEmails.inAbout = removeDuplicatesInArray(profileEmails.inAbout);
-            profileEmails.inAbout = profileEmails.inAbout.filter( (el) => !emailList.includes(el) );
-            emailList = emailList.concat(profileEmails.inAbout);
-            emailList = removeDuplicatesInArray(emailList);
+        if (aboutSection.length) { // Some profiles don't have the about section
+            profileEmails.inAbout = aboutSection.html().match(emailRegex);
+            if (profileEmails.inAbout) {
+                profileEmails.inAbout = removeDuplicatesInArray(profileEmails.inAbout);
+                profileEmails.inAbout = profileEmails.inAbout.filter( (el) => !emailList.includes(el) );
+                emailList = emailList.concat(profileEmails.inAbout);
+                emailList = removeDuplicatesInArray(emailList);
+            }
         }
 
         const experienceSectionEmpty = $("#experience-section > div[class^=_empty-state-container]").length;
@@ -210,6 +219,7 @@ waitFor(experienceSectionHeadline).then((el) => {
         const original = element;
         let cleaned = element.replace(/\s/g, "");
         cleaned = cleaned.replace(/(\(|\[|\{|\<)(at|@)(\)|\]|\}|\>)/, "@");
+        cleaned = cleaned.replace(/(\(|\[|\{|\<)(dot)(\)|\]|\}|\>)/, ".");
         if (cleaned === original) {
             return [cleaned, ``, ``];
         } else {
@@ -287,7 +297,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     function copyDataToClipboard() {
         const copyBtn = $("#SNF-copy");
         const copyFemaleBtn = $("#SNF-femcopy");
-        const menuTrigger = $( "#profile-card-section section[class^=_header] div[class^=_actions-container] section[class^=_actions-bar] button[id^=hue-menu-trigger]" );
+        const menuTrigger = $( "#profile-card-section > section[class^=_header] > div[class^=_actions-container] > section[class^=_actions-bar] > button" );
 
         function copyToClipboard() {
             menuTrigger.click();
@@ -297,7 +307,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             }, 33);
         }
 
-        if (copyBtn && copyFemaleBtn && menuTrigger.length) {
+        if (copyBtn.length && copyFemaleBtn.length && menuTrigger.length) {
             copyBtn.click(function () {
                 copyToClipboard();
             });
@@ -350,10 +360,10 @@ waitFor(experienceSectionHeadline).then((el) => {
                     // let multiTitles = currentValue["titles"].join(" ❱❱ ");
                     // newJobList.push(`${multiTitles} ➤ ${currentValue["company"]}`);
                     let multiTitles = currentValue["titles"].join(" ➤ ");
-                    newJobList.push(`${multiTitles} 🔹 ${currentValue["company"]}`);
+                    newJobList.push(`${multiTitles} 🔷 ${currentValue["company"]}`);
 
                 } else {
-                    newJobList.push(`${currentValue["titles"][0]} 🔹 ${currentValue["company"]}`);
+                    newJobList.push(`${currentValue["titles"][0]} 🔷 ${currentValue["company"]}`);
                 }
             }
         });
@@ -451,7 +461,7 @@ after readyTime`);
         let keyword6Array = currentHTML.match(keyword6Regex);
         aboutSection = document.querySelector("#about-section");
 
-        if (keyword1Array && keyword2Array && hasEmail()) {
+        if (keyword1Array.length && keyword2Array.length && hasEmail()) {
             body.append('<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
             body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
             // User interaction/click required to play audio after page load:
@@ -462,14 +472,14 @@ after readyTime`);
                     const playEmailPromise = document.querySelector('#LNSNF-email').play();
                 }, 400);
             });
-        } else if (keyword1Array && keyword2Array) {
+        } else if (keyword1Array.length && keyword2Array.length) {
             body.append('<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
             // User interaction/click required to play audio after page load:
             // https://developer.chrome.com/blog/autoplay/
             $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                 const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
             });
-        } else if ((keyword1Array || keyword2Array) && hasEmail()) {
+        } else if ((keyword1Array.length || keyword2Array.length) && hasEmail()) {
             body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
             body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
             $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
@@ -478,7 +488,7 @@ after readyTime`);
                     const playEmailPromise = document.querySelector('#LNSNF-email').play();
                 }, 400);
             });
-        } else if (keyword1Array || keyword2Array) {
+        } else if (keyword1Array.length || keyword2Array.length) {
             body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
             $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
                 const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
@@ -500,7 +510,7 @@ after readyTime`);
         }
 
 
-        if (keyword3Array) {
+        if (keyword3Array.length) {
             body.append('<audio id="LNSNF-kw3" autoplay><source src="https://alexbooster.com/media/seed.mp3"></audio>');
             // User interaction/click required to play audio after page load:
             // https://developer.chrome.com/blog/autoplay/
@@ -512,7 +522,7 @@ after readyTime`);
         }
 
 
-        if (keyword4Array) {
+        if (keyword4Array.length) {
             body.append('<audio id="LNSNF-kw4" autoplay><source src="https://alexbooster.com/media/early.mp3"></audio>');
             // User interaction/click required to play audio after page load:
             // https://developer.chrome.com/blog/autoplay/
@@ -524,7 +534,7 @@ after readyTime`);
         }
 
 
-        if (keyword5Array) {
+        if (keyword5Array.length) {
             body.append('<audio id="LNSNF-kw5" autoplay><source src="https://alexbooster.com/media/angel.mp3"></audio>');
             // User interaction/click required to play audio after page load:
             // https://developer.chrome.com/blog/autoplay/
@@ -537,7 +547,7 @@ after readyTime`);
 
 
         /*
-                if (keyword6Array) {
+                if (keyword6Array.length) {
                     body.append('<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
                     // User interaction/click required to play audio after page load:
                     // https://developer.chrome.com/blog/autoplay/
@@ -552,7 +562,7 @@ after readyTime`);
         /*
                 document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
 
-                if (aboutSection) {
+                if (aboutSection.length) {
                     document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
                 }
         */
