@@ -56,6 +56,9 @@ waitFor(experienceSectionHeadline).then((el) => {
     checkTime0 = performance.now();
     console.log(`checkTime0 (${(checkTime0 - readyTime).toFixed(2)} ms after readyTime)`);
 
+    hideIntroSection();
+    hideRelationshipSection();
+
     /////////////////////////////
     const openBadge = $(`${badgesList} li > span[class^=_open-badge]`);
     const headerSection = $("#profile-card-section > section[class^=_header]");
@@ -374,13 +377,6 @@ waitFor(experienceSectionHeadline).then((el) => {
 
 
 
-
-
-
-
-    let introSection;
-    let relationshipSection;
-
 /*
     setTimeout(function () { // TODO: Refactor this
         if (!aboutSection) {
@@ -391,34 +387,24 @@ waitFor(experienceSectionHeadline).then((el) => {
 */
 
 
-
-
-    const introSectionRemover = setInterval(hideIntroSection, 650);
-    const relationshipSectionRemover = setInterval(hideRelationshipSection, 700);
-
     function hideIntroSection() {
-        introSection = document.querySelector("section[class^=_introductions-section]");
+        const introSection = document.querySelector("section[class^=_introductions-section]");
 
         if (!!introSection) {
             // console.log(`We've got intro section! Hiding...`);
             hideSection(introSection);
-            clearInterval(introSectionRemover);
-        } else {
-            // console.log(`We don't have intro section yet!`);
         }
     }
 
     function hideRelationshipSection() {
-        relationshipSection = document.querySelector("#relationship-section");
+        const relationshipSection = document.querySelector("#relationship-section");
 
         if (!!relationshipSection) {
             // console.log(`We've got relationship section! Hiding...`);
             hideSection(relationshipSection);
-            clearInterval(relationshipSectionRemover);
-        } else {
-            // console.log(`We don't have relationship section yet!`);
         }
     }
+
 
     function highlight() {
         highlightFunctionTime = performance.now();
