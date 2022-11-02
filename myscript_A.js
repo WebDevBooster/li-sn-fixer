@@ -427,24 +427,31 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // companies match: none
                 // job descriptions match: 1 for at least two matches
 
-                // entrepreneurKWsInAbout
-                if (kwsIn.headline[keyword]) {
+                console.log(`kwsIn.headline[keyword] output for ${keyword}`);
+                console.log(kwsIn.headline[keyword]);
+                if (kwsIn.headline[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.about[keyword] && kwsIn.about[keyword] > 1) {
+                if (kwsIn.about[keyword].length && kwsIn.about[keyword].length > 1) {
                     scoreArray.push(3);
-                } else if (kwsIn.about[keyword]) {
+                } else if (kwsIn.about[keyword].length) {
                     scoreArray.push(2);
                 }
-                if (kwsIn.jobTitles[keyword]) {
+                if (kwsIn.jobTitles[keyword].length) {
                     scoreArray.push(4);
                 }
-                if (kwsIn.jobDescriptions[keyword] && kwsIn.jobDescriptions[keyword] > 1) {
+                if (kwsIn.jobDescriptions[keyword].length && kwsIn.jobDescriptions[keyword].length > 1) {
                     scoreArray.push(1);
                 }
 
                 if (scoreArray.length) {
+                    console.log(`scoreArray for ${keyword}`);
+                    console.log(scoreArray);
                     score[keyword] = ["TRUE", Math.max(...scoreArray)];
+                    console.log(`keyword:`);
+                    console.log(keyword);
+                    console.log(`score[keyword]`);
+                    console.log(score[keyword]);
                 }
             }
 
@@ -456,18 +463,18 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // companies match: none
                 // job descriptions match: 1 for at least two matches
 
-                if (kwsIn.headline[keyword]) {
+                if (kwsIn.headline[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.about[keyword] && kwsIn.about[keyword] > 1) {
+                if (kwsIn.about[keyword].length && kwsIn.about[keyword].length > 1) {
                     scoreArray.push(4);
-                } else if (kwsIn.about[keyword]) {
+                } else if (kwsIn.about[keyword].length) {
                     scoreArray.push(2);
                 }
-                if (kwsIn.jobTitles[keyword]) {
+                if (kwsIn.jobTitles[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.jobDescriptions[keyword] && kwsIn.jobDescriptions[keyword] > 1) {
+                if (kwsIn.jobDescriptions[keyword].length && kwsIn.jobDescriptions[keyword].length > 1) {
                     scoreArray.push(1);
                 }
 
@@ -484,18 +491,18 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // companies match: none
                 // job descriptions match: 1 for at least two matches
 
-                if (kwsIn.headline[keyword]) {
+                if (kwsIn.headline[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.about[keyword] && kwsIn.about[keyword] > 1) {
+                if (kwsIn.about[keyword].length && kwsIn.about[keyword].length > 1) {
                     scoreArray.push(4);
-                } else if (kwsIn.about[keyword]) {
+                } else if (kwsIn.about[keyword].length) {
                     scoreArray.push(2);
                 }
-                if (kwsIn.jobTitles[keyword]) {
+                if (kwsIn.jobTitles[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.jobDescriptions[keyword] && kwsIn.jobDescriptions[keyword] > 1) {
+                if (kwsIn.jobDescriptions[keyword].length && kwsIn.jobDescriptions[keyword].length > 1) {
                     scoreArray.push(1);
                 }
 
@@ -512,27 +519,27 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // companies match: 3 for one match; 4 for more than one match
                 // job descriptions match: 2 for one match; 3 for more than one match
 
-                if (kwsIn.headline[keyword]) {
+                if (kwsIn.headline[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.about[keyword] && kwsIn.about[keyword] > 1) {
+                if (kwsIn.about[keyword].length && kwsIn.about[keyword].length > 1) {
                     scoreArray.push(4);
-                } else if (kwsIn.about[keyword]) {
+                } else if (kwsIn.about[keyword].length) {
                     scoreArray.push(3);
                 }
-                if (kwsIn.jobTitles[keyword] && kwsIn.jobTitles[keyword] > 1) {
+                if (kwsIn.jobTitles[keyword].length && kwsIn.jobTitles[keyword].length > 1) {
                     scoreArray.push(5);
-                } else if (kwsIn.jobTitles[keyword]) {
+                } else if (kwsIn.jobTitles[keyword].length) {
                     scoreArray.push(4);
                 }
-                if (kwsIn.companies[keyword] && kwsIn.companies[keyword] > 1) {
+                if (kwsIn.companies[keyword].length && kwsIn.companies[keyword].length > 1) {
                     scoreArray.push(4);
-                } else if (kwsIn.companies[keyword]) {
+                } else if (kwsIn.companies[keyword].length) {
                     scoreArray.push(3);
                 }
-                if (kwsIn.jobDescriptions[keyword] && kwsIn.jobDescriptions[keyword] > 1) {
+                if (kwsIn.jobDescriptions[keyword].length && kwsIn.jobDescriptions[keyword].length > 1) {
                     scoreArray.push(3);
-                } else if (kwsIn.jobDescriptions[keyword]) {
+                } else if (kwsIn.jobDescriptions[keyword].length) {
                     scoreArray.push(2);
                 }
 
@@ -549,27 +556,27 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // companies match: 2 for one match; 3 for more than one match
                 // job descriptions match: 2 for one match; 3 for more than one match
 
-                if (kwsIn.headline[keyword]) {
+                if (kwsIn.headline[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.about[keyword] && kwsIn.about[keyword] > 1) {
+                if (kwsIn.about[keyword].length && kwsIn.about[keyword].length > 1) {
                     scoreArray.push(4);
-                } else if (kwsIn.about[keyword]) {
+                } else if (kwsIn.about[keyword].length) {
                     scoreArray.push(3);
                 }
-                if (kwsIn.jobTitles[keyword] && kwsIn.jobTitles[keyword] > 1) {
+                if (kwsIn.jobTitles[keyword].length && kwsIn.jobTitles[keyword].length > 1) {
                     scoreArray.push(5);
-                } else if (kwsIn.jobTitles[keyword]) {
+                } else if (kwsIn.jobTitles[keyword].length) {
                     scoreArray.push(4);
                 }
-                if (kwsIn.companies[keyword] && kwsIn.companies[keyword] > 1) {
+                if (kwsIn.companies[keyword].length && kwsIn.companies[keyword].length > 1) {
                     scoreArray.push(3);
-                } else if (kwsIn.companies[keyword]) {
+                } else if (kwsIn.companies[keyword].length) {
                     scoreArray.push(2);
                 }
-                if (kwsIn.jobDescriptions[keyword] && kwsIn.jobDescriptions[keyword] > 1) {
+                if (kwsIn.jobDescriptions[keyword].length && kwsIn.jobDescriptions[keyword].length > 1) {
                     scoreArray.push(3);
-                } else if (kwsIn.jobDescriptions[keyword]) {
+                } else if (kwsIn.jobDescriptions[keyword].length) {
                     scoreArray.push(2);
                 }
 
@@ -586,26 +593,26 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // companies match: 3
                 // job descriptions match: 1 for one match; 2 for two etc.
 
-                if (kwsIn.headline[keyword]) {
+                if (kwsIn.headline[keyword].length) {
                     scoreArray.push(5);
                 }
-                if (kwsIn.about[keyword] && kwsIn.about[keyword] > 2) {
+                if (kwsIn.about[keyword].length && kwsIn.about[keyword].length > 2) {
                     scoreArray.push(4);
-                } else if (kwsIn.about[keyword] && kwsIn.about[keyword] === 2) {
+                } else if (kwsIn.about[keyword].length && kwsIn.about[keyword].length === 2) {
                     scoreArray.push(3);
-                } else if (kwsIn.about[keyword]) {
+                } else if (kwsIn.about[keyword].length) {
                     scoreArray.push(2);
                 }
-                if (kwsIn.jobTitles[keyword]) {
+                if (kwsIn.jobTitles[keyword].length) {
                     scoreArray.push(4);
                 }
-                if (kwsIn.companies[keyword]) {
+                if (kwsIn.companies[keyword].length) {
                     scoreArray.push(3);
                 }
-                if (kwsIn.jobDescriptions[keyword] && kwsIn.jobDescriptions[keyword] > 5) {
+                if (kwsIn.jobDescriptions[keyword].length && kwsIn.jobDescriptions[keyword].length > 5) {
                     scoreArray.push(5);
-                } else if (kwsIn.jobDescriptions[keyword]) {
-                    scoreArray.push(kwsIn.jobDescriptions[keyword]);
+                } else if (kwsIn.jobDescriptions[keyword].length) {
+                    scoreArray.push(kwsIn.jobDescriptions[keyword].length);
                 }
 
                 if (scoreArray.length) {
@@ -615,53 +622,58 @@ waitFor(experienceSectionHeadline).then((el) => {
         });
     }
 
-    function findMatchingKeywords(keyword) {
-        // in headline (use the already defined headline const)
-        const headlineNormalized = headline.normalize("NFKC");
-        let headlineMatches = headlineNormalized.match(kwRegex(keyword));
-        if (headlineMatches) {
-            kwsIn.headline[keyword] = headlineMatches;
-        }
-
-        // in about (if section exists):
-        if (aboutSection.length) {
-            let aboutMatches = aboutSection.html().match(kwRegex(keyword));
-            if (aboutMatches) {
-                kwsIn.about[keyword] = aboutMatches;
+    function findMatchingKeywords( /*Array*/ keywordArray) {
+        keywordArray.forEach(function (keyword) {
+            // in headline (use the already defined headline const)
+            const headlineNormalized = headline.normalize("NFKC");
+            console.log(`regex used for ${keyword}`);
+            console.log(kwRegex(keyword));
+            let headlineMatches = headlineNormalized.match(kwRegex(keyword));
+            if (headlineMatches) {
+                console.log(`headlineMatches`);
+                console.log(headlineMatches);
+                kwsIn.headline[keyword] = headlineMatches;
             }
-        }
 
-        // in experience section:
-        if (!isExperienceSectionEmpty) {
-            const jobTitleElements = $("h2[data-anonymize=job-title], h3[data-anonymize=job-title]");
-            // This matches all job titles in single-title and multi-title job lists
-            if (jobTitleElements.length) {
-                let jobTitles = [];
-                jobTitleElements.each(function () {
-                    jobTitles.push($(this).text());
-                });
-                jobTitles = jobTitles.join(" | ");
-                let jobTitleMatches = jobTitles.match(kwRegex(keyword));
-                if (jobTitleMatches) {
-                    kwsIn.jobTitles[keyword] = jobTitleMatches;
+            // in about (if section exists):
+            if (aboutSection.length) {
+                let aboutMatches = aboutSection.html().match(kwRegex(keyword));
+                if (aboutMatches) {
+                    kwsIn.about[keyword] = aboutMatches;
                 }
             }
 
-            const companyNameElements = $("p[data-anonymize=company-name], h2[data-anonymize=company-name]");
-            // This matches all company names in single-title and multi-title job lists
-            if (companyNameElements.length) {
-                let companyNames = [];
-                companyNameElements.each(function () {
-                    companyNames.push($(this).text());
-                });
-                companyNames = companyNames.join(" | ");
-                let companyNameMatches = companyNames.match(kwRegex(keyword));
-                if (companyNameMatches) {
-                    kwsIn.companies[keyword] = companyNameMatches;
+            // in experience section:
+            if (!isExperienceSectionEmpty) {
+                const jobTitleElements = $("h2[data-anonymize=job-title], h3[data-anonymize=job-title]");
+                // This matches all job titles in single-title and multi-title job lists
+                if (jobTitleElements.length) {
+                    let jobTitles = [];
+                    jobTitleElements.each(function () {
+                        jobTitles.push($(this).text());
+                    });
+                    jobTitles = jobTitles.join(" | ");
+                    let jobTitleMatches = jobTitles.match(kwRegex(keyword));
+                    if (jobTitleMatches) {
+                        kwsIn.jobTitles[keyword] = jobTitleMatches;
+                    }
                 }
-            }
 
-            // in job descriptions:
+                const companyNameElements = $("p[data-anonymize=company-name], h2[data-anonymize=company-name]");
+                // This matches all company names in single-title and multi-title job lists
+                if (companyNameElements.length) {
+                    let companyNames = [];
+                    companyNameElements.each(function () {
+                        companyNames.push($(this).text());
+                    });
+                    companyNames = companyNames.join(" | ");
+                    let companyNameMatches = companyNames.match(kwRegex(keyword));
+                    if (companyNameMatches) {
+                        kwsIn.companies[keyword] = companyNameMatches;
+                    }
+                }
+
+                // in job descriptions:
                 // description of single position that has been expanded after clicking the "see more" button:
                 // p[class^=_single-position-description]
                 // description of single position that hasn't been expanded or doesn't have the "see more" button:
@@ -670,31 +682,32 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // [class^=_single-position-description]
                 // and for _multi-position-descriptions:
                 // [class^=_multi-position-description]
-            const jobDescriptionElements = $("[class^=_single-position-description], [class^=_multi-position-description]");
-            if (jobDescriptionElements.length) {
-                let jobDescriptions = [];
-                jobDescriptionElements.each(function () {
-                    jobDescriptions.push($(this).html()); // html() instead of text() because it preserves line breaks
-                });
-                jobDescriptions = jobDescriptions.join(" | ");
+                const jobDescriptionElements = $("[class^=_single-position-description], [class^=_multi-position-description]");
+                if (jobDescriptionElements.length) {
+                    let jobDescriptions = [];
+                    jobDescriptionElements.each(function () {
+                        jobDescriptions.push($(this).html()); // html() instead of text() because it preserves line breaks
+                    });
+                    jobDescriptions = jobDescriptions.join(" | ");
 
-                let jobDescriptionMatches = jobDescriptions.match(kwRegex(keyword));
-                if (jobDescriptionMatches) {
-                    kwsIn.jobDescriptions[keyword] = jobDescriptionMatches;
+                    let jobDescriptionMatches = jobDescriptions.match(kwRegex(keyword));
+                    if (jobDescriptionMatches) {
+                        kwsIn.jobDescriptions[keyword] = jobDescriptionMatches;
+                    }
                 }
+
+                findMatchingKeywordsTime = performance.now();
+                console.log(`findMatchingKeywordsTime: ${(findMatchingKeywordsTime - readyTime).toFixed(2)} ms`);
+
             }
-
-            findMatchingKeywordsTime = performance.now();
-            console.log(`findMatchingKeywordsTime: ${(findMatchingKeywordsTime - readyTime).toFixed(2)} ms`);
-
-        }
+        });
     }
 
     function collectProfileData() {
         setTimeout(clickShowMoreButtons, 1);
         setTimeout(collectEmails, 999);
         setTimeout(appendCollectedEmails, 1122);
-        setTimeout(findMatchingKeywords, 1222);
+        setTimeout(findMatchingKeywords, 1222, kwArray);
         setTimeout(copyDataToClipboard, 1444);
     }
     collectProfileData();
