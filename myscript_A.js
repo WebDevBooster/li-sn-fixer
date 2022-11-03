@@ -401,7 +401,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 regex = /\bearly stage\b|\bearly-stage\b/gi;
                 break;
             case "web3":
-                regex = /\bblockchain\b|\bblock chain\b|\bweb3\b|\bweb 3\b|crypto|\bnft\b|\bdefi\b/gi;
+                regex = /\bblockchain\b|\bblock chain\b|\bweb3\b|\bweb 3\b|crypto|\bnft\b|\bnfts\b|\bdefi\b/gi;
         }
 
         return regex;
@@ -1114,7 +1114,7 @@ const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/)
             }
 
             // Hide non-premium profiles (for now I'm only targeting premium profiles)
-            if ($(element).has("a[data-anonymize=person-name]").length && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length) {
+            if ($(element).has("span[data-anonymize=person-name]").length && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length) {
                 element.style.backgroundColor = "#0073b1";
             }
         }
@@ -1137,7 +1137,7 @@ const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/)
             }
         }
 
-        setInterval(handleListItems, 1000);
+        setInterval(handleListItems, 500);
     }
 
 });
