@@ -83,3 +83,35 @@
     text-transform: capitalize;
 }
 
+.SNF-viewed-non-premium {
+    background-image: linear-gradient(135deg, #fff8dc 40%, #00ffff 40%, #00ffff 50%, #fff8dc 50%, #fff8dc 90%, #00ffff 90%, #00ffff 100%);
+    background-size: 141px 141px;
+}
+.SNF-non-premium {
+    background-color: aqua !important;
+}
+.SNF-viewed-premium {
+    background-color: cornsilk !important;
+}
+.SNF-out-of-network {
+    background-color: pink !important;
+}
+
+#SNF-counter {
+    position: fixed;
+    top: 270px;
+    left: 0;
+    line-height: 20px;
+    padding: 0 5px;
+    background-color: cornsilk;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+}
+#SNF-counter span:nth-of-type(2) {
+    /*padding: 0 11px;*/
+}
+#countdown {
+    padding: 5px 0 5px 10px;
+    color: red;
+}

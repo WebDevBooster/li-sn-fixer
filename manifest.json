@@ -9,7 +9,7 @@
     },
     "content_scripts" : [
         {
-            "matches" : ["https://www.linkedin.com/sales/*"],
+            "matches" : ["https://www.linkedin.com/sales/*", "https://developer.mozilla.org/*"],
             "css" : ["mystyles_A.css"],
             "js" : ["jquery.min.js","myscript_A.js"]
         }
