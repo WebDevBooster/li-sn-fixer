@@ -1294,13 +1294,26 @@ waitFor(experienceSectionHeadline).then((el) => {
     function runScriptsOnce() {
         // run scripts if not ran before
         if (!scriptsRan && !document.hidden) {
+            console.log(`This tab is now active and the scrips haven't run yet.`);
             runScriptsOnceTime = performance.now();
             console.log(`runScriptsOnceTime (${(runScriptsOnceTime - readyTime).toFixed(2)} ms after readyTime)`);
-            console.log(`scripts are running here...`);
-            updateLocalStorage();
-            handleThisProfile();
 
-            scriptsRan = true;
+            // Make sure the tab remains active for at least 100 ms
+            // because when a tab is closed, Chrome switches back to the previously active tab
+            // BUT... for some reason, the next/following tab becomes active for a split second.
+            // Even though that's not visible, that must be what's happening in my work browsers.
+            // (maybe due to FLST — Focus Last Selected Tab — add-on)
+            setTimeout(function () {
+                if (!scriptsRan && !document.hidden) {
+                    console.log(`This tab is still active after 111 ms. Run the scripts now!`);
+                    runScriptsOnceTime = performance.now();
+                    console.log(`runScriptsOnceTime (${(runScriptsOnceTime - readyTime).toFixed(2)} ms after readyTime)`);
+                    updateLocalStorage();
+                    handleThisProfile();
+
+                    scriptsRan = true;
+                }
+            }, 111);
         }
     }
     runScriptsOnce();
