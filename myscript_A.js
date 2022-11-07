@@ -169,14 +169,14 @@ function addNonLeadToCounterAndCloseTab() {
 }
 
 function autoScrollDownAndUp() {
-    let timeout = getRandInteger(1555, 2999);
+    let timeout = getRandInteger(444, 999);
     setTimeout(function () {
         const minScroll = $(window).height() * 2;
         const maxScroll = $(document).height() - $(window).height();
         const scrollDistance = getRandInteger(minScroll, maxScroll);
         const scrollDownSpeed = getRandInteger(555, 1999);
-        const scrollUpSpeed = getRandInteger(555, 1999);
-        const scrollUpDelay = getRandInteger(999, 3999);
+        const scrollUpSpeed = getRandInteger(555, 999);
+        const scrollUpDelay = getRandInteger(999, 2222);
         console.log(`scroll...`);
         console.log(`Distance: ${scrollDistance}`);
         console.log(`DownSpeed: ${scrollDownSpeed}`);
