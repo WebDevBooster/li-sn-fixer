@@ -169,23 +169,26 @@ function addNonLeadToCounterAndCloseTab() {
 }
 
 function autoScrollDownAndUp() {
-    const minScroll = $(window).height() * 2;
-    const maxScroll = $(document).height() - $(window).height();
-    const scrollDistance = getRandInteger(minScroll, maxScroll);
-    const scrollDownSpeed = getRandInteger(555, 1999);
-    const scrollUpSpeed = getRandInteger(555, 1999);
-    const scrollUpDelay = getRandInteger(999, 3999);
-    console.log(`scroll...`);
-    console.log(`Distance: ${scrollDistance}`);
-    console.log(`DownSpeed: ${scrollDownSpeed}`);
-    console.log(`UpSpeed: ${scrollUpSpeed}`);
-    console.log(`Delay: ${scrollUpDelay}`);
-    console.log(`ScrollTimeTotal: ${scrollDownSpeed + scrollUpSpeed + scrollUpDelay}`);
-
-    $("html").animate({scrollTop: scrollDistance}, scrollDownSpeed);
+    let timeout = getRandInteger(1555, 2999);
     setTimeout(function () {
-        $("html").animate({ scrollTop: 0 }, scrollUpSpeed);
-    }, scrollUpDelay);
+        const minScroll = $(window).height() * 2;
+        const maxScroll = $(document).height() - $(window).height();
+        const scrollDistance = getRandInteger(minScroll, maxScroll);
+        const scrollDownSpeed = getRandInteger(555, 1999);
+        const scrollUpSpeed = getRandInteger(555, 1999);
+        const scrollUpDelay = getRandInteger(999, 3999);
+        console.log(`scroll...`);
+        console.log(`Distance: ${scrollDistance}`);
+        console.log(`DownSpeed: ${scrollDownSpeed}`);
+        console.log(`UpSpeed: ${scrollUpSpeed}`);
+        console.log(`Delay: ${scrollUpDelay}`);
+        console.log(`ScrollTimeTotal: ${scrollDownSpeed + scrollUpSpeed + scrollUpDelay}`);
+
+        $("html").animate({scrollTop: scrollDistance}, scrollDownSpeed);
+        setTimeout(function () {
+            $("html").animate({ scrollTop: 0 }, scrollUpSpeed);
+        }, scrollUpDelay);
+    }, timeout);
 }
 
 function hideSection(element) {
