@@ -45,6 +45,7 @@ function getRandInteger(min, max) {
 }
 
 function updateLocalStorage() {
+    let startTime;
     let snCounter = {
         leads: null,
         nonLeads: null
@@ -62,7 +63,9 @@ function updateLocalStorage() {
         } else {
             localStorage.setItem("leads", "0");
             localStorage.setItem("nonLeads", "0");
-
+            startTime = new Date().getTime();
+            startTime = startTime.toString();
+            localStorage.setItem("startTime", startTime);
         }
         console.log(`previous snCounter:`);
         console.log(snCounter);
@@ -100,6 +103,17 @@ function updateLocalStorage() {
         let currentNonLeads = parseInt(localStorage.getItem("nonLeads"));
         let total = currentLeads + currentNonLeads;
         let ratio = Math.round((currentLeads / total * 100));
+        let totalClass = "total";
+        if (total > 465) {
+            totalClass = "total warning"
+        }
+        let nowTime = new Date().getTime();
+        startTime = parseInt(localStorage.getItem("startTime"));
+        let timeDiff = nowTime - startTime;
+        let mins = Math.round(timeDiff / 1000 / 60);
+        mins = mins % 60; // throw away hours
+        mins = (mins < 10) ? "0" + mins : mins;
+        let hrs = Math.round(timeDiff / 1000 / 60 / 60);
 
         body.append(`
         <div id="SNF-counter">
@@ -109,8 +123,11 @@ function updateLocalStorage() {
         <span class="non-lead">
             N: ${currentNonLeads}
         </span>
-        <span class="total">
+        <span class="${totalClass}">
             T: ${total}
+        </span>
+        <span class="timer">
+            ⏱️${hrs}:${mins}
         </span>
         <button>X</button>
         </div>

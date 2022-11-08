@@ -111,6 +111,14 @@
 #SNF-counter span:nth-of-type(2) {
     /*padding: 0 11px;*/
 }
+#SNF-counter span.warning {
+    background-color: orangered;
+    padding: 10px 5px;
+}
+#SNF-counter span.timer {
+    padding: 10px 0;
+    margin-left: -5px;
+}
 #countdown {
     padding: 5px 0 5px 10px;
     color: red;
