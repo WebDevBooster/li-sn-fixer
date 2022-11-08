@@ -111,13 +111,23 @@ function updateLocalStorage() {
             }
         }
 
-        let nowTime = new Date().getTime();
-        snfStartTime = parseInt(localStorage.getItem("snfStartTime"));
-        let timeDiff = nowTime - snfStartTime;
-        let mins = Math.floor(timeDiff / 1000 / 60);
-        mins = mins % 60; // throw away hours
-        mins = (mins < 10) ? "0" + mins : mins;
-        let hrs = Math.floor(timeDiff / 1000 / 60 / 60);
+        function getTrackedTime() {
+            let snfTrackedTime = "";
+            let nowTime = new Date().getTime();
+            snfStartTime = parseInt(localStorage.getItem("snfStartTime"));
+            if (snfStartTime) {
+                let timeDiff = nowTime - snfStartTime;
+                let mins = Math.floor(timeDiff / 1000 / 60);
+                mins = mins % 60; // throw away hours
+                mins = (mins < 10) ? "0" + mins : mins;
+                let hrs = Math.floor(timeDiff / 1000 / 60 / 60);
+                snfTrackedTime = `${hrs}:${mins}`;
+            }
+
+            localStorage.setItem("snfTrackedTime", snfTrackedTime);
+            return snfTrackedTime;
+        }
+        getTrackedTime();
 
         body.append(`
         <div id="SNF-counter">
@@ -131,7 +141,7 @@ function updateLocalStorage() {
             T: ${total}
         </span>
         <span class="timer">
-            ⏱️${hrs}:${mins}
+            ⏱️${getTrackedTime()}
         </span>
         <button>X</button>
         </div>
