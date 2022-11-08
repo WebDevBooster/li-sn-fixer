@@ -110,10 +110,10 @@ function updateLocalStorage() {
         let nowTime = new Date().getTime();
         startTime = parseInt(localStorage.getItem("startTime"));
         let timeDiff = nowTime - startTime;
-        let mins = Math.round(timeDiff / 1000 / 60);
+        let mins = Math.floor(timeDiff / 1000 / 60);
         mins = mins % 60; // throw away hours
         mins = (mins < 10) ? "0" + mins : mins;
-        let hrs = Math.round(timeDiff / 1000 / 60 / 60);
+        let hrs = Math.floor(timeDiff / 1000 / 60 / 60);
 
         body.append(`
         <div id="SNF-counter">
