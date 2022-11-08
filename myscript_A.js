@@ -1,4 +1,8 @@
 $( document ).ready(function() {
+const currentURL = document.location.href;
+const salesLeadPageMatch = currentURL.match(/linkedin\.com\/sales\/lead/);
+const mozillaPageMatch = currentURL.match(/developer\.mozilla\.org/);
+const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/);
 const body = $("body");
 const readyTime = performance.now();
 
@@ -129,23 +133,25 @@ function updateLocalStorage() {
         }
         getTrackedTime();
 
-        body.append(`
-        <div id="SNF-counter">
-        <span class="lead">
-            L: ${currentLeads}<br>${ratio}%
-        </span>
-        <span class="non-lead">
-            N: ${currentNonLeads}
-        </span>
-        <span class="${totalClass}">
-            T: ${total}
-        </span>
-        <span class="timer">
-            ⏱️${getTrackedTime()}
-        </span>
-        <button>X</button>
-        </div>
-    `);
+        if (salesLeadPageMatch) {
+            body.append(`
+            <div id="SNF-counter">
+            <span class="lead">
+                L: ${currentLeads}<br>${ratio}%
+            </span>
+            <span class="non-lead">
+                N: ${currentNonLeads}
+            </span>
+            <span class="${totalClass}">
+                T: ${total}
+            </span>
+            <span class="timer">
+                ⏱️${getTrackedTime()}
+            </span>
+            <button>X</button>
+            </div>
+            `);
+        }
     }
     appendStats();
 
@@ -226,9 +232,6 @@ function hideSection(element) {
     element.style.display = "none";
 }
 
-const currentURL = document.location.href;
-const salesLeadPageMatch = currentURL.match(/linkedin\.com\/sales\/lead/);
-const mozillaPageMatch = currentURL.match(/developer\.mozilla\.org/);
 
 if (mozillaPageMatch) {
     // console.log(`we're on the Mozilla page!`);
@@ -1358,7 +1361,6 @@ waitFor(experienceSectionHeadline).then((el) => {
 // End of the salesLeadPage functions
 
 
-const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/);
 
     if (searchPageMatch) {
         waitFor("#search-results-container ol li:nth-of-type(1)").then((el) => {
