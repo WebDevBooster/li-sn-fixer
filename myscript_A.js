@@ -45,27 +45,27 @@ function getRandInteger(min, max) {
 }
 
 function updateLocalStorage() {
-    let startTime;
+    let snfStartTime;
     let snCounter = {
-        leads: null,
-        nonLeads: null
+        snfLeads: null,
+        snfNonLeads: null
     };
-    let prevLeads = localStorage.getItem("leads");
-    let prevNonLeads = localStorage.getItem("nonLeads");
+    let prevLeads = localStorage.getItem("snfLeads");
+    let prevNonLeads = localStorage.getItem("snfNonLeads");
     console.log(`prevLeads: ${prevLeads}`);
     console.log(`prevNonLeads: ${prevNonLeads}`);
 
     function initializeCounters() {
         if (prevLeads && prevNonLeads) {
-            snCounter.leads = prevLeads;
-            snCounter.nonLeads = prevNonLeads;
+            snCounter.snfLeads = prevLeads;
+            snCounter.snfNonLeads = prevNonLeads;
 
         } else {
-            localStorage.setItem("leads", "0");
-            localStorage.setItem("nonLeads", "0");
-            startTime = new Date().getTime();
-            startTime = startTime.toString();
-            localStorage.setItem("startTime", startTime);
+            localStorage.setItem("snfLeads", "0");
+            localStorage.setItem("snfNonLeads", "0");
+            snfStartTime = new Date().getTime();
+            snfStartTime = snfStartTime.toString();
+            localStorage.setItem("snfStartTime", snfStartTime);
         }
         console.log(`previous snCounter:`);
         console.log(snCounter);
@@ -75,32 +75,32 @@ function updateLocalStorage() {
 
     /*
         function updateLocalStorage() {
-            let prevLeads = parseInt(localStorage.getItem("leads"));
+            let prevLeads = parseInt(localStorage.getItem("snfLeads"));
             let leadCounter = prevLeads + 1;
             leadCounter = leadCounter.toString();
-            let prevNonLeads = parseInt(localStorage.getItem("nonLeads"));
+            let prevNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
             let nonLeadCounter = prevNonLeads + 1;
             nonLeadCounter = nonLeadCounter.toString();
 
             if (nothing) {
-                localStorage.setItem("nonLeads", nonLeadCounter);
+                localStorage.setItem("snfNonLeads", nonLeadCounter);
             }
             if (something) {
-                localStorage.setItem("leads", leadCounter);
+                localStorage.setItem("snfLeads", leadCounter);
             }
 
             console.log(`current snCounter after update`);
-            console.log(`leads:`);
-            console.log(localStorage.getItem("leads"));
-            console.log(`nonLeads:`);
-            console.log(localStorage.getItem("nonLeads"));
+            console.log(`snfLeads:`);
+            console.log(localStorage.getItem("snfLeads"));
+            console.log(`snfNonLeads:`);
+            console.log(localStorage.getItem("snfNonLeads"));
         }
         updateLocalStorage();
     */
 
     function appendStats() {
-        let currentLeads = parseInt(localStorage.getItem("leads"));
-        let currentNonLeads = parseInt(localStorage.getItem("nonLeads"));
+        let currentLeads = parseInt(localStorage.getItem("snfLeads"));
+        let currentNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
         let total = currentLeads + currentNonLeads;
         let ratio = Math.round((currentLeads / total * 100));
         let totalClass = "total";
@@ -108,8 +108,8 @@ function updateLocalStorage() {
             totalClass = "total warning"
         }
         let nowTime = new Date().getTime();
-        startTime = parseInt(localStorage.getItem("startTime"));
-        let timeDiff = nowTime - startTime;
+        snfStartTime = parseInt(localStorage.getItem("snfStartTime"));
+        let timeDiff = nowTime - snfStartTime;
         let mins = Math.floor(timeDiff / 1000 / 60);
         mins = mins % 60; // throw away hours
         mins = (mins < 10) ? "0" + mins : mins;
@@ -138,10 +138,10 @@ function updateLocalStorage() {
 
     function addNonLeadToCounterAndCloseTabOnClick() {
         $("#SNF-counter span.non-lead").click(function () {
-            let prevNonLeads = parseInt(localStorage.getItem("nonLeads"));
+            let prevNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
             let nonLeadCounter = prevNonLeads + 1;
             nonLeadCounter = nonLeadCounter.toString();
-            localStorage.setItem("nonLeads", nonLeadCounter);
+            localStorage.setItem("snfNonLeads", nonLeadCounter);
 
             window.close();
         });
@@ -154,16 +154,16 @@ function updateLocalStorage() {
 }
 
 function addLeadToCounter() {
-    let prevLeads = parseInt(localStorage.getItem("leads"));
+    let prevLeads = parseInt(localStorage.getItem("snfLeads"));
     let leadCounter = prevLeads + 1;
     leadCounter = leadCounter.toString();
-    localStorage.setItem("leads", leadCounter);
+    localStorage.setItem("snfLeads", leadCounter);
 }
 
 function addNonLeadToCounterAndCloseTab() {
-    let prevNonLeads = localStorage.getItem("nonLeads");
-    // console.log(`localStorage.getItem("nonLeads") before:`);
-    // console.log(localStorage.getItem("nonLeads"));
+    let prevNonLeads = localStorage.getItem("snfNonLeads");
+    // console.log(`localStorage.getItem("snfNonLeads") before:`);
+    // console.log(localStorage.getItem("snfNonLeads"));
     // console.log(`prevNonLeads type:`);
     // console.log(typeof prevNonLeads);
     // console.log(`prevNonLeads true or false?`);
@@ -172,14 +172,14 @@ function addNonLeadToCounterAndCloseTab() {
         prevNonLeads = parseInt(prevNonLeads);
         let nonLeadCounter = prevNonLeads + 1;
         nonLeadCounter = nonLeadCounter.toString();
-        localStorage.setItem("nonLeads", nonLeadCounter);
-        // console.log(`localStorage.getItem("nonLeads") after:`);
-        // console.log(localStorage.getItem("nonLeads"));
+        localStorage.setItem("snfNonLeads", nonLeadCounter);
+        // console.log(`localStorage.getItem("snfNonLeads") after:`);
+        // console.log(localStorage.getItem("snfNonLeads"));
     }
 
     setTimeout(function () {
-        // console.log(`localStorage.getItem("nonLeads") before window.close():`);
-        // console.log(localStorage.getItem("nonLeads"));
+        // console.log(`localStorage.getItem("snfNonLeads") before window.close():`);
+        // console.log(localStorage.getItem("snfNonLeads"));
         // console.log(`window.close() would trigger now...`);
         window.close();
     }, 1);
