@@ -1362,6 +1362,8 @@ const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/)
 
     if (searchPageMatch) {
         waitFor("#search-results-container ol li:nth-of-type(1)").then((el) => {
+            updateLocalStorage();
+
             function manipulateListElement(element, index) {
                 // Hide non-premium profiles (for now I'm only targeting premium profiles)
                 if ($(element).has("span[data-anonymize=person-name]").length
