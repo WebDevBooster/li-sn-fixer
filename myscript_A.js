@@ -99,14 +99,18 @@ function updateLocalStorage() {
     */
 
     function appendStats() {
+        let totalClass = "total";
+        let ratio = 0;
         let currentLeads = parseInt(localStorage.getItem("snfLeads"));
         let currentNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
         let total = currentLeads + currentNonLeads;
-        let ratio = Math.round((currentLeads / total * 100));
-        let totalClass = "total";
-        if (total > 465) {
-            totalClass = "total warning"
+        if (total) {
+            ratio = Math.round((currentLeads / total * 100));
+            if (total > 465) {
+                totalClass = "total warning"
+            }
         }
+
         let nowTime = new Date().getTime();
         snfStartTime = parseInt(localStorage.getItem("snfStartTime"));
         let timeDiff = nowTime - snfStartTime;
