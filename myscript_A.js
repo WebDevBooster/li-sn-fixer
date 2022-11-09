@@ -211,7 +211,7 @@ function autoScrollDownAndUp() {
         const minScroll = $(window).height() * 2;
         const maxScroll = $(document).height() - $(window).height();
         const scrollDistance = getRandInteger(minScroll, maxScroll);
-        const scrollDownSpeed = getRandInteger(555, 1999);
+        const scrollDownSpeed = getRandInteger(555, 1555);
         const scrollUpSpeed = getRandInteger(555, 999);
         const scrollUpDelay = getRandInteger(999, 2222);
         console.log(`scroll...`);
@@ -222,9 +222,10 @@ function autoScrollDownAndUp() {
         console.log(`ScrollTimeTotal: ${scrollDownSpeed + scrollUpSpeed + scrollUpDelay}`);
 
         $("html").animate({scrollTop: scrollDistance}, scrollDownSpeed);
-        setTimeout(function () {
-            $("html").animate({ scrollTop: 0 }, scrollUpSpeed);
-        }, scrollUpDelay);
+        // Testing without scrollUp
+        // setTimeout(function () {
+        //     $("html").animate({ scrollTop: 0 }, scrollUpSpeed);
+        // }, scrollUpDelay);
     }, timeout);
 }
 
@@ -400,13 +401,13 @@ waitFor(experienceSectionHeadline).then((el) => {
                     // Don't auto-close, set the background to red instead and close manually.
                     $("#content-main").css("background-color", "#c91b0c");
 
-                    let randomTimeout = getRandInteger(3333, 6666);
+                    let randomTimeout = getRandInteger(1999, 4444);
                     let countdown = Math.round(randomTimeout / 1000);
-                    let downloadTimer = setInterval(function(){
+                    let countdownTimer = setInterval(function(){
                         countdown--;
                         document.getElementById("countdown").textContent = countdown.toString();
                         if (countdown <= 0) {
-                            clearInterval(downloadTimer);
+                            clearInterval(countdownTimer);
                         }
                     },1000);
 
