@@ -102,12 +102,15 @@ function updateLocalStorage() {
         updateLocalStorage();
     */
 
+    let currentLeads,
+        currentNonLeads,
+        total;
+    let ratio = 0;
+    let totalClass = "total";
     function appendStats() {
-        let totalClass = "total";
-        let ratio = 0;
-        let currentLeads = parseInt(localStorage.getItem("snfLeads"));
-        let currentNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
-        let total = currentLeads + currentNonLeads;
+        currentLeads = parseInt(localStorage.getItem("snfLeads"));
+        currentNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
+        total = currentLeads + currentNonLeads;
         if (total) {
             ratio = Math.round((currentLeads / total * 100));
             if (total > 465) {
@@ -152,6 +155,34 @@ function updateLocalStorage() {
             </div>
             `);
         }
+
+        if (searchPageMatch) {
+            body.append(`
+            <div id="SNF-counter-sales-page">
+            <span class="lead">
+                L: <span class="current-leads">${currentLeads}</span><br><span class="current-ratio">${ratio}</span>%
+            </span>
+            <span class="non-lead">
+                N: <span class="current-non-leads">${currentNonLeads}</span>
+            </span>
+            <span class="${totalClass}">
+                T: <span class="current-8hr-total">${total}</span><br>
+                <button id="SNF-refresh-data" title="refresh data">↻</button>
+            </span>
+            <span class="timer">
+                ⏱️${getTrackedTime()}<br>
+                <button id="reset-8hrs" title="reset this 8-hr cycle">X</button>
+            </span>
+            <span class="day-total">
+                DT: ${total}
+            </span>
+            <span class="day-timer">
+                ⏰${getTrackedTime()}<br>
+                <button id="reset-24hrs" title="reset this 24-hr cycle">X</button>
+            </span>
+            </div>
+            `);
+        }
     }
     appendStats();
 
@@ -168,9 +199,30 @@ function updateLocalStorage() {
     }
     addNonLeadToCounterAndCloseTabOnClick();
 
-    $("#SNF-counter button").click(function () {
-        localStorage.clear();
+    // TODO: Refactor this!
+    // $("#SNF-counter button").click(function () {
+    //     localStorage.clear();
+    // });
+
+    $("#SNF-refresh-data").click(function () {
+        currentLeads = localStorage.getItem("snfLeads");
+        currentNonLeads = localStorage.getItem("snfNonLeads");
+        $("#SNF-counter-sales-page .current-leads").text(currentLeads);
+        $("#SNF-counter-sales-page .current-non-leads").text(currentNonLeads);
+        total = parseInt(currentLeads) + parseInt(currentNonLeads);
+        $("#SNF-counter-sales-page .current-8hr-total").text(total);
+        if (total) {
+            ratio = Math.round((currentLeads / total * 100));
+            $("#SNF-counter-sales-page .current-ratio").text(ratio);
+            if (total > 465) {
+                $("#SNF-counter-sales-page .total").addClass("warning");
+            }
+            if (total < 466) {
+                $("#SNF-counter-sales-page .total").removeClass("warning");
+            }
+        }
     });
+
 }
 
 function addLeadToCounter() {
