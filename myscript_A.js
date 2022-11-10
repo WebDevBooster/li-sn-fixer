@@ -49,13 +49,18 @@ function getRandInteger(min, max) {
 }
 
 function updateLocalStorage() {
-    let snfStartTime;
+    let snf8hrStart,
+        snf19hrStart,
+        snf8hrTotal,
+        snf19hrTotal;
     let snCounter = {
         snfLeads: null,
         snfNonLeads: null
     };
     let prevLeads = localStorage.getItem("snfLeads");
     let prevNonLeads = localStorage.getItem("snfNonLeads");
+    snf8hrTotal = localStorage.getItem("snf8hrTotal");
+    snf19hrTotal = localStorage.getItem("snf19hrTotal");
     console.log(`prevLeads: ${prevLeads}`);
     console.log(`prevNonLeads: ${prevNonLeads}`);
 
@@ -67,9 +72,15 @@ function updateLocalStorage() {
         } else {
             localStorage.setItem("snfLeads", "0");
             localStorage.setItem("snfNonLeads", "0");
-            snfStartTime = new Date().getTime();
-            snfStartTime = snfStartTime.toString();
-            localStorage.setItem("snfStartTime", snfStartTime);
+            snf8hrStart = new Date().getTime();
+            snf8hrStart = snf8hrStart.toString();
+            localStorage.setItem("snf8hrStart", snf8hrStart);
+            snf19hrStart = new Date().getTime();
+            snf19hrStart = snf19hrStart.toString();
+            localStorage.setItem("snf19hrStart", snf19hrStart);
+
+            localStorage.setItem("snf8hrTotal", "0");
+            localStorage.setItem("snf19hrTotal", "0");
         }
         console.log(`previous snCounter:`);
         console.log(snCounter);
@@ -103,25 +114,56 @@ function updateLocalStorage() {
     */
 
     let currentLeads,
-        currentNonLeads,
-        total;
+        currentNonLeads;
     let ratio = 0;
-    let totalClass = "total";
-    function appendStats() {
-        currentLeads = parseInt(localStorage.getItem("snfLeads"));
-        currentNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
-        total = currentLeads + currentNonLeads;
-        if (total) {
-            ratio = Math.round((currentLeads / total * 100));
-            if (total > 465) {
-                totalClass = "total warning"
+    function updateTotals() {
+        snf8hrTotal = parseInt(localStorage.getItem("snf8hrTotal"));
+        snf19hrTotal = parseInt(localStorage.getItem("snf19hrTotal"));
+
+        if (snf8hrTotal) {
+            ratio = Math.round((currentLeads / snf8hrTotal * 100));
+            if (snf8hrTotal > 465) {
+                $("#SNF-counter .total, #SNF-counter-search-page .total").addClass("warning");
+            }
+            if (snf8hrTotal < 466) {
+                $("#SNF-counter .total, #SNF-counter-search-page .total").removeClass("warning");
             }
         }
+        if (snf19hrTotal) {
+            if (snf19hrTotal > 789) {
+                $("#SNF-counter .day-total, #SNF-counter-search-page .day-total").addClass("warning");
+            }
+            if (snf19hrTotal < 790) {
+                $("#SNF-counter .day-total, #SNF-counter-search-page .day-total").removeClass("warning");
+            }
+        }
+    }
 
-        function getTrackedTime() {
-            let snfTrackedTime = "";
-            let nowTime = new Date().getTime();
-            snfStartTime = parseInt(localStorage.getItem("snfStartTime"));
+    function getTrackedTime(/*Number*/ hrs) {
+        let snfStartTime = "";
+        let snfTrackedKey = "";
+        let snfTrackedTime = "";
+        let nowTime = new Date().getTime();
+
+        if (!hrs || hrs === 8) {
+            snfStartTime = `snf8hrStart`;
+            snfTrackedKey = `snf8hrTracker`;
+            calculateAndSetTime();
+        } else if (typeof hrs === "number") {
+            snfStartTime = `snf${hrs}hrStart`;
+            snfTrackedKey = `snf${hrs}hrTracker`;
+            calculateAndSetTime();
+        }
+
+        function calculateAndSetTime() {
+            // console.log(`from calculateAndSetTime()...`);
+            // console.log(`snfStartTime`);
+            // console.log(snfStartTime);
+            // console.log(`localStorage.getItem(snfStartTime)`);
+            // console.log(localStorage.getItem(snfStartTime));
+            snfStartTime = parseInt(localStorage.getItem(snfStartTime));
+            // console.log(`parsed snfStartTime`);
+            // console.log(snfStartTime);
             if (snfStartTime) {
                 let timeDiff = nowTime - snfStartTime;
                 let mins = Math.floor(timeDiff / 1000 / 60);
@@ -129,11 +171,24 @@ function updateLocalStorage() {
                 mins = (mins < 10) ? "0" + mins : mins;
                 let hrs = Math.floor(timeDiff / 1000 / 60 / 60);
                 snfTrackedTime = `${hrs}:${mins}`;
+                // console.log(`snfTrackedTime...`);
+                // console.log(snfTrackedTime);
             }
 
-            localStorage.setItem("snfTrackedTime", snfTrackedTime);
-            return snfTrackedTime;
+            localStorage.setItem(snfTrackedKey, snfTrackedTime);
+            // console.log(`snfTrackedKey`);
+            // console.log(snfTrackedKey);
+            // console.log(`snfTrackedTime`);
+            // console.log(snfTrackedTime);
         }
+        return snfTrackedTime;
+    }
+
+    function appendStats() {
+        currentLeads = parseInt(localStorage.getItem("snfLeads"));
+        currentNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
+        updateTotals();
+
         getTrackedTime();
 
         if (salesLeadPageMatch) {
@@ -142,43 +197,48 @@ function updateLocalStorage() {
             <span class="lead">
                 L: ${currentLeads}<br>${ratio}%
             </span>
-            <span class="non-lead">
+            <span class="non-lead" title="click this to mark this profile as non-lead and close tab">
                 N: ${currentNonLeads}
             </span>
-            <span class="${totalClass}">
-                T: ${total}
+            <span class="total">
+                Total:<br>${snf8hrTotal}
             </span>
-            <span class="timer">
-                ⏱️${getTrackedTime()}
+            <span class="timer" title="time in this 8-hr cycle">
+                ⏱️<br>${getTrackedTime()}
             </span>
-            <button>X</button>
+            <span class="day-total">
+                DayT:<br><span class="current-19hr-total">${snf19hrTotal}</span>
+            </span>
+            <span class="day-timer" title="time in this 19-hr cycle">
+                ⏰<br>${getTrackedTime(19)}
+            </span>
             </div>
             `);
         }
 
         if (searchPageMatch) {
             body.append(`
-            <div id="SNF-counter-sales-page">
+            <div id="SNF-counter-search-page">
             <span class="lead">
                 L: <span class="current-leads">${currentLeads}</span><br><span class="current-ratio">${ratio}</span>%
             </span>
             <span class="non-lead">
                 N: <span class="current-non-leads">${currentNonLeads}</span>
             </span>
-            <span class="${totalClass}">
-                T: <span class="current-8hr-total">${total}</span><br>
+            <span class="total">
+                T: <span class="current-8hr-total">${snf8hrTotal}</span><br>
                 <button id="SNF-refresh-data" title="refresh data">↻</button>
             </span>
             <span class="timer">
-                ⏱️${getTrackedTime()}<br>
-                <button id="reset-8hrs" title="reset this 8-hr cycle">X</button>
+                ⏱️<span class="current-8hr-cycle">${getTrackedTime(8)}</span><br>
+                <button id="reset-8hr-cycle" title="reset this 8-hr cycle">X</button>
             </span>
             <span class="day-total">
-                DT: ${total}
+                DT: <span class="current-19hr-total">${snf19hrTotal}</span>
             </span>
             <span class="day-timer">
-                ⏰${getTrackedTime()}<br>
-                <button id="reset-24hrs" title="reset this 24-hr cycle">X</button>
+                ⏰<span class="current-19hr-cycle">${getTrackedTime(19)}</span><br>
+                <button id="reset-19hr-cycle" title="reset this 19-hr cycle">X</button>
             </span>
             </div>
             `);
@@ -194,35 +254,77 @@ function updateLocalStorage() {
             nonLeadCounter = nonLeadCounter.toString();
             localStorage.setItem("snfNonLeads", nonLeadCounter);
 
+            addToTotals();
+
             window.close();
         });
     }
     addNonLeadToCounterAndCloseTabOnClick();
 
-    // TODO: Refactor this!
-    // $("#SNF-counter button").click(function () {
-    //     localStorage.clear();
-    // });
-
     $("#SNF-refresh-data").click(function () {
         currentLeads = localStorage.getItem("snfLeads");
         currentNonLeads = localStorage.getItem("snfNonLeads");
-        $("#SNF-counter-sales-page .current-leads").text(currentLeads);
-        $("#SNF-counter-sales-page .current-non-leads").text(currentNonLeads);
-        total = parseInt(currentLeads) + parseInt(currentNonLeads);
-        $("#SNF-counter-sales-page .current-8hr-total").text(total);
-        if (total) {
-            ratio = Math.round((currentLeads / total * 100));
-            $("#SNF-counter-sales-page .current-ratio").text(ratio);
-            if (total > 465) {
-                $("#SNF-counter-sales-page .total").addClass("warning");
-            }
-            if (total < 466) {
-                $("#SNF-counter-sales-page .total").removeClass("warning");
-            }
-        }
+        $("#SNF-counter-search-page .current-leads").text(currentLeads);
+        $("#SNF-counter-search-page .current-non-leads").text(currentNonLeads);
+
+        updateTotals();
+
+        $("#SNF-counter-search-page .current-ratio").text(ratio);
+        $("#SNF-counter-search-page .current-8hr-total").text(snf8hrTotal);
+        $("#SNF-counter-search-page .current-19hr-total").text(snf19hrTotal);
+
+        $("#SNF-counter-search-page .current-8hr-cycle").text(getTrackedTime(8));
+        $("#SNF-counter-search-page .current-19hr-cycle").text(getTrackedTime(19));
+
+        // total = parseInt(currentLeads) + parseInt(currentNonLeads);
+        // $("#SNF-counter-search-page .current-8hr-total").text(total);
+        // if (total) {
+        //     ratio = Math.round((currentLeads / total * 100));
+        //     $("#SNF-counter-search-page .current-ratio").text(ratio);
+        //     if (total > 465) {
+        //         $("#SNF-counter-search-page .total").addClass("warning");
+        //     }
+        //     if (total < 466) {
+        //         $("#SNF-counter-search-page .total").removeClass("warning");
+        //     }
+        // }
     });
 
+    $("#reset-8hr-cycle").click(function () {
+        localStorage.setItem("snfLeads", "0");
+        localStorage.setItem("snfNonLeads", "0");
+        snf8hrStart = new Date().getTime();
+        snf8hrStart = snf8hrStart.toString();
+        localStorage.setItem("snf8hrStart", snf8hrStart);
+        localStorage.setItem("snf8hrTotal", "0");
+        localStorage.setItem("snf8hrTracker", "0:00");
+    });
+
+    $("#reset-19hr-cycle").click(function () {
+        localStorage.setItem("snfLeads", "0");
+        localStorage.setItem("snfNonLeads", "0");
+        snf8hrStart = new Date().getTime();
+        snf8hrStart = snf8hrStart.toString();
+        localStorage.setItem("snf8hrStart", snf8hrStart);
+        localStorage.setItem("snf8hrTotal", "0");
+        localStorage.setItem("snf8hrTracker", "0:00");
+
+        localStorage.setItem("snf19hrStart", snf8hrStart);
+        localStorage.setItem("snf19hrTotal", "0");
+        localStorage.setItem("snf19hrTracker", "0:00");
+    });
+}
+
+function addToTotals() {
+    let snf8hrTotals = parseInt(localStorage.getItem("snf8hrTotal"));
+    snf8hrTotals = snf8hrTotals + 1;
+    snf8hrTotals = snf8hrTotals.toString();
+    localStorage.setItem("snf8hrTotal", snf8hrTotals);
+
+    let snf19hrTotals = parseInt(localStorage.getItem("snf19hrTotal"));
+    snf19hrTotals = snf19hrTotals + 1;
+    snf19hrTotals = snf19hrTotals.toString();
+    localStorage.setItem("snf19hrTotal", snf19hrTotals);
 }
 
 function addLeadToCounter() {
@@ -230,6 +332,8 @@ function addLeadToCounter() {
     let leadCounter = prevLeads + 1;
     leadCounter = leadCounter.toString();
     localStorage.setItem("snfLeads", leadCounter);
+
+    addToTotals();
 }
 
 function addNonLeadToCounterAndCloseTab() {
@@ -247,6 +351,8 @@ function addNonLeadToCounterAndCloseTab() {
         localStorage.setItem("snfNonLeads", nonLeadCounter);
         // console.log(`localStorage.getItem("snfNonLeads") after:`);
         // console.log(localStorage.getItem("snfNonLeads"));
+
+        addToTotals();
     }
 
     setTimeout(function () {

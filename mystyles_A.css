@@ -109,7 +109,7 @@
     flex-direction: column;
 }
 
-#SNF-counter-sales-page {
+#SNF-counter-search-page {
     position: fixed;
     top: 0;
     left: 0;
@@ -121,16 +121,16 @@
     /*flex-direction: column;*/
 }
 
-#SNF-counter-sales-page > span {
+#SNF-counter-search-page > span {
     padding: 5px 10px 5px 0;
 }
-#SNF-counter-sales-page span[class$="timer"] {
+#SNF-counter-search-page span[class$="timer"] {
     text-align: center;
 }
-#SNF-counter-sales-page span[class^="day-"] {
+#SNF-counter-search-page span[class^="day-"] {
     background-color: lightcyan;
 }
-/*#SNF-counter-sales-page span:last-of-type {*/
+/*#SNF-counter-search-page span:last-of-type {*/
 /*    padding-left: 10px;*/
 /*}*/
 
@@ -138,14 +138,20 @@
     /*padding: 0 11px;*/
 }
 #SNF-counter span.warning,
-#SNF-counter-sales-page span.warning {
+#SNF-counter-search-page span.warning {
     background-color: orangered;
     padding: 10px 5px;
 }
-#SNF-counter span.timer {
-    padding: 10px 0;
-    margin-left: -5px;
+#SNF-counter span.total,
+#SNF-counter span.day-total {
+    padding-top: 10px;
 }
+#SNF-counter span.timer,
+#SNF-counter span.day-timer {
+    padding: 10px 0;
+    /*margin-left: -5px;*/
+}
+
 #countdown {
     padding: 5px 0 5px 10px;
     color: red;
