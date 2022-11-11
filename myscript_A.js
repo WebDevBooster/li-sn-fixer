@@ -130,10 +130,10 @@ function updateLocalStorage() {
             }
         }
         if (snf19hrTotal) {
-            if (snf19hrTotal > 789) {
+            if (snf19hrTotal > 785) {
                 $("#SNF-counter .day-total, #SNF-counter-search-page .day-total").addClass("warning");
             }
-            if (snf19hrTotal < 790) {
+            if (snf19hrTotal < 786) {
                 $("#SNF-counter .day-total, #SNF-counter-search-page .day-total").removeClass("warning");
             }
         }
