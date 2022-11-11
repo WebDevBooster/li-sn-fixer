@@ -297,27 +297,37 @@ function updateLocalStorage() {
     });
 
     $("#reset-8hr-cycle").click(function () {
-        localStorage.setItem("snfLeads", "0");
-        localStorage.setItem("snfNonLeads", "0");
-        snf8hrStart = new Date().getTime();
-        snf8hrStart = snf8hrStart.toString();
-        localStorage.setItem("snf8hrStart", snf8hrStart);
-        localStorage.setItem("snf8hrTotal", "0");
-        localStorage.setItem("snf8hrTracker", "0:00");
+        let msg = `WARNING!!!\n\nDo you really want to reset the 8-hr cycle stats?\n\nPress OK to confirm.`
+        if (confirm(msg)) {
+            localStorage.setItem("snfLeads", "0");
+            localStorage.setItem("snfNonLeads", "0");
+            snf8hrStart = new Date().getTime();
+            snf8hrStart = snf8hrStart.toString();
+            localStorage.setItem("snf8hrStart", snf8hrStart);
+            localStorage.setItem("snf8hrTotal", "0");
+            localStorage.setItem("snf8hrTracker", "0:00");
+        } else {
+            console.log(`#reset-8hr-cycle was denied. Do nothing.`);
+        }
     });
 
     $("#reset-19hr-cycle").click(function () {
-        localStorage.setItem("snfLeads", "0");
-        localStorage.setItem("snfNonLeads", "0");
-        snf8hrStart = new Date().getTime();
-        snf8hrStart = snf8hrStart.toString();
-        localStorage.setItem("snf8hrStart", snf8hrStart);
-        localStorage.setItem("snf8hrTotal", "0");
-        localStorage.setItem("snf8hrTracker", "0:00");
+        let msg = `WARNING!!!\n\nDo you really want to reset the 19-hr cycle stats?\n\nPress OK to confirm.`
+        if (confirm(msg)) {
+            localStorage.setItem("snfLeads", "0");
+            localStorage.setItem("snfNonLeads", "0");
+            snf8hrStart = new Date().getTime();
+            snf8hrStart = snf8hrStart.toString();
+            localStorage.setItem("snf8hrStart", snf8hrStart);
+            localStorage.setItem("snf8hrTotal", "0");
+            localStorage.setItem("snf8hrTracker", "0:00");
 
-        localStorage.setItem("snf19hrStart", snf8hrStart);
-        localStorage.setItem("snf19hrTotal", "0");
-        localStorage.setItem("snf19hrTracker", "0:00");
+            localStorage.setItem("snf19hrStart", snf8hrStart);
+            localStorage.setItem("snf19hrTotal", "0");
+            localStorage.setItem("snf19hrTracker", "0:00");
+        } else {
+            console.log(`#reset-19hr-cycle was denied. Do nothing.`);
+        }
     });
 }
 
