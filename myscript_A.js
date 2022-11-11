@@ -1605,3 +1605,6 @@ waitFor(experienceSectionHeadline).then((el) => {
     }
 
 });
+
+// keywords: "investor" + TITLE > (Chief Executive Officer)(Founder)(Co-Founder)(President)(Director)(Managing Director)(Executive Director)(Principal)(General Partner)(Managing Partner)(Managing General Partner) + selectedSubFilter > CURRENT_OR_PAST + CURRENT_COMPANY > LinkedIn > EXCLUDED
+// also filter by industry
