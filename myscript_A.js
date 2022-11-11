@@ -575,7 +575,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                     // Don't auto-close, set the background to red instead and close manually.
                     $("#content-main").css("background-color", "#c91b0c");
 
-                    let randomTimeout = getRandInteger(1999, 4444);
+                    let randomTimeout = getRandInteger(1999, 3999);
                     let countdown = Math.round(randomTimeout / 1000);
                     let countdownTimer = setInterval(function(){
                         countdown--;
