@@ -472,7 +472,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     let allEmails = "";
     let jobList = [];
     let jobs = "";
-    let profileURL = "";
+    let profileURL = "/////////////////////////////////////////////////////////////////////";
     let isFemale = "FALSE";
 
     const kwArray = ["entrepreneur", "investor", "angel", "seed", "early", "web3"];
@@ -1126,6 +1126,8 @@ waitFor(experienceSectionHeadline).then((el) => {
 
             const copyBtn = $("#SNF-copy");
             const copyFemaleBtn = $("#SNF-femcopy");
+
+/*
             const menuTrigger = $( "#profile-card-section > section[class^=_header] > div[class^=_actions-container] > section[class^=_actions-bar] > button" );
 
             function copyToClipboard() {
@@ -1139,15 +1141,23 @@ waitFor(experienceSectionHeadline).then((el) => {
                     });
                 }, 33);
             }
+*/
 
-            if (copyBtn.length && copyFemaleBtn.length && menuTrigger.length) {
+            waitFor("#hue-web-menu-outlet ul li a").then((el) => {
+                // profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
+                profileURL = $( "#hue-web-menu-outlet ul li a:contains('View LinkedIn profile')" ).attr("href");
+                // const copyElement = $( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
+                return profileURL;
+            });
+
+            if (copyBtn.length && copyFemaleBtn.length) {
                 copyBtn.click(function () {
-                    copyToClipboard();
+                    modifyClipboard(profileURL);
                 });
 
                 copyFemaleBtn.click(function () {
                     isFemale = "TRUE";
-                    copyToClipboard();
+                    modifyClipboard(profileURL);
                 });
             }
         }
@@ -1203,10 +1213,11 @@ waitFor(experienceSectionHeadline).then((el) => {
             return jobs = newJobList.join(" ✚✚ ");
         }
 
-        async function modifyClipboard() {
+        async function modifyClipboard(/*string*/ url) {
             // Sales Navigator lead URLs have a lot of crap appended to them.
             // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
             const leadURL = `${currentURL.substring(0, 75)},name`;
+            profileURL = url;
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().cleanUpString();
             const headlineClean = headline.cleanUpString();
 
