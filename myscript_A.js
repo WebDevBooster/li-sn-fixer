@@ -380,11 +380,11 @@ function addNonLeadToCounterAndCloseTab() {
 }
 
 function autoScrollDownAndUp() {
-    let timeout = getRandInteger(666, 1111);
+    let timeout = getRandInteger(999, 1555);
     setTimeout(function () {
-        const minScroll = $(window).height() * 1.3;
+        const minScroll = $(window).height() * 1;
         // const maxScroll = $(document).height() - $(window).height();
-        const maxScroll = $(window).height() * 2.2;
+        const maxScroll = $(window).height() * 1.5;
         const scrollDistance = getRandInteger(minScroll, maxScroll);
         const scrollDownSpeed = getRandInteger(444, 888);
         const scrollUpSpeed = getRandInteger(555, 999);
@@ -1619,3 +1619,12 @@ waitFor(experienceSectionHeadline).then((el) => {
 
 // keywords: "investor" + TITLE > (Chief Executive Officer)(Founder)(Co-Founder)(President)(Director)(Managing Director)(Executive Director)(Principal)(General Partner)(Managing Partner)(Managing General Partner) + selectedSubFilter > CURRENT_OR_PAST + CURRENT_COMPANY > LinkedIn > EXCLUDED
 // also filter by industry
+
+/*
+https://www.linkedin.com/sales/search/people?page=1&query=(spellCorrectionEnabled%3Atrue%2CrecentSearchParam%3A
+(id%3A1907908354%2CdoLogHistory%3Atrue)%2Cfilters%3AList((type%3ACURRENT_COMPANY%2Cvalues%3AList((id%3A1337%2Ctext%3ALinkedIn%2CselectionType%3AEXCLUDED)))%2C
+(type%3ATITLE%2Cvalues%3AList((id%3A8%2Ctext%3AChief%2520Executive%2520Officer%2CselectionType%3AINCLUDED)%2C(id%3A35%2Ctext%3AFounder%2CselectionType%3AINCLUDED)%2C(id%3A103%2Ctext%3ACo-Founder%2CselectionType%3AINCLUDED)%2C(id%3A6%2Ctext%3APresident%2CselectionType%3AINCLUDED)%2C(id%3A5%2Ctext%3ADirector%2CselectionType%3AINCLUDED)%2C(id%3A16%2Ctext%3AManaging%2520Director%2CselectionType%3AINCLUDED)%2C(id%3A60%2Ctext%3AExecutive%2520Director%2CselectionType%3AINCLUDED)%2C(id%3A47%2Ctext%3APrincipal%2CselectionType%3AINCLUDED)%2C(id%3A2637%2Ctext%3AGeneral%2520Partner%2CselectionType%3AINCLUDED)%2C(id%3A154%2Ctext%3AManaging%2520Partner%2CselectionType%3AINCLUDED)%2C(id%3A17639%2Ctext%3AManaging%2520General%2520Partner%2CselectionType%3AINCLUDED))%2CselectedSubFilter%3ACURRENT_OR_PAST)
+%2C(type%3AREGION%2Cvalues%3AList((id%3A102277331%2Ctext%3ASan%2520Francisco%252C%2520California%252C%2520United%2520States%2CselectionType%3AINCLUDED)))%2C(type%3AINDUSTRY%2Cvalues%3AList((id%3A43%2Ctext%3AFinancial%2520Services%2CselectionType%3AINCLUDED))))%2Ckeywords%3A%2522investor%2522)
+
+https://www.linkedin.com/sales/search/people?query=(recentSearchParam%3A(id%3A1793808001%2CdoLogHistory%3Atrue)%2Cfilters%3AList((type%3ACURRENT_COMPANY%2Cvalues%3AList((id%3A1337%2Ctext%3ALinkedIn%2CselectionType%3AEXCLUDED)))%2C(type%3ATITLE%2Cvalues%3AList((text%3AChief%2520Executive%2520Officer%2CselectionType%3AINCLUDED))%2CselectedSubFilter%3ACURRENT_OR_PAST)%2C(type%3AREGION%2Cvalues%3AList((id%3A103300978%2Ctext%3AAlameda%252C%2520California%252C%2520United%2520States%2CselectionType%3AINCLUDED)))))&sessionId=xa%2BJ8KY6QF2qh9xeT3XXcw%3D%3D&viewAllFilters=true
+*/
