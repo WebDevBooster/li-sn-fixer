@@ -418,6 +418,22 @@ if (mozillaPageMatch) {
 
     // autoScrollDownAndUp();
 
+/*
+    $("div.main-document-header-container").append(`
+        <section id="SNF-data">
+            <div>
+                <button id="SNF-copy" style="width: 65px;" class="copy-btn" type="button">C</button>
+                <button id="SNF-femcopy" style="width: 65px;" class="copy-btn" type="button">F</button>
+            </div>
+        </section>
+        `);
+
+    $("#SNF-copy").click(function () {
+        // $("#SNF-copy").prepend("✔<br>");
+        // $("#SNF-copy").before("<div style='text-align: center;'>✅</div>");
+        $("#SNF-copy").before("<div style='text-align: center;'>❌</div>");
+    });
+*/
 
 }
 
@@ -1152,12 +1168,22 @@ waitFor(experienceSectionHeadline).then((el) => {
 
             if (copyBtn.length && copyFemaleBtn.length) {
                 copyBtn.click(function () {
-                    modifyClipboard(profileURL);
+                    if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
+                        modifyClipboard(profileURL);
+                        copyBtn.before("<div style='text-align: center;'>✅</div>");
+                    } else {
+                        copyBtn.before("<div style='text-align: center;'>❌</div>");
+                    }
                 });
 
                 copyFemaleBtn.click(function () {
-                    isFemale = "TRUE";
-                    modifyClipboard(profileURL);
+                    if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
+                        isFemale = "TRUE";
+                        modifyClipboard(profileURL);
+                        copyBtn.before("<div style='text-align: center;'>✅</div>");
+                    } else {
+                        copyBtn.before("<div style='text-align: center;'>❌</div>");
+                    }
                 });
             }
         }
