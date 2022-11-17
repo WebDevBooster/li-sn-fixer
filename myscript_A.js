@@ -1170,9 +1170,9 @@ waitFor(experienceSectionHeadline).then((el) => {
                 copyBtn.click(function () {
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
                         modifyClipboard(profileURL);
-                        copyBtn.before("<div style='text-align: center;'>✅</div>");
+                        copyBtn.before("<div style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                     } else {
-                        copyBtn.before("<div style='text-align: center;'>❌</div>");
+                        copyBtn.before("<div style='text-align: center; background-color: orangered'><b>✖</b></div>");
                     }
                 });
 
@@ -1180,9 +1180,9 @@ waitFor(experienceSectionHeadline).then((el) => {
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
                         isFemale = "TRUE";
                         modifyClipboard(profileURL);
-                        copyBtn.before("<div style='text-align: center;'>✅</div>");
+                        copyBtn.before("<div style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                     } else {
-                        copyBtn.before("<div style='text-align: center;'>❌</div>");
+                        copyBtn.before("<div style='text-align: center; background-color: orangered'><b>✖</b></div>");
                     }
                 });
             }
