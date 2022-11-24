@@ -122,10 +122,10 @@ function updateLocalStorage() {
 
         if (snf8hrTotal) {
             ratio = Math.round((currentLeads / snf8hrTotal * 100));
-            if (snf8hrTotal > 465) {
+            if (snf8hrTotal > 365) {
                 $("#SNF-counter .total, #SNF-counter-search-page .total").addClass("warning");
             }
-            if (snf8hrTotal < 466) {
+            if (snf8hrTotal < 366) {
                 $("#SNF-counter .total, #SNF-counter-search-page .total").removeClass("warning");
             }
         }
