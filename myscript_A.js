@@ -453,6 +453,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     // hideIntroSection();
     // hideRelationshipSection();
 
+    const premiumBadge = $(`${badgesList} li > span svg[class^=_premium-badge]`);
     const openBadge = $(`${badgesList} li > span[class^=_open-badge]`);
     const headerSection = $("#profile-card-section > section[class^=_header]");
     const detailsSection = $("#profile-card-section > section[class^=_details-section]");
@@ -476,6 +477,8 @@ waitFor(experienceSectionHeadline).then((el) => {
     // const newSubdomainDomainDotRegex = /(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})/gi;
     const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
 
+    const twitterRegex = /https:\/\/twitter\.com\/[a-z0-9_]{1,15}/gi;
+
     let profileEmails = {
         inHeader: null,
         inContact: null,
@@ -489,6 +492,8 @@ waitFor(experienceSectionHeadline).then((el) => {
     let jobList = [];
     let jobs = "";
     let profileURL = "/////////////////////////////////////////////////////////////////////";
+    let isPremium = "FALSE";
+    let isOpen = "FALSE";
     let isFemale = "FALSE";
 
     const kwArray = ["entrepreneur", "investor", "angel", "seed", "early", "web3"];
@@ -574,10 +579,19 @@ waitFor(experienceSectionHeadline).then((el) => {
         }
 
         function autoCloseTabOrCollectProfileData () {
+            // I started collecting data from previously discarded profiles.
+            // So, NOT auto-closing tabs anymore and not changing background to red.
+
+            if (premiumBadge.length) {
+                isPremium = "TRUE";
+            }
+
             if (openBadge.length) {
                 checkTimeOpenBadgeDetected = performance.now();
                 console.log(`OpenBadgeDetected (${(checkTimeOpenBadgeDetected - readyTime).toFixed(2)} ms after readyTime)`);
                 // console.log(`open badge is there!`);
+
+                isOpen = "TRUE";
                 collectProfileData();
             } else {
                 // console.log(`no open badge there!`);
@@ -587,6 +601,10 @@ waitFor(experienceSectionHeadline).then((el) => {
                     // console.log(`We have EMAIL!!!`);
                     collectProfileData();
                 } else {
+                    collectProfileData();
+                    // The code in the following comment is now obsolete because I'm now collecting data from these profiles too.
+
+                    /*
                     // window.close();
 
                     // Don't auto-close, set the background to red instead and close manually.
@@ -609,6 +627,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                         addNonLeadToCounterAndCloseTab();
                     }, randomTimeout);
                     autoScrollDownAndUp();
+                */
                 }
             }
         }
@@ -650,6 +669,20 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function removeDuplicatesInArray(array) {
             return [... new Set(array.map(e => e.toLowerCase()))];
+        }
+
+        function collectTwitter() {
+            let twitterLink = "";
+            const contactSection = $("#profile-card-section > section[class^=_details-section] > section");
+
+            if (contactSection.length) {
+                let twitterURLs = contactSection.html().match(twitterRegex); // null if none, array if some
+                if (twitterURLs) {
+                    twitterLink = twitterURLs[0];
+                }
+            }
+
+            return twitterLink;
         }
 
         function collectEmails() {
@@ -1249,12 +1282,25 @@ waitFor(experienceSectionHeadline).then((el) => {
 
             const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > div:nth-child(1)" ).text().cleanUpString();
 
+            let connections = "";
+            const connectionsOfNon1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > div:nth-child(2)" );
+            const connectionsOf1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > a:nth-child(2)" );
+            if (connectionsOfNon1stDegreeProfile.length) {
+                connections = connectionsOfNon1stDegreeProfile.text()
+                    .cleanUpString().replace(/(\+ connections| (connections|connection))/, "");
+            } else if (connectionsOf1stDegreeProfile.length) {
+                connections = connectionsOf1stDegreeProfile.text()
+                    .cleanUpString().replace(/(\+ connections| (connections|connection))/, "");
+            }
+
+            const twitter = collectTwitter();
+
             getEmailsToExport();
             await getJobsToExport();
             getKeywordScores(kwArray);
             addLeadToCounter();
 
-            await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}`);
+            await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}\t${isPremium}\t${isOpen}\t${connections}\t${twitter}`);
         }
 
 
