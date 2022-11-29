@@ -408,6 +408,25 @@ function hideSection(element) {
     element.style.display = "none";
 }
 
+function showWindowHeight() {
+    // $(window).resize(function () {
+    //     windowHeight = $(window).height();
+    // });
+    setInterval(function () {
+        return `window height: ${$(window).height()}px`;
+    }, 250);
+}
+let docHeight = "0";
+
+waitFor("#SNF-doc-height").then((el) => {
+    const docHeightSection = $("#SNF-doc-height");
+    setInterval(function () {
+        if (docHeightSection.length) {
+            docHeight = `doc height: ${$(document).height().toLocaleString()}px`;
+            docHeightSection.text(docHeight);
+        }
+    }, 250);
+});
 
 if (mozillaPageMatch) {
     // console.log(`we're on the Mozilla page!`);
@@ -793,6 +812,8 @@ waitFor(experienceSectionHeadline).then((el) => {
             const experienceElements = addHTMLElements(profileEmails.inExperience, "experience");
 
             headerSection.append(`
+        <section id="SNF-doc-height">
+        </section>
         <section id="SNF-data">
             <div>
                 <button id="SNF-copy" class="copy-btn" type="button">Copy</button>
