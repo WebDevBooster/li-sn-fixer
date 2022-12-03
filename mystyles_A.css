@@ -96,6 +96,10 @@
 .SNF-out-of-network {
     background-color: pink !important;
 }
+.SNF-out-of-network a {
+    color: lightgrey !important;
+    background-color: pink !important;
+}
 
 #SNF-counter {
     position: fixed;
@@ -159,4 +163,13 @@
 
 #SNF-doc-height {
     padding-left: 20px;
+}
+
+
+#search-results-container > div > ol > li > div > div > div.flex.justify-space-between.full-width > div.flex.flex-column > div.mb3 > div > div.artdeco-entity-lockup__content.ember-view > div.flex.flex-wrap.align-items-center > div.artdeco-entity-lockup__title.ember-view > a:visited {
+    color: lightgrey;
+    background-color: white !important;
+}
+#search-results-container > div > ol > li > div > div > div.flex.justify-space-between.full-width > div.flex.flex-column > div.mb3 > div > div.artdeco-entity-lockup__content.ember-view > div.flex.flex-wrap.align-items-center > div.artdeco-entity-lockup__title.ember-view > a:link {
+    background-color: yellow;
 }
