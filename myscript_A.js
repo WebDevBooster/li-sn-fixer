@@ -497,6 +497,8 @@ waitFor(experienceSectionHeadline).then((el) => {
     // const newSubdomainDomainDotRegex = /(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})/gi;
     const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
 
+    const genericEmailExclusionRegex = /^(info|jobs|careers|Co-Founder|Founder)/i;
+
     // Removes images such as image@3x.jpg etc.
     const imageRemoverRegex = /.+(?<!\.jpg|\.png|\.jpeg|\.jpe|\.jif|\.jfif|\.jfi|\.gif|\.webp|\.tiff|\.tif|\.bmp|\.dib|\.jp2|\.j2k|\.jpf|\.jpx|\.jpm|\.mj2)$/gim;
 
@@ -798,18 +800,22 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function addHTMLElements(array, sectionName) {
             if (array) {
-                let newElements = [];
-                newElements[0] = `<span>${sectionName}:</span>`;
-                array.forEach(function (currentValue, index) {
-                    currentValue = cleanUpEmail(currentValue);
-                    const checkmark = index === 0 ? "checked" : "";
-                    newElements.push(`
+                const filteredArray = array.filter(email => !genericEmailExclusionRegex.test(email));
+
+                if (filteredArray) {
+                    let newElements = [];
+                    newElements[0] = `<span>${sectionName}:</span>`;
+                    filteredArray.forEach(function (currentValue, index) {
+                        currentValue = cleanUpEmail(currentValue);
+                        const checkmark = index === 0 ? "checked" : "";
+                        newElements.push(`
                 <label for="SNF-${sectionName}-checkbox${index}">
                 <input id="SNF-${sectionName}-checkbox${index}" value="${currentValue[0]}" type="checkbox" ${checkmark}>
                 <span id="SNF-${sectionName}-email${index}">${currentValue[0]}${currentValue[1]}${currentValue[2]}</span>
                 </label>`);
-                });
-                return newElements.join("");
+                    });
+                    return newElements.join("");
+                }
             } else {
                 // return "¯\\_( ツ)_/¯";
                 return "";
