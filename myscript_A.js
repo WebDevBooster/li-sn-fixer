@@ -753,8 +753,18 @@ waitFor(experienceSectionHeadline).then((el) => {
             }
 
             if (!isExperienceSectionEmpty) {
-                const experienceSection = $("#experience-section div");
-                profileEmails.inExperience = experienceSection.html().match(emailRegex);
+                const experienceEntries = $("#experience-section ul[class^=_experience-list] li[class^=_experience-entry]");
+                const presentEntries = experienceEntries.filter(function() {
+                    return $(this).find("span[class^=_position-time-period-range]").text().includes("Present");
+                });
+
+                if (presentEntries.length > 0) {
+                    const htmlContentOfPresentEntries = presentEntries.map((index, el) => $(el).html()).get().join("");
+                    profileEmails.inExperience = htmlContentOfPresentEntries.match(emailRegex);
+                } else {
+                    console.log("No elements containing 'Present' found.");
+                }
+
                 if (profileEmails.inExperience) {
                     profileEmails.inExperience = removeDuplicatesInArray(profileEmails.inExperience);
                     profileEmails.inExperience = profileEmails.inExperience.filter( (el) => !emailList.includes(el) );
