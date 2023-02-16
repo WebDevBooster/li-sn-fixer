@@ -657,6 +657,11 @@ waitFor(experienceSectionHeadline).then((el) => {
         autoCloseTabOrCollectProfileData ();
 
         function clickShowMoreButtons() {
+            const currentRoleMoreButton = $("#profile-card-section div[class^=_current-role-container] [id$=clamped-content] > span:nth-child(2) > button[class^=_ellipsis-button]");
+            if (currentRoleMoreButton.length) {
+                currentRoleMoreButton.click();
+            }
+
             function clickExperienceButtons() {
                 const experienceButtons = document.querySelectorAll("#experience-section [id$=clamped-content] > span:nth-child(2) > button[class^=_ellipsis-button]");
                 if (experienceButtons.length) {
