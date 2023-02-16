@@ -773,6 +773,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             let cleaned = element.replace(/\s/g, "");
             cleaned = cleaned.replace(/(\(|\[|\{|\<)(at|@)(\)|\]|\}|\>)/, "@");
             cleaned = cleaned.replace(/(\(|\[|\{|\<)(dot)(\)|\]|\}|\>)/, ".");
+            cleaned = cleaned.cleanUpString();
             if (cleaned === original) {
                 return [cleaned, ``, ``];
             } else {
@@ -1256,9 +1257,10 @@ waitFor(experienceSectionHeadline).then((el) => {
                     firstEmail = "";
                     allEmails = "";
                 } else {
-                    const checkedEmailsArray = checkedEmailElements.map(function () {
+                    let checkedEmailsArray = checkedEmailElements.map(function () {
                         return $(this).val();
                     }).toArray();
+                    checkedEmailsArray = removeDuplicatesInArray(checkedEmailsArray);
                     firstEmail = checkedEmailElements[0].value;
                     let allEmailsArray = [];
                     profileEmails.uniqueEmails.forEach(function (currentValue) {
