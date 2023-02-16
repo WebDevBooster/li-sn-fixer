@@ -800,7 +800,14 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function addHTMLElements(array, sectionName) {
             if (array) {
-                const filteredArray = array.filter(email => !genericEmailExclusionRegex.test(email));
+                let filteredArray;
+                // don't filter emails from the contact section
+                // because those are guaranteed to be user's real, personal emails
+                if (sectionName !== "contact") {
+                    filteredArray = array.filter(email => !genericEmailExclusionRegex.test(email));
+                } else {
+                    filteredArray = array;
+                }
 
                 if (filteredArray) {
                     let newElements = [];
