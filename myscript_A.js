@@ -464,7 +464,8 @@ if (salesLeadPageMatch) {
 const badgesList = "#profile-card-section > section[class^=_header] ul[class^=_badges]";
 // The experience section headline always exists, even if the experience section is empty.
 // So, it's even better to wait for this HTML because then we definitely have everything.
-const experienceSectionHeadline = "#experience-section > div[class^=_experience-content] > h2";
+// const experienceSectionHeadline = "#experience-section > div[class^=_experience-content] > h2";
+const experienceSectionHeadline = "#profile-card-section > section[class^=_header] > div:nth-child(1) > div[class^=_bodyText] > span";
 waitFor(experienceSectionHeadline).then((el) => {
     checkTime0 = performance.now();
     console.log(`checkTime0 (${(checkTime0 - readyTime).toFixed(2)} ms after readyTime)`);
@@ -495,6 +496,9 @@ waitFor(experienceSectionHeadline).then((el) => {
     // const subdomainDomainDotRegex = /(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})/gi;
     // const newSubdomainDomainDotRegex = /(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})/gi;
     const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
+
+    // Removes images such as image@3x.jpg etc.
+    const imageRemoverRegex = /.+(?<!\.jpg|\.png|\.jpeg|\.jpe|\.jif|\.jfif|\.jfi|\.gif|\.webp|\.tiff|\.tif|\.bmp|\.dib|\.jp2|\.j2k|\.jpf|\.jpx|\.jpm|\.mj2)$/gim;
 
     const twitterRegex = /https:\/\/twitter\.com\/[a-z0-9_]{1,15}/gi;
 
