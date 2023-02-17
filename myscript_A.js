@@ -500,7 +500,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     const genericEmailExclusionRegex = /^(info|jobs|careers|inquiries|Co-Founder|Founder)/i;
 
     // Removes images such as image@3x.jpg etc.
-    const imageRemoverRegex = /.+(?<!\.jpg|\.png|\.jpeg|\.jpe|\.jif|\.jfif|\.jfi|\.gif|\.webp|\.tiff|\.tif|\.bmp|\.dib|\.jp2|\.j2k|\.jpf|\.jpx|\.jpm|\.mj2)$/gim;
+    const imageRemoverRegex = /.+(\.jpg|\.png|\.jpeg|\.jpe|\.jif|\.jfif|\.jfi|\.gif|\.webp|\.tiff|\.tif|\.bmp|\.dib|\.jp2|\.j2k|\.jpf|\.jpx|\.jpm|\.mj2)$/i;
 
     const twitterRegex = /https:\/\/twitter\.com\/[a-z0-9_]{1,15}/gi;
 
@@ -805,6 +805,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // because those are guaranteed to be user's real, personal emails
                 if (sectionName !== "contact") {
                     filteredArray = array.filter(email => !genericEmailExclusionRegex.test(email));
+                    filteredArray = array.filter(email => !imageRemoverRegex.test(email));
                 } else {
                     filteredArray = array;
                 }
