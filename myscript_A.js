@@ -497,6 +497,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     // const newSubdomainDomainDotRegex = /(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})/gi;
     const emailRegex = /(([^<>()[\]\\.,;:\s@"\/]+(\.[^<>()[\]\\.,;:\s@"\/]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
 
+    const nonsenseExclusionRegex = /(www\.)/i;
     const genericEmailExclusionRegex = /^(info|jobs|careers|inquiries)/i;
     const headerGenericsExclusionRegex = /^(Co-Founder|Founder|President|co-CEO|CEO|COO)/i;
 
@@ -801,34 +802,30 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function addHTMLElements(array, sectionName) {
             if (array) {
-                let filteredArray;
+                let filteredArray = array.filter(email => !nonsenseExclusionRegex.test(email));
                 // don't filter emails from the contact section
                 // because those are guaranteed to be user's real, personal emails
                 if (sectionName !== "contact") {
-                    filteredArray = array.filter(email => !genericEmailExclusionRegex.test(email));
+                    filteredArray = filteredArray.filter(email => !genericEmailExclusionRegex.test(email));
                     filteredArray = filteredArray.filter(email => !imageRemoverRegex.test(email));
 
                     if (sectionName === "header") {
                         filteredArray = filteredArray.filter(email => !headerGenericsExclusionRegex.test(email));
                     }
-                } else {
-                    filteredArray = array;
                 }
 
-                if (filteredArray) {
-                    let newElements = [];
-                    newElements[0] = `<span>${sectionName}:</span>`;
-                    filteredArray.forEach(function (currentValue, index) {
-                        currentValue = cleanUpEmail(currentValue);
-                        const checkmark = index === 0 ? "checked" : "";
-                        newElements.push(`
+                let newElements = [];
+                newElements[0] = `<span>${sectionName}:</span>`;
+                filteredArray.forEach(function (currentValue, index) {
+                    currentValue = cleanUpEmail(currentValue);
+                    const checkmark = index === 0 ? "checked" : "";
+                    newElements.push(`
                 <label for="SNF-${sectionName}-checkbox${index}">
                 <input id="SNF-${sectionName}-checkbox${index}" value="${currentValue[0]}" type="checkbox" ${checkmark}>
                 <span id="SNF-${sectionName}-email${index}">${currentValue[0]}${currentValue[1]}${currentValue[2]}</span>
                 </label>`);
-                    });
-                    return newElements.join("");
-                }
+                });
+                return newElements.join("");
             } else {
                 // return "¯\\_( ツ)_/¯";
                 return "";
