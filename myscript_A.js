@@ -498,8 +498,8 @@ waitFor(experienceSectionHeadline).then((el) => {
     const emailRegex = /(([^<>()[\]\\.,;:\s@"\/]+(\.[^<>()[\]\\.,;:\s@"\/]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
 
     const nonsenseExclusionRegex = /(www\.)/i;
-    const genericEmailExclusionRegex = /^(info|jobs|careers|inquiries)/i;
-    const headerGenericsExclusionRegex = /^(Co-Founder|Founder|President|co-CEO|CEO|COO)/i;
+    const genericEmailExclusionRegex = /^(info|jobs|careers|inquiries|projects|recruiting)/i;
+    const headerGenericsExclusionRegex = /^(Co-Founder|Founder|President|co-CEO|CEO|COO|Mentor|Marketing)/i;
 
     // Removes images such as image@3x.jpg etc.
     const imageRemoverRegex = /.+(\.jpg|\.png|\.jpeg|\.jpe|\.jif|\.jfif|\.jfi|\.gif|\.webp|\.tiff|\.tif|\.bmp|\.dib|\.jp2|\.j2k|\.jpf|\.jpx|\.jpm|\.mj2)$/i;
@@ -582,6 +582,8 @@ waitFor(experienceSectionHeadline).then((el) => {
         return this
             .normalize("NFKC") // Remove weird (and unsearchable) fonts like in the headline of this profile: https://www.linkedin.com/in/bobfarkas1
             .replace(/[^\p{L}\p{N}\p{P}\p{Z}^$£€+]/gu, "") // Remove emojis & symbols etc.
+            .replace(/^[+'"=]+/, "") // Remove plus signs and quotes
+            // from the *beginning* of a string because that causes issues when pasting into Google spreadsheet
             .replace(/\s\s+/g, " ") // Replace instances of multiple spaces with one
             // This one supersedes the following as it also removes line breaks, tabs etc.
             //.replace(/\r?\n|\r/gm, ""); // Inside a headline there could even be a line break like in this profile: https://www.linkedin.com/in/andrew-dude-92523335
@@ -1643,8 +1645,14 @@ waitFor(experienceSectionHeadline).then((el) => {
 
     let scriptsRan = false;
     function runScriptsOnce() {
+        const reloadButton = $("#artdeco-modal-outlet div[class^=artdeco-modal] > button.artdeco-modal__confirm-dialog-btn.artdeco-button > span.artdeco-button__text");
+        // There are actually 2 buttons that will match the above selector
+        // if LinkedIn displays that popup.
+        // The one we're interested in has
+        // inner text "Reload page"
+
         // run scripts if not ran before
-        if (!scriptsRan && !document.hidden) {
+        if (!reloadButton.length && !scriptsRan && !document.hidden) {
             console.log(`This tab is now active and the scrips haven't run yet.`);
             runScriptsOnceTime = performance.now();
             console.log(`runScriptsOnceTime (${(runScriptsOnceTime - readyTime).toFixed(2)} ms after readyTime)`);
