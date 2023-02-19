@@ -497,9 +497,9 @@ waitFor(experienceSectionHeadline).then((el) => {
     // const newSubdomainDomainDotRegex = /(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})/gi;
     const emailRegex = /(([^<>()[\]\\.,;:\s@"\/]+(\.[^<>()[\]\\.,;:\s@"\/]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
 
-    const nonsenseExclusionRegex = /(www\.)/i;
+    const nonsenseExclusionRegex = /(www\.|#)/i;
     const genericEmailExclusionRegex = /^(info|jobs|careers|inquiries|projects|recruiting)/i;
-    const headerGenericsExclusionRegex = /^(Co-Founder|Founder|President|co-CEO|CEO|COO|Mentor|Marketing)/i;
+    const headerGenericsExclusionRegex = /^(Co-Founder|Founder|President|co-CEO|CEO|COO|Mentor|Marketing|Product)/i;
 
     // Removes images such as image@3x.jpg etc.
     const imageRemoverRegex = /.+(\.jpg|\.png|\.jpeg|\.jpe|\.jif|\.jfif|\.jfi|\.gif|\.webp|\.tiff|\.tif|\.bmp|\.dib|\.jp2|\.j2k|\.jpf|\.jpx|\.jpm|\.mj2)$/i;
@@ -582,8 +582,8 @@ waitFor(experienceSectionHeadline).then((el) => {
         return this
             .normalize("NFKC") // Remove weird (and unsearchable) fonts like in the headline of this profile: https://www.linkedin.com/in/bobfarkas1
             .replace(/[^\p{L}\p{N}\p{P}\p{Z}^$£€+]/gu, "") // Remove emojis & symbols etc.
-            .replace(/^[+'"=]+/, "") // Remove plus signs and quotes
-            // from the *beginning* of a string because that causes issues when pasting into Google spreadsheet
+            .replace(/^[+'"=]/, "/$&") // Prepend a slash to plus signs and quotes
+            // at the *beginning* of a string because + or " at the beginning causes issues when pasting into Google Sheets
             .replace(/\s\s+/g, " ") // Replace instances of multiple spaces with one
             // This one supersedes the following as it also removes line breaks, tabs etc.
             //.replace(/\r?\n|\r/gm, ""); // Inside a headline there could even be a line break like in this profile: https://www.linkedin.com/in/andrew-dude-92523335
