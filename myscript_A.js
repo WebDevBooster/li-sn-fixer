@@ -816,6 +816,34 @@ waitFor(experienceSectionHeadline).then((el) => {
                     }
                 }
 
+                if (filteredArray) {
+                    /*
+                    // play audio (doesn't work because it requires user interaction such as a click to play media)
+                    const audio = new Audio(chrome.runtime.getURL("media/adara.mp3"));
+                    console.log("audio variable: ", audio);
+                    audio.play().then(() => {
+                        console.log('Audio file played successfully');
+                    }).catch((error) => {
+                        console.error('Error playing audio file:', error);
+                    });
+                    */
+
+                    // Get my Telegram bot (Linked Messenger) to message me
+                    const apiKey = "5927670817:AAFsEJ6U5NhWo1Fz6iVk7yEAk3iWhTyAWxw";
+                    const chatId = "1895015879";
+                    const message = "Hey, there's an email to check!";
+
+                    const url = `https://api.telegram.org/bot${apiKey}/sendMessage?chat_id=${chatId}&text=${message}`;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Message sent:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error sending message:', error);
+                        });
+                }
                 let newElements = [];
                 newElements[0] = `<span>${sectionName}:</span>`;
                 filteredArray.forEach(function (currentValue, index) {
