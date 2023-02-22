@@ -828,6 +828,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                     });
                     */
 
+                    /*
                     // Get my Telegram bot (Linked Messenger) to message me
                     const apiKey = "5927670817:AAFsEJ6U5NhWo1Fz6iVk7yEAk3iWhTyAWxw";
                     const chatId = "1895015879";
@@ -843,6 +844,8 @@ waitFor(experienceSectionHeadline).then((el) => {
                         .catch(error => {
                             console.error('Error sending message:', error);
                         });
+                    // Telegram message sent.
+                    */
                 }
                 let newElements = [];
                 newElements[0] = `<span>${sectionName}:</span>`;
