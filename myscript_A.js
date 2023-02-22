@@ -1290,9 +1290,9 @@ waitFor(experienceSectionHeadline).then((el) => {
                 copyBtn.click(function () {
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
                         modifyClipboard(profileURL);
-                        copyBtn.before("<div style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
+                        copyBtn.before("<div id='SNFc-success' style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                     } else {
-                        copyBtn.before("<div style='text-align: center; background-color: orangered'><b>✖</b></div>");
+                        copyBtn.before("<div id='SNFc-fail' style='text-align: center; background-color: orangered'><b>✖</b></div>");
                     }
                 });
 
