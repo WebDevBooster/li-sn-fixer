@@ -6,7 +6,50 @@
 </head>
 <body>
 
+<!--
+https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/7TULfhj1kIwF7dWTiaNs/pub/jXcIcDA9OIy21ADdPLYi.jpg
+https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,h_600,c_lfill/https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,h_600,c_lfill/https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/7TULfhj1kIwF7dWTiaNs/pub/jXcIcDA9OIy21ADdPLYi.jpg
+
+With `w_600` Cloudinary can automatically scale down the image to 600px width
+and with `ar_3:2` it automatically crops the image to a 3:2 aspect ratio (which reduces the file size even more).
+Here's an example:
+https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,ar_3:2,c_lfill/https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/7TULfhj1kIwF7dWTiaNs/pub/jXcIcDA9OIy21ADdPLYi.jpg
+That image is only 17.4 KB
+https://cloudinary.com/documentation/resizing_and_cropping
+https://cloudinary.com/documentation/transformation_reference#c_fill
+-->
+
+
+<!--
 <img src="https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,h_600,c_lfill/https%3A%2F%2Fres.cloudinary.com%2Fglide%2Fimage%2Ffetch%2Ff_auto%2Cw_600%2Ch_600%2Cc_lfill%2Fhttps%253A%252F%252Fstorage.googleapis.com%252Fglide-prod.appspot.com%252Fuploads-v2%252F7TULfhj1kIwF7dWTiaNs%252Fpub%252FjXcIcDA9OIy21ADdPLYi.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+
+Better change the above to something like this:
+
+<img src="https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,ar_3:2,c_lfill/https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/7TULfhj1kIwF7dWTiaNs/pub/jXcIcDA9OIy21ADdPLYi.jpg"
+     style="width: 100%; height: 100%; object-fit: cover;">
+-->
+
+
+<!--My custom Rich Text element V3-->
+<div style="width: calc(100% + 32px); height: auto; margin-top: -24px; margin-left: -16px; margin-bottom: -8px; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; aspect-ratio: 3/2; position: relative;">
+    <img src="https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,ar_3:2,c_lfill/https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/7TULfhj1kIwF7dWTiaNs/pub/jXcIcDA9OIy21ADdPLYi.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+    <div style="position: absolute; bottom: 0; left: 0; padding: 10px 16px; color: white; text-shadow: rgb(0 0 0 / 90%) 0px 0px 4px; background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); width: 100%;">
+        <p style="margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.5rem;">Mary<br><span style="margin-left: -3px; letter-spacing: -1px;">⭐⭐⭐⭐⭐</span></p>
+        <p style="margin: 0; font-size: 1rem; font-weight: 500;">attendance: 100%</p>
+    </div>
+</div>
+<!--My custom Rich Text element V3 END-->
+
+
+<!--My custom Rich Text element V2-->
+<div style="width: calc(100% + 32px); height: auto; margin-top: -8px; margin-left: -16px; margin-bottom: -8px; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; aspect-ratio: 3/2; position: relative;">
+    <img src="https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,h_600,c_lfill/https%3A%2F%2Fres.cloudinary.com%2Fglide%2Fimage%2Ffetch%2Ff_auto%2Cw_600%2Ch_600%2Cc_lfill%2Fhttps%253A%252F%252Fstorage.googleapis.com%252Fglide-prod.appspot.com%252Fuploads-v2%252F7TULfhj1kIwF7dWTiaNs%252Fpub%252FjXcIcDA9OIy21ADdPLYi.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+    <div style="position: absolute; bottom: 0; left: 0; padding: 10px 16px; color: white; text-shadow: rgb(0 0 0 / 90%) 0px 0px 4px; background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); width: 100%;">
+        <p style="margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.5rem;">Mary<br><span style="margin-left: -4px; letter-spacing: -2px;">⭐⭐⭐⭐⭐</span></p>
+        <p style="margin: 0; font-size: 1rem; font-weight: 500;">attendance: 100%</p>
+    </div>
+</div>
+<!--My custom Rich Text element V2 END-->
 
 <!--My custom Rich Text element -->
 <div style="width: 100%; height: auto; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; aspect-ratio: 3/2; position: relative;">
@@ -19,15 +62,7 @@
 <!--My custom Rich Text element END-->
 
 
-<!--My custom Rich Text element V2 END-->
-<div style="width: calc(100% + 32px); height: auto; margin-top: -8px; margin-left: -16px; margin-bottom: -8px; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; aspect-ratio: 3/2; position: relative;">
-    <img src="https://res.cloudinary.com/glide/image/fetch/f_auto,w_600,h_600,c_lfill/https%3A%2F%2Fres.cloudinary.com%2Fglide%2Fimage%2Ffetch%2Ff_auto%2Cw_600%2Ch_600%2Cc_lfill%2Fhttps%253A%252F%252Fstorage.googleapis.com%252Fglide-prod.appspot.com%252Fuploads-v2%252F7TULfhj1kIwF7dWTiaNs%252Fpub%252FjXcIcDA9OIy21ADdPLYi.jpg" style="width: 100%; height: 100%; object-fit: cover;">
-    <div style="position: absolute; bottom: 0; left: 0; padding: 10px 16px; color: white; text-shadow: rgb(0 0 0 / 90%) 0px 0px 4px; background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); width: 100%;">
-        <p style="margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.5rem;">Mary<br><span style="margin-left: -4px; letter-spacing: -2px;">⭐⭐⭐⭐⭐</span></p>
-        <p style="margin: 0; font-size: 1rem; font-weight: 500;">attendance: 100%</p>
-    </div>
-</div>
-<!--My custom Rich Text element V2 END-->
+
 
 
 
