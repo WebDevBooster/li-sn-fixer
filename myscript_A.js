@@ -851,7 +851,9 @@ waitFor(experienceSectionHeadline).then((el) => {
                 newElements[0] = `<span>${sectionName}:</span>`;
                 filteredArray.forEach(function (currentValue, index) {
                     currentValue = cleanUpEmail(currentValue);
-                    const checkmark = index === 0 ? "checked" : "";
+                    // const checkmark = index === 0 ? "checked" : "";
+                    // with the new automation, I now want to grab all emails as I won't be manually checking.
+                    const checkmark = "checked";
                     newElements.push(`
                 <label for="SNF-${sectionName}-checkbox${index}">
                 <input id="SNF-${sectionName}-checkbox${index}" value="${currentValue[0]}" type="checkbox" ${checkmark}>
@@ -1718,71 +1720,71 @@ waitFor(experienceSectionHeadline).then((el) => {
 
 
 
-    if (searchPageMatch) {
-        waitFor("#search-results-container ol li:nth-of-type(1)").then((el) => {
-            updateLocalStorage();
+if (searchPageMatch) {
+    waitFor("#search-results-container ol li:nth-of-type(1)").then((el) => {
+        updateLocalStorage();
 
-            function manipulateListElement(element, index) {
-                // Hide non-premium profiles (for now I'm only targeting premium profiles)
-                if ($(element).has("span[data-anonymize=person-name]").length
-                    && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length
-                    && $(element).has("li-icon[aria-label^=Viewed]").length
-                    && !$(element).has(".SNF-viewed-non-premium").length) {
-                    // add class ".viewed-non-premium"
-                    $(element).addClass("SNF-viewed-non-premium");
-                }
-
-                if ($(element).has("span[data-anonymize=person-name]").length
-                    && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length
-                    && !$(element).has(".SNF-non-premium").length) {
-                    // element.style.backgroundColor = "#0073b1";
-                    // element.style.backgroundColor = "aqua";
-                    $(element).addClass("SNF-non-premium");
-                }
-
-
-                if ($(element).has("li-icon[aria-label^=Viewed]").length && !$(element).has(".SNF-viewed-premium").length) {
-                    //element.style.backgroundColor = "cornsilk";
-                    $(element).addClass("SNF-viewed-premium");
-                }
-
-                // most "out-of-network" profiles are useless for me
-                if ($(element).has("div[class^=_out-of-network]").length && !$(element).has(".SNF-out-of-network").length) {
-                    // element.style.backgroundColor = "pink";
-                    $(element).addClass("SNF-out-of-network");
-                }
+        function manipulateListElement(element, index) {
+            // Hide non-premium profiles (for now I'm only targeting premium profiles)
+            if ($(element).has("span[data-anonymize=person-name]").length
+                && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length
+                && $(element).has("li-icon[aria-label^=Viewed]").length
+                && !$(element).has(".SNF-viewed-non-premium").length) {
+                // add class ".viewed-non-premium"
+                $(element).addClass("SNF-viewed-non-premium");
             }
 
-            function handleListItems() {
-                const listArray = document.querySelectorAll("li.artdeco-list__item");
-                const aboutSectionsArray = $("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div:nth-of-type(2)");
-                const yearsArray = $("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div > div > div:nth-of-type(2) > div:nth-of-type(4)");
-
-                if (listArray.length) {
-                    listArray.forEach(manipulateListElement);
-                }
-
-                if (aboutSectionsArray.length) {
-                    // aboutSectionsArray.forEach(hideSection);
-                    aboutSectionsArray.each(function () {
-                        if ($(this).is(":visible")) {
-                            $(this).hide();
-                        }
-                    });
-                }
-
-                if (yearsArray.length) {
-                    yearsArray.each(function () {
-                        if ($(this).is(":visible")) {
-                            $(this).hide();
-                        }
-                    });
-                }
+            if ($(element).has("span[data-anonymize=person-name]").length
+                && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length
+                && !$(element).has(".SNF-non-premium").length) {
+                // element.style.backgroundColor = "#0073b1";
+                // element.style.backgroundColor = "aqua";
+                $(element).addClass("SNF-non-premium");
             }
 
-            setInterval(handleListItems, 300);
-        });
-    }
+
+            if ($(element).has("li-icon[aria-label^=Viewed]").length && !$(element).has(".SNF-viewed-premium").length) {
+                //element.style.backgroundColor = "cornsilk";
+                $(element).addClass("SNF-viewed-premium");
+            }
+
+            // most "out-of-network" profiles are useless for me
+            if ($(element).has("div[class^=_out-of-network]").length && !$(element).has(".SNF-out-of-network").length) {
+                // element.style.backgroundColor = "pink";
+                $(element).addClass("SNF-out-of-network");
+            }
+        }
+
+        function handleListItems() {
+            const listArray = document.querySelectorAll("li.artdeco-list__item");
+            const aboutSectionsArray = $("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div:nth-of-type(2)");
+            const yearsArray = $("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div > div > div:nth-of-type(2) > div:nth-of-type(4)");
+
+            if (listArray.length) {
+                listArray.forEach(manipulateListElement);
+            }
+
+            if (aboutSectionsArray.length) {
+                // aboutSectionsArray.forEach(hideSection);
+                aboutSectionsArray.each(function () {
+                    if ($(this).is(":visible")) {
+                        $(this).hide();
+                    }
+                });
+            }
+
+            if (yearsArray.length) {
+                yearsArray.each(function () {
+                    if ($(this).is(":visible")) {
+                        $(this).hide();
+                    }
+                });
+            }
+        }
+
+        setInterval(handleListItems, 300);
+    });
+}
 
 });
 
