@@ -1284,7 +1284,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             }
 */
 
-            waitFor("#hue-web-menu-outlet ul li a").then((el) => {
+            waitFor("#hue-web-menu-outlet div[data-artdeco-is-focused=\"true\"] ul li a").then((el) => {
                 // profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
                 profileURL = $( "#hue-web-menu-outlet ul li a:contains('View LinkedIn profile')" ).attr("href");
                 // const copyElement = $( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
