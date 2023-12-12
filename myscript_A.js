@@ -476,10 +476,10 @@ waitFor(experienceSectionHeadline).then((el) => {
     const premiumBadge = $(`${badgesList} li > span svg[class^=_premium-badge]`);
     const openBadge = $(`${badgesList} li > span[class^=_open-badge]`);
     const headerSection = $("#profile-card-section > section[class^=_header]");
-    const detailsSection = $("#profile-card-section > section[class^=_details-section]");
+    const detailsSection = $("#profile-card-section > section[class^=details-section]");
     const aboutSection = $("#about-section");
     const experienceSection = $("#experience-section");
-    const isExperienceSectionEmpty = $("#experience-section > div[class^=_empty-state-container]").length;
+    const isExperienceSectionEmpty = $("#experience-section > div[class^=experience-content]").length;
     const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text();
 
     // This is a normal email regex that I used to collect the first 20K~ investor leads (until 25/10/2022):
@@ -663,7 +663,7 @@ waitFor(experienceSectionHeadline).then((el) => {
         autoCloseTabOrCollectProfileData ();
 
         function clickShowMoreButtons() {
-            const currentRoleMoreButton = $("#profile-card-section div[class^=_current-role-container] [id$=clamped-content] > span:nth-child(2) > button[class^=_ellipsis-button]");
+            const currentRoleMoreButton = $("#profile-card-section div[class^=current-role-container] [id$=clamped-content] > span:nth-child(2) > button[class^=_ellipsis-button]");
             if (currentRoleMoreButton.length) {
                 currentRoleMoreButton.click();
             }
@@ -707,7 +707,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function collectTwitter() {
             let twitterLink = "";
-            const contactSection = $("#profile-card-section > section[class^=_details-section] > section");
+            const contactSection = $("#profile-card-section > section[class^=details-section] > section");
 
             if (contactSection.length) {
                 let twitterURLs = contactSection.html().match(twitterRegex); // null if none, array if some
@@ -729,7 +729,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 emailList = emailList.concat(profileEmails.inHeader);
             }
 
-            const contactSection = $("#profile-card-section > section[class^=_details-section] > section");
+            const contactSection = $("#profile-card-section > section[class^=details-section] > section");
             if (contactSection.length) {
                 profileEmails.inContact = contactSection.html().match(emailRegex);
                 if (profileEmails.inContact) {
@@ -740,9 +740,9 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
             }
 
-            const currentRolesSectionEmpty = $("#profile-card-section > section[class^=_details-section] > div[class^=_current-role-container] p[class^=_no-current-role]").length;
+            const currentRolesSectionEmpty = $("#profile-card-section > section[class^=details-section] > div[class^=current-role-container] p[class^=_no-current-role]").length;
             if (!currentRolesSectionEmpty) {
-                const currentRolesSection = $("#profile-card-section > section[class^=_details-section] > div[class^=_current-role-container]");
+                const currentRolesSection = $("#profile-card-section > section[class^=details-section] > div[class^=current-role-container]");
                 profileEmails.inCurrentRoles = currentRolesSection.html().match(emailRegex);
                 if (profileEmails.inCurrentRoles) {
                     profileEmails.inCurrentRoles = removeDuplicatesInArray(profileEmails.inCurrentRoles);
@@ -764,9 +764,9 @@ waitFor(experienceSectionHeadline).then((el) => {
             }
 
             if (!isExperienceSectionEmpty) {
-                const experienceEntries = $("#experience-section ul[class^=_experience-list] li[class^=_experience-entry]");
+                const experienceEntries = $("#experience-section ul[class^=experience-list] li[class^=_experience-entry]");
                 const presentEntries = experienceEntries.filter(function() {
-                    return $(this).find("span[class^=_position-time-period-range]").text().includes("Present");
+                    return $(this).find("span[class^=position-time-period-range]").text().includes("Present");
                 });
 
                 if (presentEntries.length > 0) {
@@ -1373,11 +1373,11 @@ waitFor(experienceSectionHeadline).then((el) => {
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().cleanUpString();
             const headlineClean = headline.cleanUpString();
 
-            const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > div:nth-child(1)" ).text().cleanUpString();
+            const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=lockup-links-container] > div:nth-child(1)" ).text().cleanUpString();
 
             let connections = "";
-            const connectionsOfNon1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > div:nth-child(2)" );
-            const connectionsOf1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=_lockup-links-container] > a:nth-child(2)" );
+            const connectionsOfNon1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=lockup-links-container] > div:nth-child(2)" );
+            const connectionsOf1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=lockup-links-container] > a:nth-child(2)" );
             if (connectionsOfNon1stDegreeProfile.length) {
                 connections = connectionsOfNon1stDegreeProfile.text()
                     .cleanUpString().replace(/(\+ connections| (connections|connection))/, "");
@@ -1603,8 +1603,8 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         async function fillJobList() {
             jobList = []; // Need to empty it in case I clicked the copy button before but then decided to choose a different set of emails.
-            let jobElements = $("#experience-section ul[class^=_experience-list] li[class^=_experience-entry]");
-            let multiPositionsList = $("#experience-section ul[class^=_experience-list] li[class^=_experience-entry] ul[class^=_positions-list]");
+            let jobElements = $("#experience-section ul[class^=experience-list] li[class^=_experience-entry]");
+            let multiPositionsList = $("#experience-section ul[class^=experience-list] li[class^=_experience-entry] ul[class^=_positions-list]");
 
             if (jobElements.length) {
                 jobElements.each(function () {
