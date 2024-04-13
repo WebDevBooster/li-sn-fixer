@@ -1376,11 +1376,11 @@ waitFor(experienceSectionHeadline).then((el) => {
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().cleanUpString();
             const headlineClean = headline.cleanUpString();
 
-            const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=lockup-links-container] > div:nth-child(1)" ).text().cleanUpString();
+            const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)" ).text().cleanUpString();
 
             let connections = "";
-            const connectionsOfNon1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=lockup-links-container] > div:nth-child(2)" );
-            const connectionsOf1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div[class^=lockup-links-container] > a:nth-child(2)" );
+            const connectionsOfNon1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)" );
+            const connectionsOf1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > a:nth-child(2)" );
             if (connectionsOfNon1stDegreeProfile.length) {
                 connections = connectionsOfNon1stDegreeProfile.text()
                     .cleanUpString().replace(/(\+ connections| (connections|connection))/, "");
