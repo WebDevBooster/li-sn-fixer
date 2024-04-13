@@ -732,7 +732,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 emailList = emailList.concat(profileEmails.inHeader);
             }
 
-            const contactSection = $("#profile-card-section > section[class^=details-section] > section");
+            const contactSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
             if (contactSection.length) {
                 profileEmails.inContact = contactSection.html().match(emailRegex);
                 if (profileEmails.inContact) {
