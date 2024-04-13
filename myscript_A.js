@@ -767,7 +767,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             }
 
             if (!isExperienceSectionEmpty) {
-                const experienceEntries = $("#experience-section ul[class^=experience-list] li[class^=_experience-entry]");
+                const experienceEntries = $("#experience-section ul li[class^=_experience-entry]");
                 const presentEntries = experienceEntries.filter(function() {
                     return $(this).find("span[class^=position-time-period-range]").text().includes("Present");
                 });
