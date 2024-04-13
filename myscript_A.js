@@ -476,7 +476,8 @@ waitFor(experienceSectionHeadline).then((el) => {
     const premiumBadge = $(`${badgesList} li > span svg[class^=_premium-badge]`);
     const openBadge = $(`${badgesList} li > span[class^=_open-badge]`);
     const headerSection = $("#profile-card-section > section[class^=_header]");
-    const detailsSection = $("#profile-card-section > section[class^=details-section]");
+    // const detailsSection = $("#profile-card-section > section[class^=details-section]");
+    const detailsSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
     const aboutSection = $("#about-section");
     const experienceSection = $("#experience-section");
     const isExperienceSectionEmpty = $("#experience-section > div[class^=experience-content]").length;
@@ -592,6 +593,8 @@ waitFor(experienceSectionHeadline).then((el) => {
 
     /////////////////////////////
     function handleThisProfile() {
+        hideRelationshipSection();
+
         // Quick check to see if there are any emails
         function hasEmail() {
             // Header and Details HTML will have loaded at this point.
@@ -740,9 +743,9 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
             }
 
-            const currentRolesSectionEmpty = $("#profile-card-section > section[class^=details-section] > div[class^=current-role-container] p[class^=_no-current-role]").length;
-            if (!currentRolesSectionEmpty) {
-                const currentRolesSection = $("#profile-card-section > section[class^=details-section] > div[class^=current-role-container]");
+            // const currentRolesSectionEmpty = $("#profile-card-section > section[class^=details-section] > div[class^=current-role-container] p[class^=_no-current-role]").length;
+            const currentRolesSection = $("#profile-card-section > section div[data-sn-view-name=lead-current-role]");
+            if (currentRolesSection.length) {
                 profileEmails.inCurrentRoles = currentRolesSection.html().match(emailRegex);
                 if (profileEmails.inCurrentRoles) {
                     profileEmails.inCurrentRoles = removeDuplicatesInArray(profileEmails.inCurrentRoles);
@@ -1422,9 +1425,8 @@ waitFor(experienceSectionHeadline).then((el) => {
             const relationshipSection = document.querySelector("#relationship-section");
 
             if (!!relationshipSection) {
-                // console.log(`We've got relationship section! Hiding...`);
-                // we no longer need to hide this
-                // hideSection(relationshipSection);
+                console.log(`We've got relationship section! Hiding...`);
+                hideSection(relationshipSection);
             }
         }
 
