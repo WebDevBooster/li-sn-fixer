@@ -480,7 +480,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     const detailsSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
     const aboutSection = $("#about-section");
     const experienceSection = $("#experience-section");
-    const isExperienceSectionEmpty = $("#experience-section > section:nth-child(1) > div > ul > li").length;
+    const isExperienceSectionNotEmpty = $("#experience-section > section:nth-child(1) > div > ul > li").length;
     const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text();
 
     // This is a normal email regex that I used to collect the first 20K~ investor leads (until 25/10/2022):
@@ -766,13 +766,15 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
             }
 
-            if (!isExperienceSectionEmpty) {
+            if (isExperienceSectionNotEmpty) {
+                console.log("Experience Section is not empty.");
                 const experienceEntries = $("#experience-section ul li[class^=_experience-entry]");
                 const presentEntries = experienceEntries.filter(function() {
-                    return $(this).find("span[class^=position-time-period-range]").text().includes("Present");
+                    return $(this).find("div:nth-child(1) > div:nth-child(2) > p > span").text().includes("Present");
                 });
 
                 if (presentEntries.length > 0) {
+                    console.log(presentEntries.length + " experienceEntries containing 'Present' found.");
                     const htmlContentOfPresentEntries = presentEntries.map((index, el) => $(el).html()).get().join("");
                     profileEmails.inExperience = htmlContentOfPresentEntries.match(emailRegex);
                 } else {
@@ -1195,7 +1197,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
 
                 // in experience section:
-                if (!isExperienceSectionEmpty) {
+                if (isExperienceSectionNotEmpty) {
                     const jobTitleElements = $("h2[data-anonymize=job-title], h3[data-anonymize=job-title]");
                     // This matches all job titles in single-title and multi-title job lists
                     if (jobTitleElements.length) {
@@ -1605,7 +1607,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         async function fillJobList() {
             jobList = []; // Need to empty it in case I clicked the copy button before but then decided to choose a different set of emails.
-            let jobElements = $("#experience-section ul[class^=experience-list] li[class^=_experience-entry]");
+            let jobElements = $("#experience-section ul li[class^=_experience-entry]");
             let multiPositionsList = $("#experience-section ul[class^=experience-list] li[class^=_experience-entry] ul[class^=_positions-list]");
 
             if (jobElements.length) {
