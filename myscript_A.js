@@ -480,7 +480,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     const detailsSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
     const aboutSection = $("#about-section");
     const experienceSection = $("#experience-section");
-    const isExperienceSectionEmpty = $("#experience-section > div[class^=experience-content]").length;
+    const isExperienceSectionEmpty = $("#experience-section > section:nth-child(1) > div > ul > li").length;
     const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text();
 
     // This is a normal email regex that I used to collect the first 20K~ investor leads (until 25/10/2022):
