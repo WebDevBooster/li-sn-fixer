@@ -710,7 +710,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function collectTwitter() {
             let twitterLink = "";
-            const contactSection = $("#profile-card-section > section[class^=details-section] > section");
+            const contactSection = $("#profile-card-section section[data-sn-view-name=lead-contact-info] > div > address");
 
             if (contactSection.length) {
                 let twitterURLs = contactSection.html().match(twitterRegex); // null if none, array if some
