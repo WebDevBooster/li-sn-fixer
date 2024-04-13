@@ -465,7 +465,7 @@ const badgesList = "#profile-card-section > section[class^=_header] ul[class^=_b
 // The experience section headline always exists, even if the experience section is empty.
 // So, it's even better to wait for this HTML because then we definitely have everything.
 // const experienceSectionHeadline = "#experience-section > div[class^=_experience-content] > h2";
-const experienceSectionHeadline = "#profile-card-section > section[class^=_header] > div:nth-child(1) > div[class^=_bodyText] > span";
+const experienceSectionHeadline = "#experience-section > section:nth-child(1) > div > h2 > span";
 waitFor(experienceSectionHeadline).then((el) => {
     checkTime0 = performance.now();
     console.log(`checkTime0 (${(checkTime0 - readyTime).toFixed(2)} ms after readyTime)`);
