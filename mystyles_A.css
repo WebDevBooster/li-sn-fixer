@@ -103,14 +103,19 @@
 
 #SNF-counter {
     position: fixed;
-    top: 200px;
+    /*top: 200px;*/
+    top: 0;
     left: 0;
     line-height: 20px;
     padding: 0 5px;
     background-color: cornsilk;
     z-index: 9999;
     display: flex;
-    flex-direction: column;
+    /*flex-direction: column;*/
+    flex-direction: row;
+}
+#SNF-counter > span {
+    width: 60px;
 }
 
 #SNF-counter-search-page {
