@@ -490,6 +490,22 @@ waitFor(experienceSectionHeadline).then((el) => {
 
     const premiumBadge = $(`${badgesList} li > span svg[class^=_premium-badge]`);
     const openBadge = $(`${badgesList} li > span[class^=_open-badge]`);
+
+    const latestTouchPoint = $("#profile-card-section div[class^=_latest-touch-point]");
+    if (latestTouchPoint.length) {
+        const tooltipContent = latestTouchPoint.text();
+        if (tooltipContent.includes("First time view")) {
+            console.log("tooltipContent: " + tooltipContent);
+            latestTouchPoint.css("background-color", "limegreen");
+        } else if (tooltipContent.includes("Viewed:")) {
+            console.log("tooltipContent: " + tooltipContent);
+            latestTouchPoint.css("background-color", "yellow");
+        } else {
+            console.log("tooltipContent: " + tooltipContent);
+            latestTouchPoint.css("background-color", "red");
+        }
+    }
+
     const headerSection = $("#profile-card-section > section[class^=_header]");
     // const detailsSection = $("#profile-card-section > section[class^=details-section]");
     const detailsSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
