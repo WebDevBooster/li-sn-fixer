@@ -3,6 +3,7 @@ const currentURL = document.location.href;
 const salesLeadPageMatch = currentURL.match(/linkedin\.com\/sales\/lead/);
 const mozillaPageMatch = currentURL.match(/developer\.mozilla\.org/);
 const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/);
+const linkedinProfilePageMatch = currentURL.match(/linkedin\.com\/in\//);
 const body = $("body");
 const readyTime = performance.now();
 
@@ -453,6 +454,20 @@ if (mozillaPageMatch) {
         $("#SNF-copy").before("<div style='text-align: center;'>❌</div>");
     });
 */
+
+}
+
+if (linkedinProfilePageMatch) {
+	console.log("Linkedin profile page detected");
+    waitFor("#artdeco-modal-outlet .artdeco-modal.send-invite textarea#custom-message").then((el) => {
+		console.log("customMessageBox detected!");
+	    const customMessageBox = $("#artdeco-modal-outlet .artdeco-modal.send-invite textarea#custom-message");
+	    setInterval(function () {
+	        if (customMessageBox.length) {
+	            customMessageBox.css("height", "180px");
+	        }
+	    }, 250);
+    });
 
 }
 
