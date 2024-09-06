@@ -1645,11 +1645,11 @@ waitFor(experienceSectionHeadline).then((el) => {
                 jobElements.each(function () {
                     let job = {};
                     job["titles"] = [];
-                    console.log(`$(this).children("ul[class^=_positions-list]").length`);
-                    console.log($(this).children("ul[class^=_positions-list]").length);
-                    if ($(this).children("ul[class^=_positions-list]").length) {
-                        console.log(`$(this).children("ul[class^=_positions-list]")`);
-                        console.log($(this).children("ul[class^=_positions-list]"));
+                    console.log(`$(this).children("li[class^=_experience-entry] ul").length`);
+                    console.log($(this).children("li[class^=_experience-entry] ul").length);
+                    if ($(this).children("li[class^=_experience-entry] ul").length) {
+                        console.log(`$(this).children("li[class^=_experience-entry] ul")`);
+                        console.log($(this).children("li[class^=_experience-entry] ul"));
                         // Example user with multiPositionsList:
                         // https://www.linkedin.com/sales/lead/ACwAAAC42vgBYm0a8xWAXNdflo0MUtpcvAwDE5U,name
                         // https://www.linkedin.com/in/gilbertson
@@ -1657,12 +1657,14 @@ waitFor(experienceSectionHeadline).then((el) => {
                         let multiTitleJobList = [];
                         let job = {};
                         job["titles"] = [];
-                        let multiPositionElements = $(this).find("li[class^=_position-entry]");
+                        let multiPositionElements = $(this).find("ul li");
                         console.log(`multiPositionElements:`);
                         console.log(multiPositionElements);
                         multiPositionElements.each(function (index) {
                             job["titles"][index] = $(this).find("h3[data-anonymize=job-title]").text()
                                 .cleanUpString();
+                            console.log("current multiPosition job title: ");
+                            console.log(job["titles"][index]);
 
                             /*
                                                     let titleElements = $(this).find("li[class^=_position-entry]");
