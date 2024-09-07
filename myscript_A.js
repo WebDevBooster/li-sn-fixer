@@ -1645,11 +1645,15 @@ waitFor(experienceSectionHeadline).then((el) => {
                 jobElements.each(function () {
                     let job = {};
                     job["titles"] = [];
-                    console.log(`$(this).children("li[class^=_experience-entry] ul").length`);
-                    console.log($(this).children("li[class^=_experience-entry] ul").length);
-                    if ($(this).children("li[class^=_experience-entry] ul").length) {
-                        console.log(`$(this).children("li[class^=_experience-entry] ul")`);
-                        console.log($(this).children("li[class^=_experience-entry] ul"));
+                    let listsInExperienceEntry = $(this).children("li[class^=_experience-entry] ul");
+                    console.log(`listsInExperienceEntry.length`);
+                    console.log(listsInExperienceEntry.length);
+                    if (listsInExperienceEntry.length &&
+                        listsInExperienceEntry.find("h3[data-anonymize=job-title]").length) {
+                        // we have to do this check because sometimes those lists inside experience entry
+                        // are media elements lists like in the case of this guy: https://www.linkedin.com/in/matcy/
+                        console.log("found multiPositionElements/h3 job titles: ");
+                        console.log(listsInExperienceEntry.find("h3[data-anonymize=job-title]"));
                         // Example user with multiPositionsList:
                         // https://www.linkedin.com/sales/lead/ACwAAAC42vgBYm0a8xWAXNdflo0MUtpcvAwDE5U,name
                         // https://www.linkedin.com/in/gilbertson
