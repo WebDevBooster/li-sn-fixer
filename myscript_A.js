@@ -1407,6 +1407,8 @@ waitFor(experienceSectionHeadline).then((el) => {
             const leadURL = `${currentURL.substring(0, 75)},name`;
             profileURL = url;
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().cleanUpString();
+            const firstName = name.split(" ")[0];
+            const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
             const headlineClean = headline.cleanUpString();
 
             const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)" ).text().cleanUpString();
@@ -1429,7 +1431,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             getKeywordScores(kwArray);
             addLeadToCounter();
 
-            await navigator.clipboard.writeText(`${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}\t${isPremium}\t${isOpen}\t${connections}\t${twitter}`);
+            await navigator.clipboard.writeText(`${capitalizedFirstName}\t${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}\t${isPremium}\t${isOpen}\t${connections}\t${twitter}`);
         }
 
 
