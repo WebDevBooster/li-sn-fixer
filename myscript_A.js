@@ -546,6 +546,10 @@ waitFor(experienceSectionHeadline).then((el) => {
         inExperience: null,
         uniqueEmails: []
     }
+    let profilePhoneAndWebsite = {
+        profilePhone: "",
+        profileWebsite: ""
+    }
     let firstEmail = "";
     let allEmails = "";
     let jobList = [];
@@ -751,6 +755,34 @@ waitFor(experienceSectionHeadline).then((el) => {
             }
 
             return twitterLink;
+        }
+
+        function collectPhoneAndWebsite() {
+            console.log("collectPhoneAndWebsite");
+            let phoneNumber;
+            let websiteURL;
+
+            const contactSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
+            if (contactSection.length) {
+                phoneNumber = contactSection.find("span[data-anonymize=phone]").text().trim();
+                // prepend apostrophe to fix Google Sheets formatting issues
+                if (phoneNumber) {
+                    phoneNumber = `'${phoneNumber}`;
+                }
+            }
+            console.log("phone number: " + phoneNumber);
+            profilePhoneAndWebsite.profilePhone = phoneNumber;
+
+            waitFor("#artdeco-modal-outlet div[aria-labelledby=lead-contact-info-modal__header] section.contact-info-form__website div.contact-info-form__website-readonly-group a").then((el) => {
+                console.log("Found contact info modal!");
+                websiteURL = $( "#artdeco-modal-outlet div[aria-labelledby=lead-contact-info-modal__header] section.contact-info-form__website div.contact-info-form__website-readonly-group a" ).attr("href");
+                console.log("websiteURL: " + websiteURL);
+                if (websiteURL) {
+                    profilePhoneAndWebsite.profileWebsite = websiteURL;
+                }
+            });
+
+            return profilePhoneAndWebsite;
         }
 
         function collectEmails() {
@@ -1289,6 +1321,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function collectProfileData() {
             setTimeout(clickShowMoreButtons, 1);
+            setTimeout(collectPhoneAndWebsite, 888);
             setTimeout(collectEmails, 999);
             setTimeout(appendCollectedEmails, 1122);
             setTimeout(findMatchingKeywords, 1222, kwArray);
@@ -1433,7 +1466,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             getKeywordScores(kwArray);
             addLeadToCounter();
 
-            await navigator.clipboard.writeText(`${capitalizedFirstName}\t${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}\t${isPremium}\t${isOpen}\t${connections}\t${twitter}\t\t\t${cleanCompanyName}`);
+            await navigator.clipboard.writeText(`${capitalizedFirstName}\t${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}\t${isPremium}\t${isOpen}\t${connections}\t${twitter}\t${profilePhoneAndWebsite.profilePhone}\t${profilePhoneAndWebsite.profileWebsite}\t${cleanCompanyName}`);
         }
 
 
