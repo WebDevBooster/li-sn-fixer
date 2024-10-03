@@ -772,7 +772,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                     profilePhoneAndWebsite.profilePhone = phoneNumber;
                 }
 
-                websiteURL = contactSection.find("address li a[rel='noopener noreferrer']").attr("href");
+                websiteURL = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info] address li").has("li-icon[type='link-icon']").find("a[rel='noopener noreferrer']").attr("href");
                 if (websiteURL) {
                     console.log("websiteURL: " + websiteURL);
                     profilePhoneAndWebsite.profileWebsite = websiteURL;
