@@ -765,19 +765,25 @@ waitFor(experienceSectionHeadline).then((el) => {
             const contactSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
             if (contactSection.length) {
                 phoneNumber = contactSection.find("span[data-anonymize=phone]").text().trim();
-                // prepend apostrophe to fix Google Sheets formatting issues
                 if (phoneNumber) {
+                    console.log("phone number: " + phoneNumber);
+                    // prepend apostrophe to fix Google Sheets formatting issues
                     phoneNumber = `'${phoneNumber}`;
+                    profilePhoneAndWebsite.profilePhone = phoneNumber;
+                }
+
+                websiteURL = contactSection.find("address li a[rel='noopener noreferrer']").attr("href");
+                if (websiteURL) {
+                    console.log("websiteURL: " + websiteURL);
+                    profilePhoneAndWebsite.profileWebsite = websiteURL;
                 }
             }
-            console.log("phone number: " + phoneNumber);
-            profilePhoneAndWebsite.profilePhone = phoneNumber;
 
             waitFor("#artdeco-modal-outlet div[aria-labelledby=lead-contact-info-modal__header] section.contact-info-form__website div.contact-info-form__website-readonly-group a").then((el) => {
                 console.log("Found contact info modal!");
                 websiteURL = $( "#artdeco-modal-outlet div[aria-labelledby=lead-contact-info-modal__header] section.contact-info-form__website div.contact-info-form__website-readonly-group a" ).attr("href");
-                console.log("websiteURL: " + websiteURL);
                 if (websiteURL) {
+                    console.log("websiteURL: " + websiteURL);
                     profilePhoneAndWebsite.profileWebsite = websiteURL;
                 }
             });
