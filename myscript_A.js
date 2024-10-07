@@ -1446,8 +1446,43 @@ waitFor(experienceSectionHeadline).then((el) => {
             const leadURL = `${currentURL.substring(0, 75)},name`;
             profileURL = url;
             const name = $( "#profile-card-section section[class^=_header_] h1" ).text().cleanUpString();
-            const firstName = name.split(" ")[0];
-            const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+            // const firstName = name.split(" ")[0];
+            // const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+            function getCapitalizedFirstName(name) {
+                // Define titles to skip
+                const titlesToSkip = ["Dr", "Dr.", "Professor"];
+
+                // Split the name into words
+                let nameParts = name.split(" ");
+
+                // Check if the first word is a title, if so skip it
+                if (titlesToSkip.includes(nameParts[0])) {
+                    nameParts.shift(); // Remove the title
+                }
+
+                // Get the first name (the first remaining part)
+                let firstName = nameParts[0];
+
+                // Handle hyphenated names (capitalize both parts)
+                if (firstName.includes("-")) {
+                    firstName = firstName.split("-").map(part =>
+                        part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+                    ).join("-");
+                }
+                // Handle two-letter names where both letters are capitalized (like "AJ")
+                else if (firstName.length === 2 && firstName === firstName.toUpperCase()) {
+                    // Leave it as it is (already capitalized correctly)
+                }
+                // Handle regular capitalization for other names
+                else {
+                    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+                }
+
+                return firstName;
+            }
+
+            const capitalizedFirstName = getCapitalizedFirstName(name);
+
             const headlineClean = headline.cleanUpString();
 
             const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)" ).text().cleanUpString();
