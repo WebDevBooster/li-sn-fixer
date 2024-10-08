@@ -1449,15 +1449,18 @@ waitFor(experienceSectionHeadline).then((el) => {
             // const firstName = name.split(" ")[0];
             // const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
             function getCapitalizedFirstName(name) {
+                // Remove any leading periods and spaces
+                name = name.replace(/^\.*\s*/, "");
+
                 // Define titles to skip
-                const titlesToSkip = ["Dr", "Dr.", "Professor"];
+                const titlesToSkip = ["Dr", "Dr.", "Professor", "Prof.", "Dame", "Lady"];
 
                 // Split the name into words
                 let nameParts = name.split(" ");
 
-                // Check if the first word is a title, if so skip it
-                if (titlesToSkip.includes(nameParts[0])) {
-                    nameParts.shift(); // Remove the title
+                // Check if the first word is a title or a single initial with a dot, if so skip it
+                if (titlesToSkip.includes(nameParts[0]) || /^[A-Z]\.$/.test(nameParts[0])) {
+                    nameParts.shift(); // Remove the title or initial
                 }
 
                 // Get the first name (the first remaining part)
