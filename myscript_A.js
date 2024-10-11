@@ -794,6 +794,11 @@ waitFor(experienceSectionHeadline).then((el) => {
         function collectEmails() {
             collectEmailsTime = performance.now();
             console.log(`collectEmailsTime: ${(collectEmailsTime - readyTime).toFixed(2)} ms`);
+
+            setTimeout(function() {
+                window.scrollTo({ top: 0, behavior: "instant" });
+            }, 33);
+
             let emailList = [];
 
             profileEmails.inHeader = headerSection.html().match(emailRegex); // null if none, array if some
@@ -1327,8 +1332,8 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function collectProfileData() {
             setTimeout(clickShowMoreButtons, 1);
-            setTimeout(collectPhoneAndWebsite, 888);
-            setTimeout(collectEmails, 999);
+            setTimeout(collectPhoneAndWebsite, 111);
+            setTimeout(collectEmails, 888);
             setTimeout(appendCollectedEmails, 1122);
             setTimeout(findMatchingKeywords, 1222, kwArray);
             setTimeout(copyDataToClipboard, 1444);
@@ -1339,10 +1344,6 @@ waitFor(experienceSectionHeadline).then((el) => {
             console.log(`copyDataToClipboardTime: ${(copyDataToClipboardTime - readyTime).toFixed(2)} ms`);
             // green light
             $("#content-main").css("background-color", "#aadec3");
-
-            setTimeout(function() {
-                window.scrollTo({ top: 0, behavior: "instant" });
-            }, 33);
 
             const copyBtn = $("#SNF-copy");
             const copyFemaleBtn = $("#SNF-femcopy");
