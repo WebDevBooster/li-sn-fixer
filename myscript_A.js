@@ -1453,7 +1453,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 name = name.replace(/^\.*\s*/, "");
 
                 // Define titles to skip
-                const titlesToSkip = ["Dr", "Dr.", "Professor", "Prof.", "Dame", "Lady"];
+                const titlesToSkip = ["Dr", "Dr.", "Professor", "Prof", "Prof.", "Dame", "Lady"];
 
                 // Split the name into words
                 let nameParts = name.split(" ");
