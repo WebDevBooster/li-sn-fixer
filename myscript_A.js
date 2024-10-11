@@ -1340,6 +1340,10 @@ waitFor(experienceSectionHeadline).then((el) => {
             // green light
             $("#content-main").css("background-color", "#aadec3");
 
+            setTimeout(function() {
+                window.scrollTo({ top: 0, behavior: "instant" });
+            }, 33);
+
             const copyBtn = $("#SNF-copy");
             const copyFemaleBtn = $("#SNF-femcopy");
 
