@@ -1852,6 +1852,24 @@ if (searchPageMatch) {
         updateLocalStorage();
 
         function manipulateListElement(element, index) {
+            // Coach highlighter
+            if ($(element).has("span[data-anonymize=title]").length) {
+                // Find the span with data-anonymize="title"
+                const spanElement = $(element).find("span[data-anonymize=title]");
+
+                // Get the content of the span element
+                const spanText = spanElement.text();
+
+                // Check if "Coach" is in the text
+                if (spanText.includes("Coach")) {
+                    // Replace the word "Coach" with a span that highlights it
+                    const highlightedText = spanText.replace(/(Coach)/g, '<span style="background-color: peachpuff;">$1</span>');
+
+                    // Set the new HTML back into the span element
+                    spanElement.html(highlightedText);
+                }
+            }
+
             // Hide non-premium profiles (for now I'm only targeting premium profiles)
             if ($(element).has("span[data-anonymize=person-name]").length
                 && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length
