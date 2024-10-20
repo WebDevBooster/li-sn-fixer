@@ -1860,10 +1860,10 @@ if (searchPageMatch) {
                 // Get the content of the span element
                 const spanText = spanElement.text();
 
-                // Check if "Coach" is in the text
-                if (spanText.includes("Coach")) {
-                    // Replace the word "Coach" with a span that highlights it
-                    const highlightedText = spanText.replace(/(Coach)/g, '<span style="background-color: peachpuff;">$1</span>');
+                // Check if "Coach" (case-insensitive) is in the text
+                if (/coach/i.test(spanText)) {
+                    // Replace all variations of "Coach" (case-insensitive) with the correctly formatted span
+                    const highlightedText = spanText.replace(/coach/gi, '<span style="background-color: peachpuff;">Coach</span>');
 
                     // Set the new HTML back into the span element
                     spanElement.html(highlightedText);
