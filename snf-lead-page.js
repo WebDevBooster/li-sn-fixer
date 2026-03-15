@@ -108,23 +108,30 @@ waitFor(experienceSectionHeadline).then((el) => {
             });
 
             if (copyBtn && copyFemaleBtn) {
-                copyBtn.addEventListener("click", function () {
+                async function handleCopy(isFemale) {
+                    const settings = await new Promise((resolve) => {
+                        chrome.storage.local.get(["liImportNumber"], resolve);
+                    });
+                    if (!settings.liImportNumber && settings.liImportNumber !== 0) {
+                        copyBtn.insertAdjacentHTML("beforebegin",
+                            "<div style='text-align: center; background-color: orangered; padding: 2px;'><b>Set Last LI Import Number in extension popup first!</b></div>");
+                        return;
+                    }
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
+                        if (isFemale) gender = "Female";
                         modifyClipboard(profileURL);
                         copyBtn.insertAdjacentHTML("beforebegin", "<div id='SNFc-success' style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                     } else {
                         copyBtn.insertAdjacentHTML("beforebegin", "<div id='SNFc-fail' style='text-align: center; background-color: orangered'><b>✖</b></div>");
                     }
+                }
+
+                copyBtn.addEventListener("click", function () {
+                    handleCopy(false);
                 });
 
                 copyFemaleBtn.addEventListener("click", function () {
-                    if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
-                        gender = "Female";
-                        modifyClipboard(profileURL);
-                        copyBtn.insertAdjacentHTML("beforebegin", "<div style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
-                    } else {
-                        copyBtn.insertAdjacentHTML("beforebegin", "<div style='text-align: center; background-color: orangered'><b>✖</b></div>");
-                    }
+                    handleCopy(true);
                 });
             }
         }

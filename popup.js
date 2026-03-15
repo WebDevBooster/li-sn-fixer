@@ -9,9 +9,13 @@ chrome.storage.local.get(["liImportNumber", "liCountry", "liProfession"], (resul
     }
     if (result.liCountry) {
         countrySelect.value = result.liCountry;
+    } else {
+        chrome.storage.local.set({ liCountry: countrySelect.value });
     }
     if (result.liProfession) {
         professionSelect.value = result.liProfession;
+    } else {
+        chrome.storage.local.set({ liProfession: professionSelect.value });
     }
 });
 
