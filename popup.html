@@ -67,6 +67,45 @@
             display: none;
             margin-top: 6px;
         }
+        hr {
+            margin: 12px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+        #exportSection {
+            margin-top: 4px;
+        }
+        #exportStatus {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        #exportBtn {
+            width: 100%;
+            padding: 7px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #exportBtn:hover {
+            background-color: #1976D2;
+        }
+        #exportBtn:disabled {
+            background-color: #ccc;
+            cursor: default;
+        }
+        #exportConfirmation {
+            color: green;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +128,14 @@
 
     <button id="saveBtn" type="button">Save</button>
     <div id="savedConfirmation">Saved!</div>
+
+    <hr>
+
+    <div id="exportSection">
+        <div id="exportStatus">New records: 0</div>
+        <button id="exportBtn" type="button" disabled>Export CSV</button>
+        <div id="exportConfirmation">Exported!</div>
+    </div>
 
     <script src="popup.js"></script>
 </body>

@@ -264,6 +264,31 @@ waitFor(experienceSectionHeadline).then((el) => {
             const liStatus = "new";
             const email = `itct${importNumber}@cboosted.com`;
 
+            const record = {
+                importNumber, liStatus, email,
+                firstName: capitalizedFirstName, gender, leadURL,
+                name, headline: headlineClean, location, country,
+                profileURL, jobs, connections, profession,
+                exported: false
+            };
+
+            // Save record to storage (dedupe by leadURL)
+            const stored = await new Promise((resolve) => {
+                chrome.storage.local.get(["liExportRecords"], resolve);
+            });
+            const records = stored.liExportRecords || [];
+            const existingRecordIndex = records.findIndex(r => r.leadURL === leadURL);
+            if (existingRecordIndex !== -1) {
+                const wasExported = records[existingRecordIndex].exported;
+                records[existingRecordIndex] = record;
+                records[existingRecordIndex].exported = wasExported;
+            } else {
+                records.push(record);
+            }
+            await new Promise((resolve) => {
+                chrome.storage.local.set({ liExportRecords: records }, resolve);
+            });
+
             try {
                 await navigator.clipboard.writeText(`${importNumber}\t${liStatus}\t${email}\t${capitalizedFirstName}\t${capitalizedFirstName}\t${gender}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${country}\t${country}\t${profileURL}\t${profileURL}\t${jobs}\t${connections}\t${profession}`);
             } catch (err) {

@@ -47,3 +47,77 @@ saveBtn.addEventListener("click", saveSettings);
 document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && e.target !== leadURLsTextarea) saveSettings();
 });
+
+// CSV Export
+const exportBtn = document.getElementById("exportBtn");
+const exportStatus = document.getElementById("exportStatus");
+const exportConfirmation = document.getElementById("exportConfirmation");
+
+const csvHeaders = [
+    "Import #", "Status", "Email",
+    "First Name", "First Name 2", "Gender",
+    "Lead URL", "Full Name", "Headline", "Location",
+    "Country", "Country 2",
+    "Profile URL", "Profile URL 2",
+    "Jobs", "Connections", "Profession"
+];
+
+function updateExportStatus() {
+    chrome.storage.local.get(["liExportRecords"], (result) => {
+        const records = result.liExportRecords || [];
+        const newCount = records.filter(r => !r.exported).length;
+        exportStatus.textContent = `New records: ${newCount}`;
+        exportBtn.disabled = newCount === 0;
+    });
+}
+
+updateExportStatus();
+
+function escapeCsvField(value) {
+    const str = String(value ?? "");
+    if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+        return '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+}
+
+function recordToCsvRow(r) {
+    return [
+        r.importNumber, r.liStatus, r.email,
+        r.firstName, r.firstName, r.gender,
+        r.leadURL, r.name, r.headline, r.location,
+        r.country, r.country,
+        r.profileURL, r.profileURL,
+        r.jobs, r.connections, r.profession
+    ].map(escapeCsvField).join(",");
+}
+
+exportBtn.addEventListener("click", () => {
+    chrome.storage.local.get(["liExportRecords"], (result) => {
+        const records = result.liExportRecords || [];
+        const newRecords = records.filter(r => !r.exported);
+        if (!newRecords.length) return;
+
+        const csvContent = csvHeaders.map(escapeCsvField).join(",") + "\n"
+            + newRecords.map(recordToCsvRow).join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        const now = new Date();
+        const date = now.toISOString().slice(0, 10);
+        const time = `${String(now.getHours()).padStart(2, "0")}.${String(now.getMinutes()).padStart(2, "0")}`;
+        a.download = `li-export-${date}_${time}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        // Mark exported records
+        records.forEach(r => { r.exported = true; });
+        chrome.storage.local.set({ liExportRecords: records }, () => {
+            updateExportStatus();
+            exportConfirmation.style.display = "block";
+            setTimeout(() => { exportConfirmation.style.display = "none"; }, 1500);
+        });
+    });
+});
