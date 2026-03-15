@@ -1,13 +1,23 @@
-const importNumberInput = document.getElementById("importNumber");
+const leadURLsTextarea = document.getElementById("leadURLs");
+const urlCountDiv = document.getElementById("urlCount");
 const countrySelect = document.getElementById("country");
 const professionSelect = document.getElementById("profession");
 const saveBtn = document.getElementById("saveBtn");
 const savedConfirmation = document.getElementById("savedConfirmation");
 
+function parseURLs(text) {
+    return text.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+}
+
+function updateURLCount() {
+    const urls = parseURLs(leadURLsTextarea.value);
+    urlCountDiv.textContent = `URLs: ${urls.length}`;
+}
+
 // Load saved values on popup open
-chrome.storage.local.get(["liImportNumber", "liCountry", "liProfession"], (result) => {
-    if (result.liImportNumber !== undefined) {
-        importNumberInput.value = result.liImportNumber;
+chrome.storage.local.get(["liLeadURLs", "liCountry", "liProfession"], (result) => {
+    if (result.liLeadURLs && result.liLeadURLs.length) {
+        leadURLsTextarea.value = result.liLeadURLs.join("\n");
     }
     if (result.liCountry) {
         countrySelect.value = result.liCountry;
@@ -15,11 +25,15 @@ chrome.storage.local.get(["liImportNumber", "liCountry", "liProfession"], (resul
     if (result.liProfession) {
         professionSelect.value = result.liProfession;
     }
+    updateURLCount();
 });
 
+leadURLsTextarea.addEventListener("input", updateURLCount);
+
 function saveSettings() {
+    const urls = parseURLs(leadURLsTextarea.value);
     chrome.storage.local.set({
-        liImportNumber: importNumberInput.value,
+        liLeadURLs: urls,
         liCountry: countrySelect.value,
         liProfession: professionSelect.value
     }, () => {
@@ -31,5 +45,5 @@ function saveSettings() {
 saveBtn.addEventListener("click", saveSettings);
 
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") saveSettings();
+    if (e.key === "Enter" && e.target !== leadURLsTextarea) saveSettings();
 });

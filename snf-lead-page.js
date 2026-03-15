@@ -110,11 +110,11 @@ waitFor(experienceSectionHeadline).then((el) => {
             if (copyBtn && copyFemaleBtn) {
                 async function handleCopy(isFemale) {
                     const settings = await new Promise((resolve) => {
-                        chrome.storage.local.get(["liImportNumber"], resolve);
+                        chrome.storage.local.get(["liLeadURLs"], resolve);
                     });
-                    if (!settings.liImportNumber && settings.liImportNumber !== 0) {
+                    if (!settings.liLeadURLs || !settings.liLeadURLs.length) {
                         copyBtn.insertAdjacentHTML("beforebegin",
-                            "<div style='text-align: center; background-color: orangered; padding: 2px;'><b>Set Last LI Import Number in extension popup first!</b></div>");
+                            "<div style='text-align: center; background-color: orangered; padding: 2px;'><b>Import Lead URLs in extension popup first!</b></div>");
                         return;
                     }
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
@@ -217,11 +217,24 @@ waitFor(experienceSectionHeadline).then((el) => {
             addLeadToCounter();
 
             const settings = await new Promise((resolve) => {
-                chrome.storage.local.get(["liImportNumber", "liCountry", "liProfession"], resolve);
+                chrome.storage.local.get(["liLeadURLs", "liCountry", "liProfession"], resolve);
             });
             const country = settings.liCountry || "UK";
-            const importNumber = Number(settings.liImportNumber || 0) + 1;
             const profession = settings.liProfession || "";
+            const leadURLs = settings.liLeadURLs || [];
+
+            let importNumber;
+            const existingIndex = leadURLs.indexOf(leadURL);
+            if (existingIndex !== -1) {
+                importNumber = existingIndex + 1;
+            } else {
+                leadURLs.push(leadURL);
+                importNumber = leadURLs.length;
+                await new Promise((resolve) => {
+                    chrome.storage.local.set({ liLeadURLs: leadURLs }, resolve);
+                });
+            }
+
             const liStatus = "new";
             const email = `itct${importNumber}@cboosted.com`;
 
