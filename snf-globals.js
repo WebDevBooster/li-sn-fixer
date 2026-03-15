@@ -8,14 +8,8 @@ var readyTime = performance.now();
 
 var checkTime0,
     runScriptsOnceTime,
-    checkTimeOpenBadgeDetected,
-    checkTimeFirstEmailDetected,
-    collectEmailsTime,
-    appendCollectedEmailsTime,
     checkTime1,
     checkTime2,
     checkTime3,
     checkTime4,
-    checkTime5,
-    findMatchingKeywordsTime,
     copyDataToClipboardTime;

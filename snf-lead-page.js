@@ -95,6 +95,10 @@ waitFor(experienceSectionHeadline).then((el) => {
         }
 
         function appendCopyButtons() {
+            if (!headerSection) {
+                console.error("headerSection not found, cannot append copy buttons.");
+                return;
+            }
             headerSection.insertAdjacentHTML("beforeend", `
         <section id="SNF-doc-height">
         </section>
@@ -260,7 +264,13 @@ waitFor(experienceSectionHeadline).then((el) => {
             const liStatus = "new";
             const email = `itct${importNumber}@cboosted.com`;
 
-            await navigator.clipboard.writeText(`${importNumber}\t${liStatus}\t${email}\t${capitalizedFirstName}\t${capitalizedFirstName}\t${gender}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${country}\t${country}\t${profileURL}\t${profileURL}\t${jobs}\t${connections}\t${profession}`);
+            try {
+                await navigator.clipboard.writeText(`${importNumber}\t${liStatus}\t${email}\t${capitalizedFirstName}\t${capitalizedFirstName}\t${gender}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${country}\t${country}\t${profileURL}\t${profileURL}\t${jobs}\t${connections}\t${profession}`);
+            } catch (err) {
+                console.error("Clipboard write failed:", err);
+                document.querySelector("#SNF-copy")?.insertAdjacentHTML("beforebegin",
+                    "<div style='text-align: center; background-color: orangered; padding: 2px;'><b>Clipboard write failed!</b></div>");
+            }
         }
 
         function hideRelationshipSection() {

@@ -3,11 +3,17 @@ if (linkedinProfilePageMatch) {
     waitFor("#artdeco-modal-outlet .artdeco-modal.send-invite textarea#custom-message").then((el) => {
         console.log("customMessageBox detected!");
         const customMessageBox = document.querySelector("#artdeco-modal-outlet .artdeco-modal.send-invite textarea#custom-message");
-        setInterval(function () {
-            if (customMessageBox) {
-                customMessageBox.style.height = "180px";
-            }
-        }, 250);
+        if (customMessageBox) {
+            customMessageBox.style.height = "180px";
+            const resizeObserver = new MutationObserver(() => {
+                if (!document.contains(customMessageBox)) {
+                    resizeObserver.disconnect();
+                } else {
+                    customMessageBox.style.height = "180px";
+                }
+            });
+            resizeObserver.observe(customMessageBox, { attributes: true, attributeFilter: ["style"] });
+        }
     });
 }
 
@@ -85,6 +91,11 @@ if (searchPageMatch) {
             }
         }
 
-        setInterval(handleListItems, 300);
+        handleListItems();
+        const listObserver = new MutationObserver(handleListItems);
+        const resultsContainer = document.querySelector("#search-results-container");
+        if (resultsContainer) {
+            listObserver.observe(resultsContainer, { childList: true, subtree: true });
+        }
     });
 }

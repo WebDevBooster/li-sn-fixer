@@ -47,18 +47,16 @@ function updateLocalStorage() {
 
         if (snf8hrTotal) {
             ratio = Math.round((currentLeads / snf8hrTotal * 100));
-            if (snf8hrTotal > 365) {
+            if (snf8hrTotal >= 366) {
                 document.querySelectorAll("#SNF-counter .total, #SNF-counter-search-page .total").forEach(function(el) { el.classList.add("warning"); });
-            }
-            if (snf8hrTotal < 366) {
+            } else {
                 document.querySelectorAll("#SNF-counter .total, #SNF-counter-search-page .total").forEach(function(el) { el.classList.remove("warning"); });
             }
         }
         if (snf19hrTotal) {
-            if (snf19hrTotal > 785) {
+            if (snf19hrTotal >= 786) {
                 document.querySelectorAll("#SNF-counter .day-total, #SNF-counter-search-page .day-total").forEach(function(el) { el.classList.add("warning"); });
-            }
-            if (snf19hrTotal < 786) {
+            } else {
                 document.querySelectorAll("#SNF-counter .day-total, #SNF-counter-search-page .day-total").forEach(function(el) { el.classList.remove("warning"); });
             }
         }
@@ -258,18 +256,3 @@ function addLeadToCounter() {
     addToTotals();
 }
 
-function addNonLeadToCounterAndCloseTab() {
-    let prevNonLeads = localStorage.getItem("snfNonLeads");
-    if (prevNonLeads) {
-        prevNonLeads = parseInt(prevNonLeads);
-        let nonLeadCounter = prevNonLeads + 1;
-        nonLeadCounter = nonLeadCounter.toString();
-        localStorage.setItem("snfNonLeads", nonLeadCounter);
-
-        addToTotals();
-    }
-
-    setTimeout(function () {
-        window.close();
-    }, 1);
-}
