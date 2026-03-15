@@ -1,3 +1,30 @@
+let idsSet; // Global but filled asynchronously
+
+// Start loading the JSON file as soon as the script loads
+const urlsPromise = fetch(chrome.runtime.getURL('database_urls.json'))
+    .then(response => response.json())
+    .then(urls => {
+        idsSet = new Set(
+            urls.map(url => url.split('/sales/lead/')[1].split(',')[0])
+        );
+    })
+    .catch(error => {
+        console.error("Failed to load database_urls.json:", error);
+    });
+
+function highlightMatchingListItems(idsSet) {
+    $("div[data-scroll-into-view]").each(function() {
+        const dataValue = $(this).attr("data-scroll-into-view");
+        const idMatch = dataValue.match(/\(([^,]+)/);
+        if (idMatch) {
+            const id = idMatch[1];
+            if (idsSet.has(id)) {
+                $(this).closest("li").css("background", "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)");
+            }
+        }
+    });
+}
+
 $( document ).ready(function() {
 const currentURL = document.location.href;
 const salesLeadPageMatch = currentURL.match(/linkedin\.com\/sales\/lead/);
@@ -1367,6 +1394,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             waitFor("#hue-web-menu-outlet div[data-artdeco-is-focused=\"true\"] ul li a").then((el) => {
                 // profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
                 profileURL = $( "#hue-web-menu-outlet ul li a:contains('View LinkedIn profile')" ).attr("href");
+                profileURL = profileURL + "/";
                 // const copyElement = $( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
                 return profileURL;
             });
@@ -1861,9 +1889,12 @@ if (searchPageMatch) {
                 const spanText = spanElement.text();
 
                 // Check if "Coach" (case-insensitive) is in the text
-                if (/coach/i.test(spanText)) {
+                if (/project/i.test(spanText)) {
                     // Replace all variations of "Coach" (case-insensitive) with the correctly formatted span
-                    const highlightedText = spanText.replace(/coach/gi, '<span style="background-color: peachpuff;">Coach</span>');
+                    //const highlightedText = spanText.replace(/coach/gi, '<span style="background-color: peachpuff;">Coach</span>');
+                    const highlightedText = spanText.replace(/project/gi, '<span style="background-color: peachpuff;">Project</span>');
+                    //const highlightedText = spanText.replace(/founder/gi, '<span style="background-color: peachpuff;">Founder</span>');
+                    //const highlightedText = spanText.replace(/scientist/gi, '<span style="background-color: peachpuff;">Scientist</span>');
 
                     // Set the new HTML back into the span element
                     spanElement.html(highlightedText);
@@ -1898,6 +1929,21 @@ if (searchPageMatch) {
                 // element.style.backgroundColor = "pink";
                 $(element).addClass("SNF-out-of-network");
             }
+
+            // Collected profile highlighter (highlighting profiles that have already been collected into the database)
+            //$("div[data-scroll-into-view*='ACwAAACKU6sB83xV8STdawzKGaUO1Vk6WiILMNs']").each(function() {
+            //    // Find the closest li ancestor
+            //    $(this).closest("li").css("background", "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)");
+            //});
+
+            // Highlight list items that are already in my database
+            urlsPromise.then(() => {
+                if (idsSet) {
+                    highlightMatchingListItems(idsSet);
+                } else {
+                    console.warn("idsSet is undefined - JSON might not have loaded.");
+                }
+            });
         }
 
         function handleListItems() {
@@ -1944,3 +1990,4 @@ https://www.linkedin.com/sales/search/people?page=1&query=(spellCorrectionEnable
 
 https://www.linkedin.com/sales/search/people?query=(recentSearchParam%3A(id%3A1793808001%2CdoLogHistory%3Atrue)%2Cfilters%3AList((type%3ACURRENT_COMPANY%2Cvalues%3AList((id%3A1337%2Ctext%3ALinkedIn%2CselectionType%3AEXCLUDED)))%2C(type%3ATITLE%2Cvalues%3AList((text%3AChief%2520Executive%2520Officer%2CselectionType%3AINCLUDED))%2CselectedSubFilter%3ACURRENT_OR_PAST)%2C(type%3AREGION%2Cvalues%3AList((id%3A103300978%2Ctext%3AAlameda%252C%2520California%252C%2520United%2520States%2CselectionType%3AINCLUDED)))))&sessionId=xa%2BJ8KY6QF2qh9xeT3XXcw%3D%3D&viewAllFilters=true
 */
+
