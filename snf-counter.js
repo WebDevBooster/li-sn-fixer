@@ -175,27 +175,11 @@ function updateLocalStorage() {
     }
     addNonLeadToCounterAndCloseTabOnClick();
 
-    function refreshSearchPageCounter() {
-        const counterEl = document.querySelector("#SNF-counter-search-page");
-        if (!counterEl) return;
-        currentLeads = localStorage.getItem("snfLeads");
-        currentNonLeads = localStorage.getItem("snfNonLeads");
-        counterEl.querySelector(".current-leads").textContent = currentLeads;
-        counterEl.querySelector(".current-non-leads").textContent = currentNonLeads;
-
-        updateTotals();
-
-        counterEl.querySelector(".current-ratio").textContent = ratio;
-        counterEl.querySelector(".current-8hr-total").textContent = snf8hrTotal;
-        counterEl.querySelector(".current-19hr-total").textContent = snf19hrTotal;
-
-        counterEl.querySelector(".current-8hr-cycle").textContent = getTrackedTime(8);
-        counterEl.querySelector(".current-19hr-cycle").textContent = getTrackedTime(19);
-    }
-
     const refreshDataBtn = document.querySelector("#SNF-refresh-data");
     if (refreshDataBtn) {
-        refreshDataBtn.addEventListener("click", refreshSearchPageCounter);
+        refreshDataBtn.addEventListener("click", function () {
+            refreshSearchPageCounter();
+        });
     }
 
     const reset8hrBtn = document.querySelector("#reset-8hr-cycle");
@@ -258,5 +242,46 @@ function addLeadToCounter() {
     localStorage.setItem("snfLeads", leadCounter);
 
     addToTotals();
+}
+
+function refreshSearchPageCounter() {
+    const counterEl = document.querySelector("#SNF-counter-search-page");
+    if (!counterEl) return;
+
+    const currentLeads = localStorage.getItem("snfLeads");
+    const currentNonLeads = localStorage.getItem("snfNonLeads");
+    const snf8hrTotal = parseInt(localStorage.getItem("snf8hrTotal"));
+    const snf19hrTotal = parseInt(localStorage.getItem("snf19hrTotal"));
+    const ratio = snf8hrTotal ? Math.round((parseInt(currentLeads) / snf8hrTotal * 100)) : 0;
+
+    counterEl.querySelector(".current-leads").textContent = currentLeads;
+    counterEl.querySelector(".current-non-leads").textContent = currentNonLeads;
+    counterEl.querySelector(".current-ratio").textContent = ratio;
+    counterEl.querySelector(".current-8hr-total").textContent = snf8hrTotal;
+    counterEl.querySelector(".current-19hr-total").textContent = snf19hrTotal;
+
+    function calcTrackedTime(hrs) {
+        const startTime = parseInt(localStorage.getItem(`snf${hrs}hrStart`));
+        if (!startTime) return "";
+        const diff = new Date().getTime() - startTime;
+        let mins = Math.floor(diff / 1000 / 60) % 60;
+        mins = (mins < 10) ? "0" + mins : mins;
+        const hours = Math.floor(diff / 1000 / 60 / 60);
+        return `${hours}:${mins}`;
+    }
+
+    counterEl.querySelector(".current-8hr-cycle").textContent = calcTrackedTime(8);
+    counterEl.querySelector(".current-19hr-cycle").textContent = calcTrackedTime(19);
+
+    if (snf8hrTotal >= 366) {
+        counterEl.querySelector(".total")?.classList.add("warning");
+    } else {
+        counterEl.querySelector(".total")?.classList.remove("warning");
+    }
+    if (snf19hrTotal >= 786) {
+        counterEl.querySelector(".day-total")?.classList.add("warning");
+    } else {
+        counterEl.querySelector(".day-total")?.classList.remove("warning");
+    }
 }
 
