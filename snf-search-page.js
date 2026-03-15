@@ -136,13 +136,21 @@ if (searchPageMatch) {
 
     // Re-run on SPA navigation (pagination, filters, etc.)
     let lastSearchURL = document.location.href;
-    const navigationObserver = new MutationObserver(() => {
+    setInterval(() => {
         const newURL = document.location.href;
         if (newURL !== lastSearchURL && /linkedin\.com\/sales\/search\/people/.test(newURL)) {
             lastSearchURL = newURL;
             refreshSearchPageCounter();
-            initSearchPage();
+            // Wait for the old results to be replaced with new ones
+            const oldFirstItem = document.querySelector("#search-results-container ol li:nth-of-type(1)");
+            const navObserver = new MutationObserver(() => {
+                const newFirstItem = document.querySelector("#search-results-container ol li:nth-of-type(1)");
+                if (newFirstItem && newFirstItem !== oldFirstItem) {
+                    navObserver.disconnect();
+                    initSearchPage();
+                }
+            });
+            navObserver.observe(document.body, { childList: true, subtree: true });
         }
-    });
-    navigationObserver.observe(document.body, { childList: true, subtree: true });
+    }, 500);
 }
