@@ -18,6 +18,7 @@ if (linkedinProfilePageMatch) {
 }
 
 if (searchPageMatch) {
+    function initSearchPage() {
     waitFor("#search-results-container ol li:nth-of-type(1)").then((el) => {
         updateLocalStorage();
 
@@ -129,4 +130,18 @@ if (searchPageMatch) {
             listObserver.observe(resultsContainer, { childList: true, subtree: true });
         }
     });
+    }
+
+    initSearchPage();
+
+    // Re-run on SPA navigation (pagination, filters, etc.)
+    let lastSearchURL = document.location.href;
+    const navigationObserver = new MutationObserver(() => {
+        const newURL = document.location.href;
+        if (newURL !== lastSearchURL && /linkedin\.com\/sales\/search\/people/.test(newURL)) {
+            lastSearchURL = newURL;
+            initSearchPage();
+        }
+    });
+    navigationObserver.observe(document.body, { childList: true, subtree: true });
 }
