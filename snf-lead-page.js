@@ -275,55 +275,30 @@ waitFor(experienceSectionHeadline).then((el) => {
         async function fillJobList() {
             jobList = []; // Need to empty it in case I clicked the copy button before but then decided to choose a different set of emails.
             let jobElements = document.querySelectorAll("#experience-section ul li[class^=_experience-entry]");
-            let multiPositionsList = document.querySelectorAll("#experience-section ul[class^=experience-list] li[class^=_experience-entry] ul[class^=_positions-list]");
 
             if (jobElements.length) {
                 jobElements.forEach(function (jobEl) {
-                    let job = {};
-                    job["titles"] = [];
-                    let listsInExperienceEntry = jobEl.querySelectorAll(":scope > li[class^=_experience-entry] ul");
-                    console.log(`listsInExperienceEntry.length`);
-                    console.log(listsInExperienceEntry.length);
-                    if (listsInExperienceEntry.length &&
-                        jobEl.querySelector("li[class^=_experience-entry] ul h3[data-anonymize=job-title]")) {
-                        // we have to do this check because sometimes those lists inside experience entry
-                        // are media elements lists like in the case of this guy: https://www.linkedin.com/in/matcy/
-                        console.log("found multiPositionElements/h3 job titles: ");
-                        console.log(jobEl.querySelectorAll("li[class^=_experience-entry] ul h3[data-anonymize=job-title]"));
-                        // Example user with multiPositionsList:
-                        // https://www.linkedin.com/sales/lead/ACwAAAC42vgBYm0a8xWAXNdflo0MUtpcvAwDE5U,name
-                        // https://www.linkedin.com/in/gilbertson
-                        // And this one has mixed: https://www.linkedin.com/in/cyaged
-                        let multiTitleJobList = [];
-                        let job = {};
-                        job["titles"] = [];
-                        let multiPositionElements = jobEl.querySelectorAll("ul li");
-                        console.log(`multiPositionElements:`);
-                        console.log(multiPositionElements);
-                        multiPositionElements.forEach(function (posEl, index) {
-                            job["titles"][index] = (posEl.querySelector("h3[data-anonymize=job-title]")?.textContent || "")
-                                .cleanUpString();
-                            console.log("current multiPosition job title: ");
-                            console.log(job["titles"][index]);
+                    let job = { titles: [], company: "" };
+
+                    // Check for nested positions: a direct child <ul> containing h3 job titles
+                    const nestedPositions = jobEl.querySelectorAll(":scope > ul > li");
+                    const hasNestedJobTitles = nestedPositions.length &&
+                        jobEl.querySelector(":scope > ul > li h3[data-anonymize=job-title]");
+
+                    if (hasNestedJobTitles) {
+                        // Multi-position entry: multiple titles under one company
+                        nestedPositions.forEach(function (posEl) {
+                            const title = (posEl.querySelector("h3[data-anonymize=job-title]")?.textContent || "").cleanUpString();
+                            if (title) job.titles.push(title);
                         });
-
-                        job["company"] = (jobEl.querySelector("h2[data-anonymize=company-name]")?.textContent || "").cleanUpString();
-                        console.log(`multi job title array:`);
-                        console.log(job["titles"]);
-                        multiTitleJobList.push(job);
-
-                        jobList = jobList.concat(multiTitleJobList);
-
+                        job.company = (jobEl.querySelector("h2[data-anonymize=company-name]")?.textContent || "").cleanUpString();
                     } else {
-                        job["titles"][0] = (jobEl.querySelector("h2[data-anonymize=job-title]")?.textContent || "").cleanUpString();
-                        job["company"] = (jobEl.querySelector("p[data-anonymize=company-name]")?.textContent || "").cleanUpString();
-                        console.log(`simple job title:`);
-                        console.log(job["titles"][0]);
-                        jobList.push(job);
+                        // Single-position entry
+                        job.titles[0] = (jobEl.querySelector("h2[data-anonymize=job-title]")?.textContent || "").cleanUpString();
+                        job.company = (jobEl.querySelector("p[data-anonymize=company-name]")?.textContent || "").cleanUpString();
                     }
 
-                    console.log(`"mixed" titles array:`);
-                    console.log(job["titles"]);
+                    jobList.push(job);
                 });
             }
 
