@@ -30,12 +30,27 @@
             box-sizing: border-box;
             font-size: 13px;
         }
-        .saved-msg {
+        #saveBtn {
+            width: 100%;
+            padding: 7px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #saveBtn:hover {
+            background-color: #45a049;
+        }
+        #savedConfirmation {
             color: green;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
             display: none;
-            margin-top: -6px;
-            margin-bottom: 6px;
+            margin-top: 6px;
         }
     </style>
 </head>
@@ -44,20 +59,20 @@
 
     <label for="importNumber">Last LI Import Number</label>
     <input type="number" id="importNumber" min="0" placeholder="e.g. 42">
-    <div class="saved-msg" id="importNumberSaved">Saved</div>
 
     <label for="country">LI Country</label>
     <select id="country">
         <option value="UK">UK</option>
         <option value="United States">United States</option>
     </select>
-    <div class="saved-msg" id="countrySaved">Saved</div>
 
     <label for="profession">LI Profession</label>
     <select id="profession">
         <option value="project manager">Project Manager</option>
     </select>
-    <div class="saved-msg" id="professionSaved">Saved</div>
+
+    <button id="saveBtn" type="button">Save</button>
+    <div id="savedConfirmation">Saved!</div>
 
     <script src="popup.js"></script>
 </body>
