@@ -138,16 +138,15 @@ if (searchPageMatch) {
     }
 
     // Initial run: wait for first list item to appear
-    let lastFirstItemText = "";
     waitFor("#search-results-container ol li:nth-of-type(1)").then((el) => {
         updateLocalStorage();
         runSearchPageLogic();
         startScrollObserver();
-        lastFirstItemText = document.querySelector("#search-results-container ol li:nth-of-type(1) span[data-anonymize=person-name]")?.textContent || "";
     });
 
     // Detect SPA navigation (pagination, filters, etc.) via URL polling
     let lastSearchURL = document.location.href;
+    let lastResultsHTML = document.querySelector("#search-results-container")?.innerHTML || "";
 
     setInterval(() => {
         const newURL = document.location.href;
@@ -155,30 +154,15 @@ if (searchPageMatch) {
             lastSearchURL = newURL;
             if (/linkedin\.com\/sales\/search\/people/.test(newURL)) {
                 refreshSearchPageCounter();
-                // Poll until the first person's name changes (new page content loaded)
-                let fallbackFired = false;
-                const pollForNewContent = setInterval(() => {
-                    const currentFirstItemText = document.querySelector("#search-results-container ol li:nth-of-type(1) span[data-anonymize=person-name]")?.textContent || "";
-                    if (currentFirstItemText && currentFirstItemText !== lastFirstItemText) {
-                        lastFirstItemText = currentFirstItemText;
-                        clearInterval(pollForNewContent);
-                        if (!fallbackFired) {
-                            runSearchPageLogic();
-                            startScrollObserver();
-                        }
-                    }
-                }, 200);
-                // Fallback: run after 2s regardless (e.g. same first name on both pages)
-                setTimeout(() => {
-                    clearInterval(pollForNewContent);
-                    if (!fallbackFired) {
-                        fallbackFired = true;
-                        lastFirstItemText = document.querySelector("#search-results-container ol li:nth-of-type(1) span[data-anonymize=person-name]")?.textContent || "";
-                        runSearchPageLogic();
-                        startScrollObserver();
-                    }
-                }, 2000);
             }
         }
-    }, 500);
+
+        // Check if results content has changed (handles both pagination and lazy loading)
+        const currentResultsHTML = document.querySelector("#search-results-container")?.innerHTML || "";
+        if (currentResultsHTML !== lastResultsHTML) {
+            lastResultsHTML = currentResultsHTML;
+            runSearchPageLogic();
+            startScrollObserver();
+        }
+    }, 1000);
 }
