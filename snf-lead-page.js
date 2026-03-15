@@ -140,7 +140,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                     }
                     if (!profileURL) {
                         copyBtn.insertAdjacentHTML("beforebegin",
-                            "<div id='SNFc-fail' style='text-align: center; background-color: orangered; padding: 2px;'><b>Profile URL not available. Click the 3 dots and \"View LinkedIn profile\" first.</b></div>");
+                            "<div id='SNFc-fail' style='text-align: center; background-color: orangered; padding: 2px;'><b>First, click the 3 dots and \"Copy LinkedIn.com URL\".</b></div>");
                         return;
                     }
                     if (isFemale) gender = "Female";
