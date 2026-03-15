@@ -66,7 +66,7 @@ waitFor(experienceSectionHeadline).then((el) => {
     let profileURL = "/////////////////////////////////////////////////////////////////////";
     let isPremium = "FALSE";
     let isOpen = "FALSE";
-    let isFemale = "FALSE";
+    let gender = "Male";
 
     const kwArray = ["entrepreneur", "investor", "angel", "seed", "early", "web3"];
     let kwsIn = {
@@ -769,7 +769,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
                 copyFemaleBtn.addEventListener("click", function () {
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
-                        isFemale = "TRUE";
+                        gender = "Female";
                         modifyClipboard(profileURL);
                         copyBtn.insertAdjacentHTML("beforebegin", "<div style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                     } else {
@@ -895,7 +895,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             getKeywordScores(kwArray);
             addLeadToCounter();
 
-            await navigator.clipboard.writeText(`${capitalizedFirstName}\t${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}\t${isPremium}\t${isOpen}\t${connections}\t${twitter}\t${profilePhoneAndWebsite.profilePhone}\t${profilePhoneAndWebsite.profileWebsite}\t${cleanCompanyName}`);
+            await navigator.clipboard.writeText(`${capitalizedFirstName}\t${capitalizedFirstName}\t${gender}\t${leadURL}\t${name}\t${headlineClean}\t${location}\tUK\tUK\t${profileURL}\t${profileURL}\t${jobs}\t${connections}`);
         }
 
         function hideRelationshipSection() {
