@@ -13,25 +13,26 @@ const urlsPromise = fetch(chrome.runtime.getURL('database_urls.json'))
     });
 
 function highlightMatchingListItems(idsSet) {
-    $("div[data-scroll-into-view]").each(function() {
-        const dataValue = $(this).attr("data-scroll-into-view");
+    document.querySelectorAll("div[data-scroll-into-view]").forEach(function(el) {
+        const dataValue = el.getAttribute("data-scroll-into-view");
         const idMatch = dataValue.match(/\(([^,]+)/);
         if (idMatch) {
             const id = idMatch[1];
             if (idsSet.has(id)) {
-                $(this).closest("li").css("background", "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)");
+                el.closest("li").style.background = "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)";
             }
         }
     });
 }
 
-$( document ).ready(function() {
+// Content scripts run at document_idle by default, so DOM is already ready.
+{
 const currentURL = document.location.href;
 const salesLeadPageMatch = currentURL.match(/linkedin\.com\/sales\/lead/);
 const mozillaPageMatch = currentURL.match(/developer\.mozilla\.org/);
 const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/);
 const linkedinProfilePageMatch = currentURL.match(/linkedin\.com\/in\//);
-const body = $("body");
+const body = document.body;
 const readyTime = performance.now();
 
 var checkTime0,
@@ -151,18 +152,18 @@ function updateLocalStorage() {
         if (snf8hrTotal) {
             ratio = Math.round((currentLeads / snf8hrTotal * 100));
             if (snf8hrTotal > 365) {
-                $("#SNF-counter .total, #SNF-counter-search-page .total").addClass("warning");
+                document.querySelectorAll("#SNF-counter .total, #SNF-counter-search-page .total").forEach(function(el) { el.classList.add("warning"); });
             }
             if (snf8hrTotal < 366) {
-                $("#SNF-counter .total, #SNF-counter-search-page .total").removeClass("warning");
+                document.querySelectorAll("#SNF-counter .total, #SNF-counter-search-page .total").forEach(function(el) { el.classList.remove("warning"); });
             }
         }
         if (snf19hrTotal) {
             if (snf19hrTotal > 785) {
-                $("#SNF-counter .day-total, #SNF-counter-search-page .day-total").addClass("warning");
+                document.querySelectorAll("#SNF-counter .day-total, #SNF-counter-search-page .day-total").forEach(function(el) { el.classList.add("warning"); });
             }
             if (snf19hrTotal < 786) {
-                $("#SNF-counter .day-total, #SNF-counter-search-page .day-total").removeClass("warning");
+                document.querySelectorAll("#SNF-counter .day-total, #SNF-counter-search-page .day-total").forEach(function(el) { el.classList.remove("warning"); });
             }
         }
     }
@@ -220,7 +221,7 @@ function updateLocalStorage() {
         getTrackedTime();
 
         if (salesLeadPageMatch) {
-            body.append(`
+            body.insertAdjacentHTML("beforeend", `
             <div id="SNF-counter">
             <span class="lead">
                 L: ${currentLeads}<br>${ratio}%
@@ -245,7 +246,7 @@ function updateLocalStorage() {
         }
 
         if (searchPageMatch) {
-            body.append(`
+            body.insertAdjacentHTML("beforeend", `
             <div id="SNF-counter-search-page">
             <span class="lead">
                 L: <span class="current-leads">${currentLeads}</span><br><span class="current-ratio">${ratio}</span>%
@@ -282,81 +283,93 @@ function updateLocalStorage() {
 
 
     function addNonLeadToCounterAndCloseTabOnClick() {
-        $("#SNF-counter span.non-lead").click(function () {
-            let prevNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
-            let nonLeadCounter = prevNonLeads + 1;
-            nonLeadCounter = nonLeadCounter.toString();
-            localStorage.setItem("snfNonLeads", nonLeadCounter);
+        const nonLeadEl = document.querySelector("#SNF-counter span.non-lead");
+        if (nonLeadEl) {
+            nonLeadEl.addEventListener("click", function () {
+                let prevNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
+                let nonLeadCounter = prevNonLeads + 1;
+                nonLeadCounter = nonLeadCounter.toString();
+                localStorage.setItem("snfNonLeads", nonLeadCounter);
 
-            addToTotals();
+                addToTotals();
 
-            window.close();
-        });
+                window.close();
+            });
+        }
     }
     addNonLeadToCounterAndCloseTabOnClick();
 
-    $("#SNF-refresh-data").click(function () {
-        currentLeads = localStorage.getItem("snfLeads");
-        currentNonLeads = localStorage.getItem("snfNonLeads");
-        $("#SNF-counter-search-page .current-leads").text(currentLeads);
-        $("#SNF-counter-search-page .current-non-leads").text(currentNonLeads);
+    const refreshDataBtn = document.querySelector("#SNF-refresh-data");
+    if (refreshDataBtn) {
+        refreshDataBtn.addEventListener("click", function () {
+            currentLeads = localStorage.getItem("snfLeads");
+            currentNonLeads = localStorage.getItem("snfNonLeads");
+            document.querySelector("#SNF-counter-search-page .current-leads").textContent = currentLeads;
+            document.querySelector("#SNF-counter-search-page .current-non-leads").textContent = currentNonLeads;
 
-        updateTotals();
+            updateTotals();
 
-        $("#SNF-counter-search-page .current-ratio").text(ratio);
-        $("#SNF-counter-search-page .current-8hr-total").text(snf8hrTotal);
-        $("#SNF-counter-search-page .current-19hr-total").text(snf19hrTotal);
+            document.querySelector("#SNF-counter-search-page .current-ratio").textContent = ratio;
+            document.querySelector("#SNF-counter-search-page .current-8hr-total").textContent = snf8hrTotal;
+            document.querySelector("#SNF-counter-search-page .current-19hr-total").textContent = snf19hrTotal;
 
-        $("#SNF-counter-search-page .current-8hr-cycle").text(getTrackedTime(8));
-        $("#SNF-counter-search-page .current-19hr-cycle").text(getTrackedTime(19));
+            document.querySelector("#SNF-counter-search-page .current-8hr-cycle").textContent = getTrackedTime(8);
+            document.querySelector("#SNF-counter-search-page .current-19hr-cycle").textContent = getTrackedTime(19);
 
-        // total = parseInt(currentLeads) + parseInt(currentNonLeads);
-        // $("#SNF-counter-search-page .current-8hr-total").text(total);
-        // if (total) {
-        //     ratio = Math.round((currentLeads / total * 100));
-        //     $("#SNF-counter-search-page .current-ratio").text(ratio);
-        //     if (total > 465) {
-        //         $("#SNF-counter-search-page .total").addClass("warning");
-        //     }
-        //     if (total < 466) {
-        //         $("#SNF-counter-search-page .total").removeClass("warning");
-        //     }
-        // }
-    });
+            // total = parseInt(currentLeads) + parseInt(currentNonLeads);
+            // $("#SNF-counter-search-page .current-8hr-total").text(total);
+            // if (total) {
+            //     ratio = Math.round((currentLeads / total * 100));
+            //     $("#SNF-counter-search-page .current-ratio").text(ratio);
+            //     if (total > 465) {
+            //         $("#SNF-counter-search-page .total").addClass("warning");
+            //     }
+            //     if (total < 466) {
+            //         $("#SNF-counter-search-page .total").removeClass("warning");
+            //     }
+            // }
+        });
+    }
 
-    $("#reset-8hr-cycle").click(function () {
-        let msg = `WARNING!!!\n\nDo you really want to reset the 8-hr cycle stats?\n\nPress OK to confirm.`
-        if (confirm(msg)) {
-            localStorage.setItem("snfLeads", "0");
-            localStorage.setItem("snfNonLeads", "0");
-            snf8hrStart = new Date().getTime();
-            snf8hrStart = snf8hrStart.toString();
-            localStorage.setItem("snf8hrStart", snf8hrStart);
-            localStorage.setItem("snf8hrTotal", "0");
-            localStorage.setItem("snf8hrTracker", "0:00");
-        } else {
-            console.log(`#reset-8hr-cycle was denied. Do nothing.`);
-        }
-    });
+    const reset8hrBtn = document.querySelector("#reset-8hr-cycle");
+    if (reset8hrBtn) {
+        reset8hrBtn.addEventListener("click", function () {
+            let msg = `WARNING!!!\n\nDo you really want to reset the 8-hr cycle stats?\n\nPress OK to confirm.`
+            if (confirm(msg)) {
+                localStorage.setItem("snfLeads", "0");
+                localStorage.setItem("snfNonLeads", "0");
+                snf8hrStart = new Date().getTime();
+                snf8hrStart = snf8hrStart.toString();
+                localStorage.setItem("snf8hrStart", snf8hrStart);
+                localStorage.setItem("snf8hrTotal", "0");
+                localStorage.setItem("snf8hrTracker", "0:00");
+            } else {
+                console.log(`#reset-8hr-cycle was denied. Do nothing.`);
+            }
+        });
+    }
 
-    $("#reset-19hr-cycle").click(function () {
-        let msg = `WARNING!!!\n\nDo you really want to reset the 19-hr cycle stats?\n\nPress OK to confirm.`
-        if (confirm(msg)) {
-            localStorage.setItem("snfLeads", "0");
-            localStorage.setItem("snfNonLeads", "0");
-            snf8hrStart = new Date().getTime();
-            snf8hrStart = snf8hrStart.toString();
-            localStorage.setItem("snf8hrStart", snf8hrStart);
-            localStorage.setItem("snf8hrTotal", "0");
-            localStorage.setItem("snf8hrTracker", "0:00");
+    const reset19hrBtn = document.querySelector("#reset-19hr-cycle");
+    if (reset19hrBtn) {
+        reset19hrBtn.addEventListener("click", function () {
+            let msg = `WARNING!!!\n\nDo you really want to reset the 19-hr cycle stats?\n\nPress OK to confirm.`
+            if (confirm(msg)) {
+                localStorage.setItem("snfLeads", "0");
+                localStorage.setItem("snfNonLeads", "0");
+                snf8hrStart = new Date().getTime();
+                snf8hrStart = snf8hrStart.toString();
+                localStorage.setItem("snf8hrStart", snf8hrStart);
+                localStorage.setItem("snf8hrTotal", "0");
+                localStorage.setItem("snf8hrTracker", "0:00");
 
-            localStorage.setItem("snf19hrStart", snf8hrStart);
-            localStorage.setItem("snf19hrTotal", "0");
-            localStorage.setItem("snf19hrTracker", "0:00");
-        } else {
-            console.log(`#reset-19hr-cycle was denied. Do nothing.`);
-        }
-    });
+                localStorage.setItem("snf19hrStart", snf8hrStart);
+                localStorage.setItem("snf19hrTotal", "0");
+                localStorage.setItem("snf19hrTracker", "0:00");
+            } else {
+                console.log(`#reset-19hr-cycle was denied. Do nothing.`);
+            }
+        });
+    }
 }
 
 function addToTotals() {
@@ -410,9 +423,9 @@ function addNonLeadToCounterAndCloseTab() {
 function autoScrollDownAndUp() {
     let timeout = getRandInteger(999, 1555);
     setTimeout(function () {
-        const minScroll = $(window).height() * 1;
-        // const maxScroll = $(document).height() - $(window).height();
-        const maxScroll = $(window).height() * 1.5;
+        const minScroll = window.innerHeight * 1;
+        // const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const maxScroll = window.innerHeight * 1.5;
         const scrollDistance = getRandInteger(minScroll, maxScroll);
         const scrollDownSpeed = getRandInteger(444, 888);
         const scrollUpSpeed = getRandInteger(555, 999);
@@ -424,10 +437,10 @@ function autoScrollDownAndUp() {
         console.log(`Delay: ${scrollUpDelay}`);
         console.log(`ScrollTimeTotal: ${scrollDownSpeed + scrollUpSpeed + scrollUpDelay}`);
 
-        $("html").animate({scrollTop: scrollDistance}, scrollDownSpeed);
+        window.scrollTo({ top: scrollDistance, behavior: 'smooth' });
         // Testing without scrollUp
         // setTimeout(function () {
-        //     $("html").animate({ scrollTop: 0 }, scrollUpSpeed);
+        //     window.scrollTo({ top: 0, behavior: 'smooth' });
         // }, scrollUpDelay);
     }, timeout);
 }
@@ -441,17 +454,17 @@ function showWindowHeight() {
     //     windowHeight = $(window).height();
     // });
     setInterval(function () {
-        return `window height: ${$(window).height()}px`;
+        return `window height: ${window.innerHeight}px`;
     }, 250);
 }
 let docHeight = "0";
 
 waitFor("#SNF-doc-height").then((el) => {
-    const docHeightSection = $("#SNF-doc-height");
+    const docHeightSection = document.querySelector("#SNF-doc-height");
     setInterval(function () {
-        if (docHeightSection.length) {
-            docHeight = `doc height: ${$(document).height().toLocaleString()}px`;
-            docHeightSection.text(docHeight);
+        if (docHeightSection) {
+            docHeight = `doc height: ${document.documentElement.scrollHeight.toLocaleString()}px`;
+            docHeightSection.textContent = docHeight;
         }
     }, 250);
 });
@@ -466,7 +479,7 @@ if (mozillaPageMatch) {
     // autoScrollDownAndUp();
 
 /*
-    $("div.main-document-header-container").append(`
+    document.querySelector("div.main-document-header-container").insertAdjacentHTML("beforeend", `
         <section id="SNF-data">
             <div>
                 <button id="SNF-copy" style="width: 65px;" class="copy-btn" type="button">C</button>
@@ -475,10 +488,10 @@ if (mozillaPageMatch) {
         </section>
         `);
 
-    $("#SNF-copy").click(function () {
-        // $("#SNF-copy").prepend("✔<br>");
-        // $("#SNF-copy").before("<div style='text-align: center;'>✅</div>");
-        $("#SNF-copy").before("<div style='text-align: center;'>❌</div>");
+    document.querySelector("#SNF-copy").addEventListener("click", function () {
+        // document.querySelector("#SNF-copy").insertAdjacentHTML("afterbegin", "✔<br>");
+        // document.querySelector("#SNF-copy").insertAdjacentHTML("beforebegin", "<div style='text-align: center;'>✅</div>");
+        document.querySelector("#SNF-copy").insertAdjacentHTML("beforebegin", "<div style='text-align: center;'>❌</div>");
     });
 */
 
@@ -488,10 +501,10 @@ if (linkedinProfilePageMatch) {
 	console.log("Linkedin profile page detected");
     waitFor("#artdeco-modal-outlet .artdeco-modal.send-invite textarea#custom-message").then((el) => {
 		console.log("customMessageBox detected!");
-	    const customMessageBox = $("#artdeco-modal-outlet .artdeco-modal.send-invite textarea#custom-message");
+	    const customMessageBox = document.querySelector("#artdeco-modal-outlet .artdeco-modal.send-invite textarea#custom-message");
 	    setInterval(function () {
-	        if (customMessageBox.length) {
-	            customMessageBox.css("height", "180px");
+	        if (customMessageBox) {
+	            customMessageBox.style.height = "180px";
 	        }
 	    }, 250);
     });
@@ -515,31 +528,31 @@ waitFor(experienceSectionHeadline).then((el) => {
     // hideIntroSection();
     // hideRelationshipSection();
 
-    const premiumBadge = $(`${badgesList} li > span svg[class^=_premium-badge]`);
-    const openBadge = $(`${badgesList} li > span[class^=_open-badge]`);
+    const premiumBadge = document.querySelector(`${badgesList} li > span svg[class^=_premium-badge]`);
+    const openBadge = document.querySelector(`${badgesList} li > span[class^=_open-badge]`);
 
-    const latestTouchPoint = $("#profile-card-section div[class^=_latest-touch-point]");
-    if (latestTouchPoint.length) {
-        const tooltipContent = latestTouchPoint.text();
+    const latestTouchPoint = document.querySelector("#profile-card-section div[class^=_latest-touch-point]");
+    if (latestTouchPoint) {
+        const tooltipContent = latestTouchPoint.textContent;
         if (tooltipContent.includes("First time view")) {
             console.log("tooltipContent: " + tooltipContent);
-            latestTouchPoint.css("background-color", "limegreen");
+            latestTouchPoint.style.backgroundColor = "limegreen";
         } else if (tooltipContent.includes("Viewed:")) {
             console.log("tooltipContent: " + tooltipContent);
-            latestTouchPoint.css("background-color", "yellow");
+            latestTouchPoint.style.backgroundColor = "yellow";
         } else {
             console.log("tooltipContent: " + tooltipContent);
-            latestTouchPoint.css("background-color", "red");
+            latestTouchPoint.style.backgroundColor = "red";
         }
     }
 
-    const headerSection = $("#profile-card-section > section[class^=_header]");
-    // const detailsSection = $("#profile-card-section > section[class^=details-section]");
-    const detailsSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
-    const aboutSection = $("#about-section");
-    const experienceSection = $("#experience-section");
-    const isExperienceSectionNotEmpty = $("#experience-section > section:nth-child(1) > div > ul > li").length;
-    const headline = $( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" ).text();
+    const headerSection = document.querySelector("#profile-card-section > section[class^=_header]");
+    // const detailsSection = document.querySelector("#profile-card-section > section[class^=details-section]");
+    const detailsSection = document.querySelector("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
+    const aboutSection = document.querySelector("#about-section");
+    const experienceSection = document.querySelector("#experience-section");
+    const isExperienceSectionNotEmpty = document.querySelectorAll("#experience-section > section:nth-child(1) > div > ul > li").length;
+    const headline = (document.querySelector( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" )?.textContent) || "";
 
     // This is a normal email regex that I used to collect the first 20K~ investor leads (until 25/10/2022):
     // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/gi;
@@ -660,12 +673,12 @@ waitFor(experienceSectionHeadline).then((el) => {
         // Quick check to see if there are any emails
         function hasEmail() {
             // Header and Details HTML will have loaded at this point.
-            const emailMatchesInHeader = headerSection.html().match(emailRegex);
-            const emailMatchesInDetails = detailsSection.html().match(emailRegex);
-            const emailMatchesInExperience = experienceSection.html().match(emailRegex);
+            const emailMatchesInHeader = headerSection.innerHTML.match(emailRegex);
+            const emailMatchesInDetails = detailsSection.innerHTML.match(emailRegex);
+            const emailMatchesInExperience = experienceSection.innerHTML.match(emailRegex);
             // aboutSection is optional
-            if (aboutSection.length) {
-                const emailMatchesInAbout = aboutSection.html().match(emailRegex);
+            if (aboutSection) {
+                const emailMatchesInAbout = aboutSection.innerHTML.match(emailRegex);
                 return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInAbout || emailMatchesInExperience);
             } else {
                 return !!(emailMatchesInHeader || emailMatchesInDetails || emailMatchesInExperience);
@@ -676,11 +689,11 @@ waitFor(experienceSectionHeadline).then((el) => {
             // I started collecting data from previously discarded profiles.
             // So, NOT auto-closing tabs anymore and not changing background to red.
 
-            if (premiumBadge.length) {
+            if (premiumBadge) {
                 isPremium = "TRUE";
             }
 
-            if (openBadge.length) {
+            if (openBadge) {
                 checkTimeOpenBadgeDetected = performance.now();
                 console.log(`OpenBadgeDetected (${(checkTimeOpenBadgeDetected - readyTime).toFixed(2)} ms after readyTime)`);
                 // console.log(`open badge is there!`);
@@ -702,7 +715,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                     // window.close();
 
                     // Don't auto-close, set the background to red instead and close manually.
-                    $("#content-main").css("background-color", "#c91b0c");
+                    document.querySelector("#content-main").style.backgroundColor = "#c91b0c";
 
                     let randomTimeout = getRandInteger(1999, 3999);
                     let countdown = Math.round(randomTimeout / 1000);
@@ -714,7 +727,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                         }
                     },1000);
 
-                    $("#SNF-counter").append(`
+                    document.querySelector("#SNF-counter").insertAdjacentHTML("beforeend", `
                 <span id="countdown"></span>
                 `);
                     setTimeout(function () {
@@ -728,8 +741,8 @@ waitFor(experienceSectionHeadline).then((el) => {
         autoCloseTabOrCollectProfileData ();
 
         function clickShowMoreButtons() {
-            const currentRoleMoreButton = $("#profile-card-section div[class^=current-role-container] [id$=clamped-content] > span:nth-child(2) > button[class^=_ellipsis-button]");
-            if (currentRoleMoreButton.length) {
+            const currentRoleMoreButton = document.querySelector("#profile-card-section div[class^=current-role-container] [id$=clamped-content] > span:nth-child(2) > button[class^=_ellipsis-button]");
+            if (currentRoleMoreButton) {
                 currentRoleMoreButton.click();
             }
 
@@ -739,15 +752,15 @@ waitFor(experienceSectionHeadline).then((el) => {
                     checkTime2 = performance.now();
                     console.log(`checkTime2: ${(checkTime2 - readyTime).toFixed(2)} ms`);
                     experienceButtons.forEach(function (item) {
-                        $(item).click();
+                        item.click();
                     });
                     checkTime3 = performance.now();
                     console.log(`checkTime3: ${(checkTime3 - readyTime).toFixed(2)} ms`);
                 }
             }
 
-            const showAllBtn = $("#experience-section > button[aria-expanded=false]");
-            if (showAllBtn.length) {
+            const showAllBtn = document.querySelector("#experience-section > button[aria-expanded=false]");
+            if (showAllBtn) {
                 showAllBtn.click();
                 waitFor("#experience-section > button[aria-expanded=true]").then((el) => {
                     checkTime1 = performance.now();
@@ -758,8 +771,8 @@ waitFor(experienceSectionHeadline).then((el) => {
                 clickExperienceButtons();
             }
 
-            const showMoreInAboutBtn = $("#about-section div > span:nth-child(2)");
-            if (showMoreInAboutBtn.length) {
+            const showMoreInAboutBtn = document.querySelector("#about-section div > span:nth-child(2)");
+            if (showMoreInAboutBtn) {
                 showMoreInAboutBtn.click();
             }
             checkTime4 = performance.now();
@@ -772,10 +785,10 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         function collectTwitter() {
             let twitterLink = "";
-            const contactSection = $("#profile-card-section section[data-sn-view-name=lead-contact-info] > div > address");
+            const contactSection = document.querySelector("#profile-card-section section[data-sn-view-name=lead-contact-info] > div > address");
 
-            if (contactSection.length) {
-                let twitterURLs = contactSection.html().match(twitterRegex); // null if none, array if some
+            if (contactSection) {
+                let twitterURLs = contactSection.innerHTML.match(twitterRegex); // null if none, array if some
                 if (twitterURLs) {
                     twitterLink = twitterURLs[0];
                 }
@@ -789,9 +802,9 @@ waitFor(experienceSectionHeadline).then((el) => {
             let phoneNumber;
             let websiteURL;
 
-            const contactSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
-            if (contactSection.length) {
-                phoneNumber = contactSection.find("span[data-anonymize=phone]").text().trim();
+            const contactSection = document.querySelector("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
+            if (contactSection) {
+                phoneNumber = contactSection.querySelector("span[data-anonymize=phone]")?.textContent?.trim() || "";
                 if (phoneNumber) {
                     console.log("phone number: " + phoneNumber);
                     // prepend apostrophe to fix Google Sheets formatting issues
@@ -799,7 +812,11 @@ waitFor(experienceSectionHeadline).then((el) => {
                     profilePhoneAndWebsite.profilePhone = phoneNumber;
                 }
 
-                websiteURL = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info] address li").has("li-icon[type='link-icon']").find("a[rel='noopener noreferrer']").attr("href");
+                const websiteLi = Array.from(document.querySelectorAll("#profile-card-section > section section[data-sn-view-name=lead-contact-info] address li")).find(function(li) { return li.querySelector("li-icon[type='link-icon']") !== null; });
+                if (websiteLi) {
+                    const websiteAnchor = websiteLi.querySelector("a[rel='noopener noreferrer']");
+                    websiteURL = websiteAnchor ? websiteAnchor.getAttribute("href") : undefined;
+                }
                 if (websiteURL) {
                     console.log("websiteURL: " + websiteURL);
                     profilePhoneAndWebsite.profileWebsite = websiteURL;
@@ -808,7 +825,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
             waitFor("#artdeco-modal-outlet div[aria-labelledby=lead-contact-info-modal__header] section.contact-info-form__website div.contact-info-form__website-readonly-group a").then((el) => {
                 console.log("Found contact info modal!");
-                websiteURL = $( "#artdeco-modal-outlet div[aria-labelledby=lead-contact-info-modal__header] section.contact-info-form__website div.contact-info-form__website-readonly-group a" ).attr("href");
+                websiteURL = document.querySelector( "#artdeco-modal-outlet div[aria-labelledby=lead-contact-info-modal__header] section.contact-info-form__website div.contact-info-form__website-readonly-group a" )?.getAttribute("href");
                 if (websiteURL) {
                     console.log("websiteURL: " + websiteURL);
                     profilePhoneAndWebsite.profileWebsite = websiteURL;
@@ -828,14 +845,14 @@ waitFor(experienceSectionHeadline).then((el) => {
 
             let emailList = [];
 
-            profileEmails.inHeader = headerSection.html().match(emailRegex); // null if none, array if some
+            profileEmails.inHeader = headerSection.innerHTML.match(emailRegex); // null if none, array if some
             if (profileEmails.inHeader) {
                 emailList = emailList.concat(profileEmails.inHeader);
             }
 
-            const contactSection = $("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
-            if (contactSection.length) {
-                profileEmails.inContact = contactSection.html().match(emailRegex);
+            const contactSection = document.querySelector("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
+            if (contactSection) {
+                profileEmails.inContact = contactSection.innerHTML.match(emailRegex);
                 if (profileEmails.inContact) {
                     profileEmails.inContact = removeDuplicatesInArray(profileEmails.inContact);
                     profileEmails.inContact = profileEmails.inContact.filter( (el) => !emailList.includes(el) );
@@ -844,10 +861,10 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
             }
 
-            // const currentRolesSectionEmpty = $("#profile-card-section > section[class^=details-section] > div[class^=current-role-container] p[class^=_no-current-role]").length;
-            const currentRolesSection = $("#profile-card-section > section div[data-sn-view-name=lead-current-role]");
-            if (currentRolesSection.length) {
-                profileEmails.inCurrentRoles = currentRolesSection.html().match(emailRegex);
+            // const currentRolesSectionEmpty = document.querySelector("#profile-card-section > section[class^=details-section] > div[class^=current-role-container] p[class^=_no-current-role]");
+            const currentRolesSection = document.querySelector("#profile-card-section > section div[data-sn-view-name=lead-current-role]");
+            if (currentRolesSection) {
+                profileEmails.inCurrentRoles = currentRolesSection.innerHTML.match(emailRegex);
                 if (profileEmails.inCurrentRoles) {
                     profileEmails.inCurrentRoles = removeDuplicatesInArray(profileEmails.inCurrentRoles);
                     profileEmails.inCurrentRoles = profileEmails.inCurrentRoles.filter( (el) => !emailList.includes(el) );
@@ -856,9 +873,9 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
             }
 
-            const aboutSection = $("#about-section");
-            if (aboutSection.length) { // Some profiles don't have the about section
-                profileEmails.inAbout = aboutSection.html().match(emailRegex);
+            const aboutSectionLocal = document.querySelector("#about-section");
+            if (aboutSectionLocal) { // Some profiles don't have the about section
+                profileEmails.inAbout = aboutSectionLocal.innerHTML.match(emailRegex);
                 if (profileEmails.inAbout) {
                     profileEmails.inAbout = removeDuplicatesInArray(profileEmails.inAbout);
                     profileEmails.inAbout = profileEmails.inAbout.filter( (el) => !emailList.includes(el) );
@@ -869,14 +886,15 @@ waitFor(experienceSectionHeadline).then((el) => {
 
             if (isExperienceSectionNotEmpty) {
                 console.log("Experience Section is not empty.");
-                const experienceEntries = $("#experience-section ul li[class^=_experience-entry]");
-                const presentEntries = experienceEntries.filter(function() {
-                    return $(this).find("div:nth-child(1) > div:nth-child(2) > p > span").text().includes("Present");
+                const experienceEntries = document.querySelectorAll("#experience-section ul li[class^=_experience-entry]");
+                const presentEntries = Array.from(experienceEntries).filter(function(entry) {
+                    const span = entry.querySelector("div:nth-child(1) > div:nth-child(2) > p > span");
+                    return span && span.textContent.includes("Present");
                 });
 
                 if (presentEntries.length > 0) {
                     console.log(presentEntries.length + " experienceEntries containing 'Present' found.");
-                    const htmlContentOfPresentEntries = presentEntries.map((index, el) => $(el).html()).get().join("");
+                    const htmlContentOfPresentEntries = Array.from(presentEntries).map(function(el) { return el.innerHTML; }).join("");
                     profileEmails.inExperience = htmlContentOfPresentEntries.match(emailRegex);
                 } else {
                     console.log("No elements containing 'Present' found.");
@@ -988,7 +1006,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             const aboutElements = addHTMLElements(profileEmails.inAbout, "about");
             const experienceElements = addHTMLElements(profileEmails.inExperience, "experience");
 
-            headerSection.append(`
+            headerSection.insertAdjacentHTML("beforeend", `
         <section id="SNF-doc-height">
         </section>
         <section id="SNF-data">
@@ -996,7 +1014,6 @@ waitFor(experienceSectionHeadline).then((el) => {
                 <button id="SNF-copy" class="copy-btn" type="button">Copy</button>
                 <button id="SNF-femcopy" class="copy-btn" type="button">FemC</button>
             </div>
-            <div>
             <div>
             ${headerElements}
             </div>
@@ -1290,8 +1307,8 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
 
                 // in about (if section exists):
-                if (aboutSection.length) {
-                    let aboutMatches = aboutSection.html().match(kwRegex(keyword));
+                if (aboutSection) {
+                    let aboutMatches = aboutSection.innerHTML.match(kwRegex(keyword));
                     if (aboutMatches) {
                         kwsIn.about[keyword] = aboutMatches;
                     }
@@ -1299,12 +1316,12 @@ waitFor(experienceSectionHeadline).then((el) => {
 
                 // in experience section:
                 if (isExperienceSectionNotEmpty) {
-                    const jobTitleElements = $("h2[data-anonymize=job-title], h3[data-anonymize=job-title]");
+                    const jobTitleElements = document.querySelectorAll("h2[data-anonymize=job-title], h3[data-anonymize=job-title]");
                     // This matches all job titles in single-title and multi-title job lists
                     if (jobTitleElements.length) {
                         let jobTitles = [];
-                        jobTitleElements.each(function () {
-                            jobTitles.push($(this).text());
+                        jobTitleElements.forEach(function (el) {
+                            jobTitles.push(el.textContent);
                         });
                         jobTitles = jobTitles.join(" | ");
                         let jobTitleMatches = jobTitles.match(kwRegex(keyword));
@@ -1313,12 +1330,12 @@ waitFor(experienceSectionHeadline).then((el) => {
                         }
                     }
 
-                    const companyNameElements = $("p[data-anonymize=company-name], h2[data-anonymize=company-name]");
+                    const companyNameElements = document.querySelectorAll("p[data-anonymize=company-name], h2[data-anonymize=company-name]");
                     // This matches all company names in single-title and multi-title job lists
                     if (companyNameElements.length) {
                         let companyNames = [];
-                        companyNameElements.each(function () {
-                            companyNames.push($(this).text());
+                        companyNameElements.forEach(function (el) {
+                            companyNames.push(el.textContent);
                         });
                         companyNames = companyNames.join(" | ");
                         let companyNameMatches = companyNames.match(kwRegex(keyword));
@@ -1336,11 +1353,11 @@ waitFor(experienceSectionHeadline).then((el) => {
                     // [class^=_single-position-description]
                     // and for _multi-position-descriptions:
                     // [class^=_multi-position-description]
-                    const jobDescriptionElements = $("[class^=_single-position-description], [class^=_multi-position-description]");
+                    const jobDescriptionElements = document.querySelectorAll("[class^=_single-position-description], [class^=_multi-position-description]");
                     if (jobDescriptionElements.length) {
                         let jobDescriptions = [];
-                        jobDescriptionElements.each(function () {
-                            jobDescriptions.push($(this).html()); // html() instead of text() because it preserves line breaks
+                        jobDescriptionElements.forEach(function (el) {
+                            jobDescriptions.push(el.innerHTML); // innerHTML instead of textContent because it preserves line breaks
                         });
                         jobDescriptions = jobDescriptions.join(" | ");
 
@@ -1370,21 +1387,21 @@ waitFor(experienceSectionHeadline).then((el) => {
             copyDataToClipboardTime = performance.now();
             console.log(`copyDataToClipboardTime: ${(copyDataToClipboardTime - readyTime).toFixed(2)} ms`);
             // green light
-            $("#content-main").css("background-color", "#aadec3");
+            document.querySelector("#content-main").style.backgroundColor = "#aadec3";
 
-            const copyBtn = $("#SNF-copy");
-            const copyFemaleBtn = $("#SNF-femcopy");
+            const copyBtn = document.querySelector("#SNF-copy");
+            const copyFemaleBtn = document.querySelector("#SNF-femcopy");
 
 /*
-            const menuTrigger = $( "#profile-card-section > section[class^=_header] > div[class^=_actions-container] > section[class^=_actions-bar] > button" );
+            const menuTrigger = document.querySelector( "#profile-card-section > section[class^=_header] > div[class^=_actions-container] > section[class^=_actions-bar] > button" );
 
             function copyToClipboard() {
                 menuTrigger.click();
                 setTimeout(function () {
                     waitFor("#hue-web-menu-outlet ul li a").then((el) => {
-                        // profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
-                        profileURL = $( "#hue-web-menu-outlet ul li a:contains('View LinkedIn profile')" ).attr("href");
-                        // const copyElement = $( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
+                        // profileURL = document.querySelector( "#hue-web-menu-outlet ul li a" ).getAttribute("href");
+                        profileURL = Array.from(document.querySelectorAll("#hue-web-menu-outlet ul li a")).find(a => a.textContent.includes("View LinkedIn profile"))?.getAttribute("href");
+                        // const copyElement = document.querySelector( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
                         modifyClipboard();
                     });
                 }, 33);
@@ -1392,30 +1409,30 @@ waitFor(experienceSectionHeadline).then((el) => {
 */
 
             waitFor("#hue-web-menu-outlet div[data-artdeco-is-focused=\"true\"] ul li a").then((el) => {
-                // profileURL = $( "#hue-web-menu-outlet ul li a" ).attr("href");
-                profileURL = $( "#hue-web-menu-outlet ul li a:contains('View LinkedIn profile')" ).attr("href");
+                // profileURL = document.querySelector( "#hue-web-menu-outlet ul li a" ).getAttribute("href");
+                profileURL = Array.from(document.querySelectorAll("#hue-web-menu-outlet ul li a")).find(a => a.textContent.includes("View LinkedIn profile"))?.getAttribute("href");
                 profileURL = profileURL + "/";
-                // const copyElement = $( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
+                // const copyElement = document.querySelector( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
                 return profileURL;
             });
 
-            if (copyBtn.length && copyFemaleBtn.length) {
-                copyBtn.click(function () {
+            if (copyBtn && copyFemaleBtn) {
+                copyBtn.addEventListener("click", function () {
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
                         modifyClipboard(profileURL);
-                        copyBtn.before("<div id='SNFc-success' style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
+                        copyBtn.insertAdjacentHTML("beforebegin", "<div id='SNFc-success' style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                     } else {
-                        copyBtn.before("<div id='SNFc-fail' style='text-align: center; background-color: orangered'><b>✖</b></div>");
+                        copyBtn.insertAdjacentHTML("beforebegin", "<div id='SNFc-fail' style='text-align: center; background-color: orangered'><b>✖</b></div>");
                     }
                 });
 
-                copyFemaleBtn.click(function () {
+                copyFemaleBtn.addEventListener("click", function () {
                     if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
                         isFemale = "TRUE";
                         modifyClipboard(profileURL);
-                        copyBtn.before("<div style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
+                        copyBtn.insertAdjacentHTML("beforebegin", "<div style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                     } else {
-                        copyBtn.before("<div style='text-align: center; background-color: orangered'><b>✖</b></div>");
+                        copyBtn.insertAdjacentHTML("beforebegin", "<div style='text-align: center; background-color: orangered'><b>✖</b></div>");
                     }
                 });
             }
@@ -1426,14 +1443,12 @@ waitFor(experienceSectionHeadline).then((el) => {
                 firstEmail = "";
                 allEmails = "";
             } else {
-                const checkedEmailElements = $("#SNF-data input[id^=SNF]:checked");
+                const checkedEmailElements = document.querySelectorAll("#SNF-data input[id^=SNF]:checked");
                 if (checkedEmailElements.length === 0) { // I might uncheck all emails
                     firstEmail = "";
                     allEmails = "";
                 } else {
-                    let checkedEmailsArray = checkedEmailElements.map(function () {
-                        return $(this).val();
-                    }).toArray();
+                    let checkedEmailsArray = Array.from(checkedEmailElements).map(el => el.value);
                     checkedEmailsArray = removeDuplicatesInArray(checkedEmailsArray);
                     firstEmail = checkedEmailElements[0].value;
                     let allEmailsArray = [];
@@ -1478,7 +1493,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             // So, we need to grab the first 75 characters and append ",name" to get rid of useless parameters.
             const leadURL = `${currentURL.substring(0, 75)},name`;
             profileURL = url;
-            const name = $( "#profile-card-section section[class^=_header_] h1" ).text().cleanUpString();
+            const name = (document.querySelector( "#profile-card-section section[class^=_header_] h1" )?.textContent || "").cleanUpString();
             // const firstName = name.split(" ")[0];
             // const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
             function getCapitalizedFirstName(name) {
@@ -1521,16 +1536,16 @@ waitFor(experienceSectionHeadline).then((el) => {
 
             const headlineClean = headline.cleanUpString();
 
-            const location = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)" ).text().cleanUpString();
+            const location = (document.querySelector( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)" )?.textContent || "").cleanUpString();
 
             let connections = "";
-            const connectionsOfNon1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)" );
-            const connectionsOf1stDegreeProfile = $( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > a:nth-child(2)" );
-            if (connectionsOfNon1stDegreeProfile.length) {
-                connections = connectionsOfNon1stDegreeProfile.text()
+            const connectionsOfNon1stDegreeProfile = document.querySelector( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)" );
+            const connectionsOf1stDegreeProfile = document.querySelector( "#profile-card-section > section[class^=_header_] > div:nth-child(1) > div:nth-child(4) > a:nth-child(2)" );
+            if (connectionsOfNon1stDegreeProfile) {
+                connections = connectionsOfNon1stDegreeProfile.textContent
                     .cleanUpString().replace(/(\+ connections| (connections|connection))/, "");
-            } else if (connectionsOf1stDegreeProfile.length) {
-                connections = connectionsOf1stDegreeProfile.text()
+            } else if (connectionsOf1stDegreeProfile) {
+                connections = connectionsOf1stDegreeProfile.textContent
                     .cleanUpString().replace(/(\+ connections| (connections|connection))/, "");
             }
 
@@ -1584,7 +1599,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 console.log(`highlight function called
         ${highlightFunctionTime - readyTime} ms
         after readyTime`);
-                let body = $( "body" );
+                let body = document.body;
                 let currentHTML = document.querySelector("#content-main div[class^=_main-column]").innerHTML;
                 // const keyword1Regex = /Crypto/gi;
                 // const keyword1Replacement = "Crypto";
@@ -1625,59 +1640,59 @@ waitFor(experienceSectionHeadline).then((el) => {
                 aboutSection = document.querySelector("#about-section");
 
                 if (keyword1Array.length && keyword2Array.length && hasEmail()) {
-                    body.append('<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
-                    body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
                     // User interaction/click required to play audio after page load:
                     // https://developer.chrome.com/blog/autoplay/
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
                         setTimeout(function () {
                             const playEmailPromise = document.querySelector('#LNSNF-email').play();
                         }, 400);
                     });
                 } else if (keyword1Array.length && keyword2Array.length) {
-                    body.append('<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
                     // User interaction/click required to play audio after page load:
                     // https://developer.chrome.com/blog/autoplay/
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
                     });
                 } else if ((keyword1Array.length || keyword2Array.length) && hasEmail()) {
-                    body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
-                    body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
                         setTimeout(function () {
                             const playEmailPromise = document.querySelector('#LNSNF-email').play();
                         }, 400);
                     });
                 } else if (keyword1Array.length || keyword2Array.length) {
-                    body.append('<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
                     });
                 } else if (hasEmail()) {
-                    body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
-                    body.append('<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
                         setTimeout(function () {
                             const playEmailPromise = document.querySelector('#LNSNF-email').play();
                         }, 400);
                     });
                 } else {
-                    body.append('<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
                     });
                 }
 
 
                 if (keyword3Array.length) {
-                    body.append('<audio id="LNSNF-kw3" autoplay><source src="https://alexbooster.com/media/seed.mp3"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw3" autoplay><source src="https://alexbooster.com/media/seed.mp3"></audio>');
                     // User interaction/click required to play audio after page load:
                     // https://developer.chrome.com/blog/autoplay/
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         setTimeout(function () {
                             const playKW3Promise = document.querySelector('#LNSNF-kw3').play();
                         }, 100);
@@ -1686,10 +1701,10 @@ waitFor(experienceSectionHeadline).then((el) => {
 
 
                 if (keyword4Array.length) {
-                    body.append('<audio id="LNSNF-kw4" autoplay><source src="https://alexbooster.com/media/early.mp3"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw4" autoplay><source src="https://alexbooster.com/media/early.mp3"></audio>');
                     // User interaction/click required to play audio after page load:
                     // https://developer.chrome.com/blog/autoplay/
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         setTimeout(function () {
                             const playKW4Promise = document.querySelector('#LNSNF-kw4').play();
                         }, 500);
@@ -1698,10 +1713,10 @@ waitFor(experienceSectionHeadline).then((el) => {
 
 
                 if (keyword5Array.length) {
-                    body.append('<audio id="LNSNF-kw5" autoplay><source src="https://alexbooster.com/media/angel.mp3"></audio>');
+                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw5" autoplay><source src="https://alexbooster.com/media/angel.mp3"></audio>');
                     // User interaction/click required to play audio after page load:
                     // https://developer.chrome.com/blog/autoplay/
-                    $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                         setTimeout(function () {
                             const playKW5Promise = document.querySelector('#LNSNF-kw5').play();
                         }, 1000);
@@ -1711,10 +1726,10 @@ waitFor(experienceSectionHeadline).then((el) => {
 
                 /!*
                         if (keyword6Array.length) {
-                            body.append('<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
+                            body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
                             // User interaction/click required to play audio after page load:
                             // https://developer.chrome.com/blog/autoplay/
-                            $( "#profile-card-section section[class^=_header_] h1" ).click(function() {
+                            document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
                                 setTimeout(function () {
                                     const playKW6Promise = document.querySelector('#LNSNF-kw6').play();
                                 }, 1000);
@@ -1725,7 +1740,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                 /!*
                         document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
 
-                        if (aboutSection.length) {
+                        if (aboutSection) {
                             document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
                         }
                 *!/
@@ -1733,14 +1748,14 @@ waitFor(experienceSectionHeadline).then((el) => {
                 // Remove irrelevant crap from image attributes
                 // because when I apply the highlight effect,
                 // if those attributes contain my keywords, it messes up the page HTML.
-                $("#experience-section img").each(function (key, value) {
-                    // console.log("img title: ", $(value).attr('title'));
-                    $(value).attr("title", "--");
-                    $(value).attr("alt", "--");
+                document.querySelectorAll("#experience-section img").forEach(function (value) {
+                    // console.log("img title: ", value.getAttribute('title'));
+                    value.setAttribute("title", "--");
+                    value.setAttribute("alt", "--");
                 });
 
-                $("div[id^=similar-leads-account-insights-outlet]").remove();
-                $("section[class^=_search-links-section]").remove();
+                document.querySelectorAll("div[id^=similar-leads-account-insights-outlet]").forEach(function(el) { el.remove(); });
+                document.querySelectorAll("section[class^=_search-links-section]").forEach(function(el) { el.remove(); });
 
                 //document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
 
@@ -1752,22 +1767,22 @@ waitFor(experienceSectionHeadline).then((el) => {
 
         async function fillJobList() {
             jobList = []; // Need to empty it in case I clicked the copy button before but then decided to choose a different set of emails.
-            let jobElements = $("#experience-section ul li[class^=_experience-entry]");
-            let multiPositionsList = $("#experience-section ul[class^=experience-list] li[class^=_experience-entry] ul[class^=_positions-list]");
+            let jobElements = document.querySelectorAll("#experience-section ul li[class^=_experience-entry]");
+            let multiPositionsList = document.querySelectorAll("#experience-section ul[class^=experience-list] li[class^=_experience-entry] ul[class^=_positions-list]");
 
             if (jobElements.length) {
-                jobElements.each(function () {
+                jobElements.forEach(function (jobEl) {
                     let job = {};
                     job["titles"] = [];
-                    let listsInExperienceEntry = $(this).children("li[class^=_experience-entry] ul");
+                    let listsInExperienceEntry = jobEl.querySelectorAll(":scope > li[class^=_experience-entry] ul");
                     console.log(`listsInExperienceEntry.length`);
                     console.log(listsInExperienceEntry.length);
                     if (listsInExperienceEntry.length &&
-                        listsInExperienceEntry.find("h3[data-anonymize=job-title]").length) {
+                        jobEl.querySelector("li[class^=_experience-entry] ul h3[data-anonymize=job-title]")) {
                         // we have to do this check because sometimes those lists inside experience entry
                         // are media elements lists like in the case of this guy: https://www.linkedin.com/in/matcy/
                         console.log("found multiPositionElements/h3 job titles: ");
-                        console.log(listsInExperienceEntry.find("h3[data-anonymize=job-title]"));
+                        console.log(jobEl.querySelectorAll("li[class^=_experience-entry] ul h3[data-anonymize=job-title]"));
                         // Example user with multiPositionsList:
                         // https://www.linkedin.com/sales/lead/ACwAAAC42vgBYm0a8xWAXNdflo0MUtpcvAwDE5U,name
                         // https://www.linkedin.com/in/gilbertson
@@ -1775,19 +1790,19 @@ waitFor(experienceSectionHeadline).then((el) => {
                         let multiTitleJobList = [];
                         let job = {};
                         job["titles"] = [];
-                        let multiPositionElements = $(this).find("ul li");
+                        let multiPositionElements = jobEl.querySelectorAll("ul li");
                         console.log(`multiPositionElements:`);
                         console.log(multiPositionElements);
-                        multiPositionElements.each(function (index) {
-                            job["titles"][index] = $(this).find("h3[data-anonymize=job-title]").text()
+                        multiPositionElements.forEach(function (posEl, index) {
+                            job["titles"][index] = (posEl.querySelector("h3[data-anonymize=job-title]")?.textContent || "")
                                 .cleanUpString();
                             console.log("current multiPosition job title: ");
                             console.log(job["titles"][index]);
 
                             /*
-                                                    let titleElements = $(this).find("li[class^=_position-entry]");
-                                                    titleElements.each(function (index) {
-                                                        job["titles"][index] = $(this).find("h3[data-anonymize=job-title]").text()
+                                                    let titleElements = posEl.querySelectorAll("li[class^=_position-entry]");
+                                                    titleElements.forEach(function (titleEl, index) {
+                                                        job["titles"][index] = (titleEl.querySelector("h3[data-anonymize=job-title]")?.textContent || "")
                                                             .cleanUpString();
                                                     });
                             */
@@ -1795,7 +1810,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
                         });
 
-                        job["company"] = $(this).find("h2[data-anonymize=company-name]").text().cleanUpString();
+                        job["company"] = (jobEl.querySelector("h2[data-anonymize=company-name]")?.textContent || "").cleanUpString();
                         console.log(`multi job title array:`);
                         console.log(job["titles"]);
                         // console.log(job["company"]);
@@ -1805,8 +1820,8 @@ waitFor(experienceSectionHeadline).then((el) => {
                         jobList = jobList.concat(multiTitleJobList);
 
                     } else {
-                        job["titles"][0] = $(this).find("h2[data-anonymize=job-title]").text().cleanUpString();
-                        job["company"] = $(this).find("p[data-anonymize=company-name]").text().cleanUpString();
+                        job["titles"][0] = (jobEl.querySelector("h2[data-anonymize=job-title]")?.textContent || "").cleanUpString();
+                        job["company"] = (jobEl.querySelector("p[data-anonymize=company-name]")?.textContent || "").cleanUpString();
                         console.log(`simple job title:`);
                         console.log(job["titles"][0]);
                         jobList.push(job);
@@ -1833,14 +1848,14 @@ waitFor(experienceSectionHeadline).then((el) => {
 
     let scriptsRan = false;
     function runScriptsOnce() {
-        const reloadButton = $("#artdeco-modal-outlet div[class^=artdeco-modal] > button.artdeco-modal__confirm-dialog-btn.artdeco-button > span.artdeco-button__text");
+        const reloadButton = document.querySelector("#artdeco-modal-outlet div[class^=artdeco-modal] > button.artdeco-modal__confirm-dialog-btn.artdeco-button > span.artdeco-button__text");
         // There are actually 2 buttons that will match the above selector
         // if LinkedIn displays that popup.
         // The one we're interested in has
         // inner text "Reload page"
 
         // run scripts if not ran before
-        if (!reloadButton.length && !scriptsRan && !document.hidden) {
+        if (!reloadButton && !scriptsRan && !document.hidden) {
             console.log(`This tab is now active and the scrips haven't run yet.`);
             runScriptsOnceTime = performance.now();
             console.log(`runScriptsOnceTime (${(runScriptsOnceTime - readyTime).toFixed(2)} ms after readyTime)`);
@@ -1881,12 +1896,12 @@ if (searchPageMatch) {
 
         function manipulateListElement(element, index) {
             // Coach highlighter
-            if ($(element).has("span[data-anonymize=title]").length) {
+            if (element.querySelector("span[data-anonymize=title]") !== null) {
                 // Find the span with data-anonymize="title"
-                const spanElement = $(element).find("span[data-anonymize=title]");
+                const spanElement = element.querySelector("span[data-anonymize=title]");
 
                 // Get the content of the span element
-                const spanText = spanElement.text();
+                const spanText = spanElement.textContent;
 
                 // Check if "Coach" (case-insensitive) is in the text
                 if (/project/i.test(spanText)) {
@@ -1897,43 +1912,43 @@ if (searchPageMatch) {
                     //const highlightedText = spanText.replace(/scientist/gi, '<span style="background-color: peachpuff;">Scientist</span>');
 
                     // Set the new HTML back into the span element
-                    spanElement.html(highlightedText);
+                    spanElement.innerHTML = highlightedText;
                 }
             }
 
             // Hide non-premium profiles (for now I'm only targeting premium profiles)
-            if ($(element).has("span[data-anonymize=person-name]").length
-                && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length
-                && $(element).has("li-icon[aria-label^=Viewed]").length
-                && !$(element).has(".SNF-viewed-non-premium").length) {
+            if (element.querySelector("span[data-anonymize=person-name]") !== null
+                && element.querySelector("li-icon[type=linkedin-premium-gold-icon]") === null
+                && element.querySelector("li-icon[aria-label^=Viewed]") !== null
+                && element.querySelector(".SNF-viewed-non-premium") === null) {
                 // add class ".viewed-non-premium"
-                $(element).addClass("SNF-viewed-non-premium");
+                element.classList.add("SNF-viewed-non-premium");
             }
 
-            if ($(element).has("span[data-anonymize=person-name]").length
-                && !$(element).has("li-icon[type=linkedin-premium-gold-icon]").length
-                && !$(element).has(".SNF-non-premium").length) {
+            if (element.querySelector("span[data-anonymize=person-name]") !== null
+                && element.querySelector("li-icon[type=linkedin-premium-gold-icon]") === null
+                && element.querySelector(".SNF-non-premium") === null) {
                 // element.style.backgroundColor = "#0073b1";
                 // element.style.backgroundColor = "aqua";
-                $(element).addClass("SNF-non-premium");
+                element.classList.add("SNF-non-premium");
             }
 
 
-            if ($(element).has("li-icon[aria-label^=Viewed]").length && !$(element).has(".SNF-viewed-premium").length) {
+            if (element.querySelector("li-icon[aria-label^=Viewed]") !== null && element.querySelector(".SNF-viewed-premium") === null) {
                 //element.style.backgroundColor = "cornsilk";
-                $(element).addClass("SNF-viewed-premium");
+                element.classList.add("SNF-viewed-premium");
             }
 
             // most "out-of-network" profiles are useless for me
-            if ($(element).has("div[class^=_out-of-network]").length && !$(element).has(".SNF-out-of-network").length) {
+            if (element.querySelector("div[class^=_out-of-network]") !== null && element.querySelector(".SNF-out-of-network") === null) {
                 // element.style.backgroundColor = "pink";
-                $(element).addClass("SNF-out-of-network");
+                element.classList.add("SNF-out-of-network");
             }
 
             // Collected profile highlighter (highlighting profiles that have already been collected into the database)
-            //$("div[data-scroll-into-view*='ACwAAACKU6sB83xV8STdawzKGaUO1Vk6WiILMNs']").each(function() {
+            //document.querySelectorAll("div[data-scroll-into-view*='ACwAAACKU6sB83xV8STdawzKGaUO1Vk6WiILMNs']").forEach(function(el) {
             //    // Find the closest li ancestor
-            //    $(this).closest("li").css("background", "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)");
+            //    el.closest("li").style.background = "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)";
             //});
 
             // Highlight list items that are already in my database
@@ -1948,8 +1963,8 @@ if (searchPageMatch) {
 
         function handleListItems() {
             const listArray = document.querySelectorAll("li.artdeco-list__item");
-            const aboutSectionsArray = $("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div:nth-of-type(2)");
-            const yearsArray = $("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div > div > div:nth-of-type(2) > div:nth-of-type(4)");
+            const aboutSectionsArray = document.querySelectorAll("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div:nth-of-type(2)");
+            const yearsArray = document.querySelectorAll("li.artdeco-list__item > div > div > div:nth-of-type(2) > div > div > div > div:nth-of-type(2) > div:nth-of-type(4)");
 
             if (listArray.length) {
                 listArray.forEach(manipulateListElement);
@@ -1957,17 +1972,17 @@ if (searchPageMatch) {
 
             if (aboutSectionsArray.length) {
                 // aboutSectionsArray.forEach(hideSection);
-                aboutSectionsArray.each(function () {
-                    if ($(this).is(":visible")) {
-                        $(this).hide();
+                aboutSectionsArray.forEach(function (el) {
+                    if (el.offsetParent !== null) {
+                        el.style.display = "none";
                     }
                 });
             }
 
             if (yearsArray.length) {
-                yearsArray.each(function () {
-                    if ($(this).is(":visible")) {
-                        $(this).hide();
+                yearsArray.forEach(function (el) {
+                    if (el.offsetParent !== null) {
+                        el.style.display = "none";
                     }
                 });
             }
@@ -1977,7 +1992,7 @@ if (searchPageMatch) {
     });
 }
 
-});
+}
 
 // keywords: "investor" + TITLE > (Chief Executive Officer)(Founder)(Co-Founder)(President)(Director)(Managing Director)(Executive Director)(Principal)(General Partner)(Managing Partner)(Managing General Partner) + selectedSubFilter > CURRENT_OR_PAST + CURRENT_COMPANY > LinkedIn > EXCLUDED
 // also filter by industry
@@ -1990,4 +2005,3 @@ https://www.linkedin.com/sales/search/people?page=1&query=(spellCorrectionEnable
 
 https://www.linkedin.com/sales/search/people?query=(recentSearchParam%3A(id%3A1793808001%2CdoLogHistory%3Atrue)%2Cfilters%3AList((type%3ACURRENT_COMPANY%2Cvalues%3AList((id%3A1337%2Ctext%3ALinkedIn%2CselectionType%3AEXCLUDED)))%2C(type%3ATITLE%2Cvalues%3AList((text%3AChief%2520Executive%2520Officer%2CselectionType%3AINCLUDED))%2CselectedSubFilter%3ACURRENT_OR_PAST)%2C(type%3AREGION%2Cvalues%3AList((id%3A103300978%2Ctext%3AAlameda%252C%2520California%252C%2520United%2520States%2CselectionType%3AINCLUDED)))))&sessionId=xa%2BJ8KY6QF2qh9xeT3XXcw%3D%3D&viewAllFilters=true
 */
-
