@@ -17,7 +17,7 @@ chrome.storage.local.get(["liImportNumber", "liCountry", "liProfession"], (resul
     }
 });
 
-saveBtn.addEventListener("click", () => {
+function saveSettings() {
     chrome.storage.local.set({
         liImportNumber: importNumberInput.value,
         liCountry: countrySelect.value,
@@ -26,4 +26,10 @@ saveBtn.addEventListener("click", () => {
         savedConfirmation.style.display = "block";
         setTimeout(() => { savedConfirmation.style.display = "none"; }, 1500);
     });
+}
+
+saveBtn.addEventListener("click", saveSettings);
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") saveSettings();
 });
