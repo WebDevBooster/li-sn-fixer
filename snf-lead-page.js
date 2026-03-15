@@ -29,6 +29,27 @@ waitFor(experienceSectionHeadline).then((el) => {
     let profileURL = "/////////////////////////////////////////////////////////////////////";
     let gender = "Male";
 
+    // Check for duplicate lead on page load
+    const leadURLCheck = `${currentURL.substring(0, 75)},name`;
+    chrome.storage.local.get(["liLeadURLs"], (result) => {
+        const leadURLs = result.liLeadURLs || [];
+        const existingIndex = leadURLs.indexOf(leadURLCheck);
+        if (existingIndex !== -1) {
+            const overlay = document.createElement("div");
+            overlay.id = "SNF-dupe-modal-overlay";
+            overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;";
+            const modal = document.createElement("div");
+            modal.style.cssText = "background:#fff;padding:24px 32px;border-radius:8px;text-align:center;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.3);";
+            modal.innerHTML = `<p style="margin:0 0 16px;font-size:15px;color:#333;"><b>This profile was already saved before</b><br>(Import #${existingIndex + 1})</p>
+                <button id="SNF-dupe-dismiss" style="padding:6px 24px;background:#4CAF50;color:#fff;border:none;border-radius:4px;font-size:14px;cursor:pointer;">OK</button>`;
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            document.getElementById("SNF-dupe-dismiss").addEventListener("click", () => {
+                overlay.remove();
+            });
+        }
+    });
+
     function handleThisProfile() {
         hideRelationshipSection();
 
