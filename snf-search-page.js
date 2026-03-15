@@ -92,7 +92,11 @@ if (searchPageMatch) {
         }
 
         handleListItems();
-        const listObserver = new MutationObserver(handleListItems);
+        const listObserver = new MutationObserver(() => {
+            listObserver.disconnect();
+            handleListItems();
+            listObserver.observe(resultsContainer, { childList: true, subtree: true });
+        });
         const resultsContainer = document.querySelector("#search-results-container");
         if (resultsContainer) {
             listObserver.observe(resultsContainer, { childList: true, subtree: true });
