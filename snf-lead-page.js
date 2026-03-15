@@ -26,7 +26,7 @@ waitFor(experienceSectionHeadline).then((el) => {
 
     let jobList = [];
     let jobs = "";
-    let profileURL = "/////////////////////////////////////////////////////////////////////";
+    let profileURL = "";
     let gender = "Male";
 
     // Check for duplicate lead on page load
@@ -138,13 +138,14 @@ waitFor(experienceSectionHeadline).then((el) => {
                             "<div style='text-align: center; background-color: orangered; padding: 2px;'><b>Import Lead URLs in extension popup first!</b></div>");
                         return;
                     }
-                    if (profileURL !== "/////////////////////////////////////////////////////////////////////") {
-                        if (isFemale) gender = "Female";
-                        modifyClipboard(profileURL);
-                        copyBtn.insertAdjacentHTML("beforebegin", "<div id='SNFc-success' style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
-                    } else {
-                        copyBtn.insertAdjacentHTML("beforebegin", "<div id='SNFc-fail' style='text-align: center; background-color: orangered'><b>✖</b></div>");
+                    if (!profileURL) {
+                        copyBtn.insertAdjacentHTML("beforebegin",
+                            "<div id='SNFc-fail' style='text-align: center; background-color: orangered; padding: 2px;'><b>Profile URL not available. Click the 3 dots and \"View LinkedIn profile\" first.</b></div>");
+                        return;
                     }
+                    if (isFemale) gender = "Female";
+                    modifyClipboard(profileURL);
+                    copyBtn.insertAdjacentHTML("beforebegin", "<div id='SNFc-success' style='text-align: center; background-color: limegreen;'><b style='margin-left: -10px;'>✔</b></div>");
                 }
 
                 copyBtn.addEventListener("click", function () {
