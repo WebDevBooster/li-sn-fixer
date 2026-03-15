@@ -1,0 +1,180 @@
+/* profile header */
+#profile-card-section > svg,
+#profile-card-section > img {
+    /* Fix the height because the retards have it jumping up and down on page load */
+    /*height: 201px;*/
+    /*shrink the height to make more space*/
+    height: 110px;
+}
+
+#content-main.lead.desktop {
+    margin-top: -120px;
+    z-index: 9999;
+}
+
+#SNF-data {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0 20px;
+}
+
+#SNF-data .copy-btn {
+    background-color: #2f7b15;
+    border: 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    min-height: 90px;
+    height: 100%;
+    line-height: 32px;
+    overflow: hidden;
+    outline-width: 2px;
+    padding: 0 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    display: inline;
+    border-radius: 5px;
+    font-size: 1.4rem;
+}
+
+#SNF-data #SNF-femcopy.copy-btn {
+    background-color: purple;
+}
+
+#SNF-data button.copy-btn:nth-of-type(2) {
+    margin-left: 10px;
+}
+
+#SNF-data div:nth-of-type(2),
+#SNF-data div:nth-of-type(2) div {
+    padding-left: 10px;
+}
+
+#SNF-data div div:nth-of-type(2) {
+    background-color: bisque;
+}
+#SNF-data div div:nth-of-type(3) {
+    background-color: lavender;
+}
+#SNF-data div div:nth-of-type(4) {
+    background-color: aquamarine;
+}
+#SNF-data div div:last-of-type {
+    background-color: beige;
+}
+
+#SNF-data div div label {
+    /*user-select: none;*/
+    display: block;
+    margin-right: 15px;
+    padding: 6px 0;
+}
+
+#SNF-data div div span {
+    font-size: 16px;
+}
+
+#SNF-data div div > span {
+    text-transform: capitalize;
+}
+
+.SNF-viewed-non-premium {
+    background-image: linear-gradient(135deg, #fff8dc 40%, #00ffff 40%, #00ffff 50%, #fff8dc 50%, #fff8dc 90%, #00ffff 90%, #00ffff 100%);
+    background-size: 141px 141px;
+}
+.SNF-non-premium {
+    background-color: aqua !important;
+}
+.SNF-viewed-premium {
+    background-color: cornsilk !important;
+}
+.SNF-out-of-network {
+    background-color: pink !important;
+}
+.SNF-out-of-network a {
+    color: lightgrey !important;
+    background-color: pink !important;
+}
+
+#SNF-counter {
+    position: fixed;
+    /*top: 200px;*/
+    top: 0;
+    left: 0;
+    line-height: 20px;
+    padding: 0 5px;
+    background-color: cornsilk;
+    z-index: 9999;
+    display: flex;
+    /*flex-direction: column;*/
+    flex-direction: row;
+}
+#SNF-counter > span {
+    width: 60px;
+}
+
+#SNF-counter-search-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    line-height: 20px;
+    padding: 0 5px;
+    background-color: cornsilk;
+    z-index: 9999;
+    display: flex;
+    /*flex-direction: column;*/
+}
+
+#SNF-counter-search-page > span {
+    padding: 5px 10px 5px 0;
+}
+#SNF-counter-search-page span[class$="timer"] {
+    text-align: center;
+}
+#SNF-counter-search-page span[class^="day-"] {
+    background-color: lightcyan;
+}
+/*#SNF-counter-search-page span:last-of-type {*/
+/*    padding-left: 10px;*/
+/*}*/
+
+#SNF-counter span:nth-of-type(2) {
+    /*padding: 0 11px;*/
+}
+#SNF-counter span.warning,
+#SNF-counter-search-page span.warning {
+    background-color: orangered;
+    padding: 10px 5px;
+}
+#SNF-counter span.total,
+#SNF-counter span.day-total {
+    padding-top: 10px;
+}
+#SNF-counter span.timer,
+#SNF-counter span.day-timer {
+    padding: 10px 0;
+    /*margin-left: -5px;*/
+}
+
+#countdown {
+    padding: 5px 0 5px 10px;
+    color: red;
+}
+
+#SNF-doc-height {
+    padding-left: 20px;
+}
+
+
+#search-results-container > div > ol > li > div > div > div.flex.justify-space-between.full-width > div.flex.flex-column > div.mb3 > div > div.artdeco-entity-lockup__content.ember-view > div.flex.flex-wrap.align-items-center > div.artdeco-entity-lockup__title.ember-view > a:visited {
+    color: lightgrey;
+    background-color: white !important;
+}
+#search-results-container > div > ol > li > div > div > div.flex.justify-space-between.full-width > div.flex.flex-column > div.mb3 > div > div.artdeco-entity-lockup__content.ember-view > div.flex.flex-wrap.align-items-center > div.artdeco-entity-lockup__title.ember-view > a:link {
+    background-color: yellow;
+}
