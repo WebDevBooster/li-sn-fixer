@@ -91,10 +91,37 @@ if (searchPageMatch) {
             }
         }
 
+        // Highlight list items whose lead URLs have been collected via the popup
+        let collectedIds = null;
+        chrome.storage.local.get(["liLeadURLs"], (result) => {
+            const leadURLs = result.liLeadURLs || [];
+            if (leadURLs.length) {
+                collectedIds = new Set(
+                    leadURLs.map(url => url.split('/sales/lead/')[1]?.split(',')[0]).filter(Boolean)
+                );
+                highlightCollectedLeads();
+            }
+        });
+
+        function highlightCollectedLeads() {
+            if (!collectedIds) return;
+            document.querySelectorAll("div[data-scroll-into-view]").forEach(function(el) {
+                const dataValue = el.getAttribute("data-scroll-into-view");
+                const idMatch = dataValue.match(/\(([^,]+)/);
+                if (idMatch) {
+                    const id = idMatch[1];
+                    if (collectedIds.has(id)) {
+                        el.closest("li").style.background = "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)";
+                    }
+                }
+            });
+        }
+
         handleListItems();
         const listObserver = new MutationObserver(() => {
             listObserver.disconnect();
             handleListItems();
+            highlightCollectedLeads();
             listObserver.observe(resultsContainer, { childList: true, subtree: true });
         });
         const resultsContainer = document.querySelector("#search-results-container");
