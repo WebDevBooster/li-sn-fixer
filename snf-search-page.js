@@ -140,6 +140,7 @@ if (searchPageMatch) {
         const newURL = document.location.href;
         if (newURL !== lastSearchURL && /linkedin\.com\/sales\/search\/people/.test(newURL)) {
             lastSearchURL = newURL;
+            refreshSearchPageCounter();
             initSearchPage();
         }
     });

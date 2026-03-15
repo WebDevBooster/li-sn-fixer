@@ -175,23 +175,27 @@ function updateLocalStorage() {
     }
     addNonLeadToCounterAndCloseTabOnClick();
 
+    function refreshSearchPageCounter() {
+        const counterEl = document.querySelector("#SNF-counter-search-page");
+        if (!counterEl) return;
+        currentLeads = localStorage.getItem("snfLeads");
+        currentNonLeads = localStorage.getItem("snfNonLeads");
+        counterEl.querySelector(".current-leads").textContent = currentLeads;
+        counterEl.querySelector(".current-non-leads").textContent = currentNonLeads;
+
+        updateTotals();
+
+        counterEl.querySelector(".current-ratio").textContent = ratio;
+        counterEl.querySelector(".current-8hr-total").textContent = snf8hrTotal;
+        counterEl.querySelector(".current-19hr-total").textContent = snf19hrTotal;
+
+        counterEl.querySelector(".current-8hr-cycle").textContent = getTrackedTime(8);
+        counterEl.querySelector(".current-19hr-cycle").textContent = getTrackedTime(19);
+    }
+
     const refreshDataBtn = document.querySelector("#SNF-refresh-data");
     if (refreshDataBtn) {
-        refreshDataBtn.addEventListener("click", function () {
-            currentLeads = localStorage.getItem("snfLeads");
-            currentNonLeads = localStorage.getItem("snfNonLeads");
-            document.querySelector("#SNF-counter-search-page .current-leads").textContent = currentLeads;
-            document.querySelector("#SNF-counter-search-page .current-non-leads").textContent = currentNonLeads;
-
-            updateTotals();
-
-            document.querySelector("#SNF-counter-search-page .current-ratio").textContent = ratio;
-            document.querySelector("#SNF-counter-search-page .current-8hr-total").textContent = snf8hrTotal;
-            document.querySelector("#SNF-counter-search-page .current-19hr-total").textContent = snf19hrTotal;
-
-            document.querySelector("#SNF-counter-search-page .current-8hr-cycle").textContent = getTrackedTime(8);
-            document.querySelector("#SNF-counter-search-page .current-19hr-cycle").textContent = getTrackedTime(19);
-        });
+        refreshDataBtn.addEventListener("click", refreshSearchPageCounter);
     }
 
     const reset8hrBtn = document.querySelector("#reset-8hr-cycle");
