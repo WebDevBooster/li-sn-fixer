@@ -99,7 +99,6 @@ function updateLocalStorage() {
     function appendStats() {
         currentLeads = parseInt(localStorage.getItem("snfLeads"));
         currentNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
-        updateTotals();
 
         getTrackedTime();
 
@@ -156,10 +155,6 @@ function updateLocalStorage() {
             `);
         }
 
-        // This repeated function call is a quick fix for a bug (the .warning class not being added on profile pages)
-        // The class is not being added because (of course) the HTML for the selector
-        // doesn't exist at the time of the previous function call
-        // TODO: fix this later when time permits
         updateTotals();
     }
     appendStats();
