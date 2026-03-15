@@ -29,7 +29,6 @@ function highlightMatchingListItems(idsSet) {
 {
 const currentURL = document.location.href;
 const salesLeadPageMatch = currentURL.match(/linkedin\.com\/sales\/lead/);
-const mozillaPageMatch = currentURL.match(/developer\.mozilla\.org/);
 const searchPageMatch = currentURL.match(/linkedin\.com\/sales\/search\/people/);
 const linkedinProfilePageMatch = currentURL.match(/linkedin\.com\/in\//);
 const body = document.body;
@@ -48,8 +47,6 @@ var checkTime0,
     checkTime5,
     findMatchingKeywordsTime,
     copyDataToClipboardTime;
-var highlightFunctionTime;
-
 // This Mutation Observer detects when an element with a given selector appears.
 // From this post: https://stackoverflow.com/a/61511955/8270343
 function waitFor(selector) {
@@ -71,7 +68,6 @@ function waitFor(selector) {
         });
     });
 }
-/////////////////////////////
 
 function getRandInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -117,31 +113,6 @@ function updateLocalStorage() {
     }
     initializeCounters();
 
-    /*
-        function updateLocalStorage() {
-            let prevLeads = parseInt(localStorage.getItem("snfLeads"));
-            let leadCounter = prevLeads + 1;
-            leadCounter = leadCounter.toString();
-            let prevNonLeads = parseInt(localStorage.getItem("snfNonLeads"));
-            let nonLeadCounter = prevNonLeads + 1;
-            nonLeadCounter = nonLeadCounter.toString();
-
-            if (nothing) {
-                localStorage.setItem("snfNonLeads", nonLeadCounter);
-            }
-            if (something) {
-                localStorage.setItem("snfLeads", leadCounter);
-            }
-
-            console.log(`current snCounter after update`);
-            console.log(`snfLeads:`);
-            console.log(localStorage.getItem("snfLeads"));
-            console.log(`snfNonLeads:`);
-            console.log(localStorage.getItem("snfNonLeads"));
-        }
-        updateLocalStorage();
-    */
-
     let currentLeads,
         currentNonLeads;
     let ratio = 0;
@@ -185,14 +156,7 @@ function updateLocalStorage() {
         }
 
         function calculateAndSetTime() {
-            // console.log(`from calculateAndSetTime()...`);
-            // console.log(`snfStartTime`);
-            // console.log(snfStartTime);
-            // console.log(`localStorage.getItem(snfStartTime)`);
-            // console.log(localStorage.getItem(snfStartTime));
             snfStartTime = parseInt(localStorage.getItem(snfStartTime));
-            // console.log(`parsed snfStartTime`);
-            // console.log(snfStartTime);
             if (snfStartTime) {
                 let timeDiff = nowTime - snfStartTime;
                 let mins = Math.floor(timeDiff / 1000 / 60);
@@ -200,15 +164,9 @@ function updateLocalStorage() {
                 mins = (mins < 10) ? "0" + mins : mins;
                 let hrs = Math.floor(timeDiff / 1000 / 60 / 60);
                 snfTrackedTime = `${hrs}:${mins}`;
-                // console.log(`snfTrackedTime...`);
-                // console.log(snfTrackedTime);
             }
 
             localStorage.setItem(snfTrackedKey, snfTrackedTime);
-            // console.log(`snfTrackedKey`);
-            // console.log(snfTrackedKey);
-            // console.log(`snfTrackedTime`);
-            // console.log(snfTrackedTime);
         }
         return snfTrackedTime;
     }
@@ -315,19 +273,6 @@ function updateLocalStorage() {
 
             document.querySelector("#SNF-counter-search-page .current-8hr-cycle").textContent = getTrackedTime(8);
             document.querySelector("#SNF-counter-search-page .current-19hr-cycle").textContent = getTrackedTime(19);
-
-            // total = parseInt(currentLeads) + parseInt(currentNonLeads);
-            // $("#SNF-counter-search-page .current-8hr-total").text(total);
-            // if (total) {
-            //     ratio = Math.round((currentLeads / total * 100));
-            //     $("#SNF-counter-search-page .current-ratio").text(ratio);
-            //     if (total > 465) {
-            //         $("#SNF-counter-search-page .total").addClass("warning");
-            //     }
-            //     if (total < 466) {
-            //         $("#SNF-counter-search-page .total").removeClass("warning");
-            //     }
-            // }
         });
     }
 
@@ -395,27 +340,16 @@ function addLeadToCounter() {
 
 function addNonLeadToCounterAndCloseTab() {
     let prevNonLeads = localStorage.getItem("snfNonLeads");
-    // console.log(`localStorage.getItem("snfNonLeads") before:`);
-    // console.log(localStorage.getItem("snfNonLeads"));
-    // console.log(`prevNonLeads type:`);
-    // console.log(typeof prevNonLeads);
-    // console.log(`prevNonLeads true or false?`);
-    // console.log(!!prevNonLeads);
     if (prevNonLeads) {
         prevNonLeads = parseInt(prevNonLeads);
         let nonLeadCounter = prevNonLeads + 1;
         nonLeadCounter = nonLeadCounter.toString();
         localStorage.setItem("snfNonLeads", nonLeadCounter);
-        // console.log(`localStorage.getItem("snfNonLeads") after:`);
-        // console.log(localStorage.getItem("snfNonLeads"));
 
         addToTotals();
     }
 
     setTimeout(function () {
-        // console.log(`localStorage.getItem("snfNonLeads") before window.close():`);
-        // console.log(localStorage.getItem("snfNonLeads"));
-        // console.log(`window.close() would trigger now...`);
         window.close();
     }, 1);
 }
@@ -424,7 +358,6 @@ function autoScrollDownAndUp() {
     let timeout = getRandInteger(999, 1555);
     setTimeout(function () {
         const minScroll = window.innerHeight * 1;
-        // const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const maxScroll = window.innerHeight * 1.5;
         const scrollDistance = getRandInteger(minScroll, maxScroll);
         const scrollDownSpeed = getRandInteger(444, 888);
@@ -438,10 +371,6 @@ function autoScrollDownAndUp() {
         console.log(`ScrollTimeTotal: ${scrollDownSpeed + scrollUpSpeed + scrollUpDelay}`);
 
         window.scrollTo({ top: scrollDistance, behavior: 'smooth' });
-        // Testing without scrollUp
-        // setTimeout(function () {
-        //     window.scrollTo({ top: 0, behavior: 'smooth' });
-        // }, scrollUpDelay);
     }, timeout);
 }
 
@@ -449,14 +378,6 @@ function hideSection(element) {
     element.style.display = "none";
 }
 
-function showWindowHeight() {
-    // $(window).resize(function () {
-    //     windowHeight = $(window).height();
-    // });
-    setInterval(function () {
-        return `window height: ${window.innerHeight}px`;
-    }, 250);
-}
 let docHeight = "0";
 
 waitFor("#SNF-doc-height").then((el) => {
@@ -468,34 +389,6 @@ waitFor("#SNF-doc-height").then((el) => {
         }
     }, 250);
 });
-
-if (mozillaPageMatch) {
-    // console.log(`we're on the Mozilla page!`);
-    // console.log(`document initially visible???`);
-    // console.log(!document.hidden);
-
-    //updateLocalStorage();
-
-    // autoScrollDownAndUp();
-
-/*
-    document.querySelector("div.main-document-header-container").insertAdjacentHTML("beforeend", `
-        <section id="SNF-data">
-            <div>
-                <button id="SNF-copy" style="width: 65px;" class="copy-btn" type="button">C</button>
-                <button id="SNF-femcopy" style="width: 65px;" class="copy-btn" type="button">F</button>
-            </div>
-        </section>
-        `);
-
-    document.querySelector("#SNF-copy").addEventListener("click", function () {
-        // document.querySelector("#SNF-copy").insertAdjacentHTML("afterbegin", "✔<br>");
-        // document.querySelector("#SNF-copy").insertAdjacentHTML("beforebegin", "<div style='text-align: center;'>✅</div>");
-        document.querySelector("#SNF-copy").insertAdjacentHTML("beforebegin", "<div style='text-align: center;'>❌</div>");
-    });
-*/
-
-}
 
 if (linkedinProfilePageMatch) {
 	console.log("Linkedin profile page detected");
@@ -519,14 +412,10 @@ if (salesLeadPageMatch) {
 const badgesList = "#profile-card-section > section[class^=_header] ul[class^=_badges]";
 // The experience section headline always exists, even if the experience section is empty.
 // So, it's even better to wait for this HTML because then we definitely have everything.
-// const experienceSectionHeadline = "#experience-section > div[class^=_experience-content] > h2";
 const experienceSectionHeadline = "#experience-section > section:nth-child(1) > div > h2 > span";
 waitFor(experienceSectionHeadline).then((el) => {
     checkTime0 = performance.now();
     console.log(`checkTime0 (${(checkTime0 - readyTime).toFixed(2)} ms after readyTime)`);
-
-    // hideIntroSection();
-    // hideRelationshipSection();
 
     const premiumBadge = document.querySelector(`${badgesList} li > span svg[class^=_premium-badge]`);
     const openBadge = document.querySelector(`${badgesList} li > span[class^=_open-badge]`);
@@ -547,26 +436,12 @@ waitFor(experienceSectionHeadline).then((el) => {
     }
 
     const headerSection = document.querySelector("#profile-card-section > section[class^=_header]");
-    // const detailsSection = document.querySelector("#profile-card-section > section[class^=details-section]");
     const detailsSection = document.querySelector("#profile-card-section > section section[data-sn-view-name=lead-contact-info]");
     const aboutSection = document.querySelector("#about-section");
     const experienceSection = document.querySelector("#experience-section");
     const isExperienceSectionNotEmpty = document.querySelectorAll("#experience-section > section:nth-child(1) > div > ul > li").length;
     const headline = (document.querySelector( "#profile-card-section section[class^=_header_] > div:nth-child(1) > div[class^=_bodyText] > span" )?.textContent) || "";
 
-    // This is a normal email regex that I used to collect the first 20K~ investor leads (until 25/10/2022):
-    // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/gi;
-    // This is an improved email regex that also catches cases like:
-    // handle(at)domain.com or handle [at] domain.com or even "handle @ gmail .com" etc.
-    // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|((me|mac|aol|live|sap|msn)\.com)|((berkeley|alum\.mit|cornell|georgetown|alumni\.harvard|alumni\.stanford)\.edu))))/gi;
-
-    // emailRegex version 3:
-    // const emailRegex = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\.(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc))))/gi;
-
-    // emailRegex version 4:
-    // const atRegex = /(@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)/gi;
-    // const subdomainDomainDotRegex = /(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})/gi;
-    // const newSubdomainDomainDotRegex = /(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})/gi;
     const emailRegex = /(([^<>()[\]\\.,;:\s@"\/]+(\.[^<>()[\]\\.,;:\s@"\/]+)*)|(".+"))(((@|\s?(\(|\[|\{|\<)\s?(at|@)\s?(\)|\]|\}|\>)\s?)(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+(\.|\s?(\(|\[|\{|\<)\s?(dot)\s?(\)|\]|\}|\>)\s?))+[a-zA-Z]{2,})))|((\s?@\s?)(((gmail|hotmail|yahoo|outlook|protonmail|icloud|googlemail)\s?\.\s?com)|(([a-zA-Z\-0-9]+)\.)?([a-zA-Z\-0-9]+)\s?\.\s?(com|edu|io|net|uk|consulting|co|vc|au|br|de|fr|dk|capital|ca|ch|org|info|in|it|be|me|ai|nl|se|tech|us|biz|eu|es|at|cz|fi|fund|group|lu|no|pro|sg|agency|app|il|nz|partners|pt|tv|ar|mx|pl|ventures|club|name|nyc)(?=\s|<|$))))/gi;
 
     const nonsenseExclusionRegex = /(www\.|#)/i;
@@ -666,7 +541,6 @@ waitFor(experienceSectionHeadline).then((el) => {
             .trim();
     }
 
-    /////////////////////////////
     function handleThisProfile() {
         hideRelationshipSection();
 
@@ -686,9 +560,6 @@ waitFor(experienceSectionHeadline).then((el) => {
         }
 
         function autoCloseTabOrCollectProfileData () {
-            // I started collecting data from previously discarded profiles.
-            // So, NOT auto-closing tabs anymore and not changing background to red.
-
             if (premiumBadge) {
                 isPremium = "TRUE";
             }
@@ -696,45 +567,16 @@ waitFor(experienceSectionHeadline).then((el) => {
             if (openBadge) {
                 checkTimeOpenBadgeDetected = performance.now();
                 console.log(`OpenBadgeDetected (${(checkTimeOpenBadgeDetected - readyTime).toFixed(2)} ms after readyTime)`);
-                // console.log(`open badge is there!`);
 
                 isOpen = "TRUE";
                 collectProfileData();
             } else {
-                // console.log(`no open badge there!`);
                 if (hasEmail()) {
                     checkTimeFirstEmailDetected = performance.now();
                     console.log(`FirstEmailDetected (${(checkTimeFirstEmailDetected - readyTime).toFixed(2)} ms after readyTime)`);
-                    // console.log(`We have EMAIL!!!`);
                     collectProfileData();
                 } else {
                     collectProfileData();
-                    // The code in the following comment is now obsolete because I'm now collecting data from these profiles too.
-
-                    /*
-                    // window.close();
-
-                    // Don't auto-close, set the background to red instead and close manually.
-                    document.querySelector("#content-main").style.backgroundColor = "#c91b0c";
-
-                    let randomTimeout = getRandInteger(1999, 3999);
-                    let countdown = Math.round(randomTimeout / 1000);
-                    let countdownTimer = setInterval(function(){
-                        countdown--;
-                        document.getElementById("countdown").textContent = countdown.toString();
-                        if (countdown <= 0) {
-                            clearInterval(countdownTimer);
-                        }
-                    },1000);
-
-                    document.querySelector("#SNF-counter").insertAdjacentHTML("beforeend", `
-                <span id="countdown"></span>
-                `);
-                    setTimeout(function () {
-                        addNonLeadToCounterAndCloseTab();
-                    }, randomTimeout);
-                    autoScrollDownAndUp();
-                */
                 }
             }
         }
@@ -861,7 +703,6 @@ waitFor(experienceSectionHeadline).then((el) => {
                 }
             }
 
-            // const currentRolesSectionEmpty = document.querySelector("#profile-card-section > section[class^=details-section] > div[class^=current-role-container] p[class^=_no-current-role]");
             const currentRolesSection = document.querySelector("#profile-card-section > section div[data-sn-view-name=lead-current-role]");
             if (currentRolesSection) {
                 profileEmails.inCurrentRoles = currentRolesSection.innerHTML.match(emailRegex);
@@ -940,43 +781,10 @@ waitFor(experienceSectionHeadline).then((el) => {
                     }
                 }
 
-                if (filteredArray) {
-                    /*
-                    // play audio (doesn't work because it requires user interaction such as a click to play media)
-                    const audio = new Audio(chrome.runtime.getURL("media/adara.mp3"));
-                    console.log("audio variable: ", audio);
-                    audio.play().then(() => {
-                        console.log('Audio file played successfully');
-                    }).catch((error) => {
-                        console.error('Error playing audio file:', error);
-                    });
-                    */
-
-                    /*
-                    // Get my Telegram bot (Linked Messenger) to message me
-                    const apiKey = "5927670817:AAFsEJ6U5NhWo1Fz6iVk7yEAk3iWhTyAWxw";
-                    const chatId = "1895015879";
-                    const message = "Hey, there's an email to check!";
-
-                    const url = `https://api.telegram.org/bot${apiKey}/sendMessage?chat_id=${chatId}&text=${message}`;
-
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Message sent:', data);
-                        })
-                        .catch(error => {
-                            console.error('Error sending message:', error);
-                        });
-                    // Telegram message sent.
-                    */
-                }
                 let newElements = [];
                 newElements[0] = `<span>${sectionName}:</span>`;
                 filteredArray.forEach(function (currentValue, index) {
                     currentValue = cleanUpEmail(currentValue);
-                    // const checkmark = index === 0 ? "checked" : "";
-                    // with the new automation, I now want to grab all emails as I won't be manually checking.
                     const checkmark = "checked";
                     newElements.push(`
                 <label for="SNF-${sectionName}-checkbox${index}">
@@ -986,7 +794,6 @@ waitFor(experienceSectionHeadline).then((el) => {
                 });
                 return newElements.join("");
             } else {
-                // return "¯\\_( ツ)_/¯";
                 return "";
             }
         }
@@ -1035,25 +842,6 @@ waitFor(experienceSectionHeadline).then((el) => {
         }
 
         function kwRegex(keyword) {
-            /*
-                    const entrepreneurRegex = /\bentrepreneur\b|\bunternehmer\b/gi;
-                    const investorRegex = /\binvestor\b/gi;
-                    const angelRegex = /\bangel investor\b|\bangel-investor\b|\bBusiness Angel\b|\bBusinessangel\b|\bBusiness-Angel\b|\bangel investing\b/gi;
-                    /!*
-                        const angelRegex2 = /\bangel investing\b/gi;
-                        // I'm moving "angel investing" into the other regex because otherwise it's needlessly complex
-                        // Level points:
-                        // headline match: 3
-                        // about match: 2
-                        // job titles match: none
-                        // companies match: none
-                        // job descriptions match: 1
-                    *!/
-                    const seedRegex = /\bseed\b|\bpreseed\b/gi;
-                    const earlyRegex = /\bearly stage\b|\bearly-stage\b/gi;
-                    const web3Regex = /\bblockchain\b|\bblock chain\b|\bweb3\b|\bweb 3\b|crypto|\bnft\b|\bdefi\b/gi;
-            */
-
             let regex;
             switch (keyword) {
                 case "entrepreneur":
@@ -1079,14 +867,6 @@ waitFor(experienceSectionHeadline).then((el) => {
         }
 
         function getKeywordScores( /*Array*/ keywordArray) {
-            /*
-                        // manual test data input:
-                        kwsIn.headline.entrepreneur = 1;
-                        kwsIn.about.entrepreneur = 2;
-                        kwsIn.jobTitles.entrepreneur = 2;
-                        kwsIn.jobDescriptions.entrepreneur = 2;
-                        // manual data input END
-            */
             keywordArray.forEach(function (keyword) {
                 let scoreArray = [];
 
@@ -1357,7 +1137,7 @@ waitFor(experienceSectionHeadline).then((el) => {
                     if (jobDescriptionElements.length) {
                         let jobDescriptions = [];
                         jobDescriptionElements.forEach(function (el) {
-                            jobDescriptions.push(el.innerHTML); // innerHTML instead of textContent because it preserves line breaks
+                            jobDescriptions.push(el.innerHTML);
                         });
                         jobDescriptions = jobDescriptions.join(" | ");
 
@@ -1392,27 +1172,9 @@ waitFor(experienceSectionHeadline).then((el) => {
             const copyBtn = document.querySelector("#SNF-copy");
             const copyFemaleBtn = document.querySelector("#SNF-femcopy");
 
-/*
-            const menuTrigger = document.querySelector( "#profile-card-section > section[class^=_header] > div[class^=_actions-container] > section[class^=_actions-bar] > button" );
-
-            function copyToClipboard() {
-                menuTrigger.click();
-                setTimeout(function () {
-                    waitFor("#hue-web-menu-outlet ul li a").then((el) => {
-                        // profileURL = document.querySelector( "#hue-web-menu-outlet ul li a" ).getAttribute("href");
-                        profileURL = Array.from(document.querySelectorAll("#hue-web-menu-outlet ul li a")).find(a => a.textContent.includes("View LinkedIn profile"))?.getAttribute("href");
-                        // const copyElement = document.querySelector( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
-                        modifyClipboard();
-                    });
-                }, 33);
-            }
-*/
-
             waitFor("#hue-web-menu-outlet div[data-artdeco-is-focused=\"true\"] ul li a").then((el) => {
-                // profileURL = document.querySelector( "#hue-web-menu-outlet ul li a" ).getAttribute("href");
                 profileURL = Array.from(document.querySelectorAll("#hue-web-menu-outlet ul li a")).find(a => a.textContent.includes("View LinkedIn profile"))?.getAttribute("href");
                 profileURL = profileURL + "/";
-                // const copyElement = document.querySelector( "#hue-web-menu-outlet ul li:contains('Copy LinkedIn.com URL')" );
                 return profileURL;
             });
 
@@ -1475,8 +1237,6 @@ waitFor(experienceSectionHeadline).then((el) => {
             jobList.forEach(function (currentValue) {
                 if (currentValue["titles"].length && currentValue["company"]) {
                     if (currentValue["titles"].length > 1) {
-                        // let multiTitles = currentValue["titles"].join(" ❱❱ ");
-                        // newJobList.push(`${multiTitles} ➤ ${currentValue["company"]}`);
                         let multiTitles = currentValue["titles"].join(" ➤ ");
                         newJobList.push(`${multiTitles} 🔷 ${currentValue["company"]}`);
 
@@ -1494,8 +1254,6 @@ waitFor(experienceSectionHeadline).then((el) => {
             const leadURL = `${currentURL.substring(0, 75)},name`;
             profileURL = url;
             const name = (document.querySelector( "#profile-card-section section[class^=_header_] h1" )?.textContent || "").cleanUpString();
-            // const firstName = name.split(" ")[0];
-            // const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
             function getCapitalizedFirstName(name) {
                 // Remove any leading periods and spaces
                 name = name.replace(/^\.*\s*/, "");
@@ -1561,28 +1319,6 @@ waitFor(experienceSectionHeadline).then((el) => {
             await navigator.clipboard.writeText(`${capitalizedFirstName}\t${isFemale}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${profileURL}\t${firstEmail}\t${allEmails}\t${jobs}\t${score.entrepreneur[0]}\t${score.entrepreneur[1]}\t${score.investor[0]}\t${score.investor[1]}\t${score.seed[0]}\t${score.seed[1]}\t${score.early[0]}\t${score.early[1]}\t${score.angel[0]}\t${score.angel[1]}\t${score.web3[0]}\t${score.web3[1]}\t${isPremium}\t${isOpen}\t${connections}\t${twitter}\t${profilePhoneAndWebsite.profilePhone}\t${profilePhoneAndWebsite.profileWebsite}\t${cleanCompanyName}`);
         }
 
-
-
-        /*
-            setTimeout(function () { // TODO: Refactor this
-                if (!aboutSection) {
-                    highlight();
-                }
-            }, 1600);
-
-        */
-
-
-        function hideIntroSection() {
-            const introSection = document.querySelector("section[class^=_introductions-section]");
-
-            if (!!introSection) {
-                // console.log(`We've got intro section! Hiding...`);
-                // we no longer need to hide this
-                // hideSection(introSection);
-            }
-        }
-
         function hideRelationshipSection() {
             const relationshipSection = document.querySelector("#relationship-section");
 
@@ -1591,179 +1327,6 @@ waitFor(experienceSectionHeadline).then((el) => {
                 hideSection(relationshipSection);
             }
         }
-
-
-        /*
-            function highlight() {
-                highlightFunctionTime = performance.now();
-                console.log(`highlight function called
-        ${highlightFunctionTime - readyTime} ms
-        after readyTime`);
-                let body = document.body;
-                let currentHTML = document.querySelector("#content-main div[class^=_main-column]").innerHTML;
-                // const keyword1Regex = /Crypto/gi;
-                // const keyword1Replacement = "Crypto";
-                const keyword1Regex = /blockchain|web3|web 3|crypto|nft|\bdefi\b/gi;
-                const keyword1Replacement = "Crypto";
-
-                // const keyword1Regex = /NFT/gi;
-                // const keyword1Replacement = "NFT";
-
-                // const keyword1Regex = /Blockchain|web3|web 3/gi;
-                // const keyword1Replacement = "Blockchain";
-                // const keyword1Regex = /Web3|Web 3\.0|Web 3/gi;
-                // const keyword1Replacement = "Web3";
-
-                // const keyword2Regex = /enthusiast/gi;
-                // const keyword2Regex = /Strategist|Evangelist|Aficionado/gi;
-                // const keyword2Regex = /expert/gi;
-                // const keyword2Regex = /consultant|advisor|analyst|specialist/gi;
-                // const keyword2Regex = /consultant|advisor|analyst|specialist|expert|investor/gi;
-                // const keyword2Regex = /consultant|advisor|evangelist/gi;
-                // const keyword2Regex = /consultant|advisor/gi;
-                // const keyword2Regex = /collector|investor|owner/gi;
-                // const keyword2Regex = /trader|investor|miner/gi;
-                // const keyword2Regex = /miner/gi;
-                const keyword2Regex = /investor/gi;
-                // const keyword2Regex = /entrepreneur/gi;
-                const keyword3Regex = /\bseed\b|\bpreseed\b/gi;
-                const keyword4Regex = /\bearly stage\b|\bearly-stage\b/gi;
-                const keyword5Regex = /\bangel investor\b|\bangel investing\b|\bangel-investor\b|\bBusiness Angel\b|\bBusinessangel\b|\bBusiness-Angel\b/gi;
-                const keyword6Regex = /entrepreneur/gi;
-
-                let keyword1Array = currentHTML.match(keyword1Regex);
-                let keyword2Array = currentHTML.match(keyword2Regex);
-                let keyword3Array = currentHTML.match(keyword3Regex);
-                let keyword4Array = currentHTML.match(keyword4Regex);
-                let keyword5Array = currentHTML.match(keyword5Regex);
-                let keyword6Array = currentHTML.match(keyword6Regex);
-                aboutSection = document.querySelector("#about-section");
-
-                if (keyword1Array.length && keyword2Array.length && hasEmail()) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
-                    // User interaction/click required to play audio after page load:
-                    // https://developer.chrome.com/blog/autoplay/
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
-                        setTimeout(function () {
-                            const playEmailPromise = document.querySelector('#LNSNF-email').play();
-                        }, 400);
-                    });
-                } else if (keyword1Array.length && keyword2Array.length) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw1and2" autoplay><source src="https://alexbooster.com/media/adara.mp3"></audio>');
-                    // User interaction/click required to play audio after page load:
-                    // https://developer.chrome.com/blog/autoplay/
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        const playKW1and2Promise = document.querySelector('#LNSNF-kw1and2').play();
-                    });
-                } else if ((keyword1Array.length || keyword2Array.length) && hasEmail()) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
-                        setTimeout(function () {
-                            const playEmailPromise = document.querySelector('#LNSNF-email').play();
-                        }, 400);
-                    });
-                } else if (keyword1Array.length || keyword2Array.length) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw2" autoplay><source src="https://alexbooster.com/media/Tones.ogg"></audio>');
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        const playKW2Promise = document.querySelector('#LNSNF-kw2').play();
-                    });
-                } else if (hasEmail()) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-email" autoplay><source src="https://alexbooster.com/media/Cha-Ching.ogg"></audio>');
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
-                        setTimeout(function () {
-                            const playEmailPromise = document.querySelector('#LNSNF-email').play();
-                        }, 400);
-                    });
-                } else {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-no-kws" autoplay><source src="https://alexbooster.com/media/shrink-ray.ogg"></audio>');
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        const playKW2Promise = document.querySelector('#LNSNF-no-kws').play();
-                    });
-                }
-
-
-                if (keyword3Array.length) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw3" autoplay><source src="https://alexbooster.com/media/seed.mp3"></audio>');
-                    // User interaction/click required to play audio after page load:
-                    // https://developer.chrome.com/blog/autoplay/
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        setTimeout(function () {
-                            const playKW3Promise = document.querySelector('#LNSNF-kw3').play();
-                        }, 100);
-                    });
-                }
-
-
-                if (keyword4Array.length) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw4" autoplay><source src="https://alexbooster.com/media/early.mp3"></audio>');
-                    // User interaction/click required to play audio after page load:
-                    // https://developer.chrome.com/blog/autoplay/
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        setTimeout(function () {
-                            const playKW4Promise = document.querySelector('#LNSNF-kw4').play();
-                        }, 500);
-                    });
-                }
-
-
-                if (keyword5Array.length) {
-                    body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw5" autoplay><source src="https://alexbooster.com/media/angel.mp3"></audio>');
-                    // User interaction/click required to play audio after page load:
-                    // https://developer.chrome.com/blog/autoplay/
-                    document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                        setTimeout(function () {
-                            const playKW5Promise = document.querySelector('#LNSNF-kw5').play();
-                        }, 1000);
-                    });
-                }
-
-
-                /!*
-                        if (keyword6Array.length) {
-                            body.insertAdjacentHTML("beforeend", '<audio id="LNSNF-kw6" autoplay><source src="https://alexbooster.com/media/entrepreneur.mp3"></audio>');
-                            // User interaction/click required to play audio after page load:
-                            // https://developer.chrome.com/blog/autoplay/
-                            document.querySelector( "#profile-card-section section[class^=_header_] h1" ).addEventListener("click", function() {
-                                setTimeout(function () {
-                                    const playKW6Promise = document.querySelector('#LNSNF-kw6').play();
-                                }, 1000);
-                            });
-                        }
-                *!/
-
-                /!*
-                        document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML = document.querySelector("#profile-card-section > section[class^=_header_] span[data-anonymize=headline]").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
-
-                        if (aboutSection) {
-                            document.querySelector("#about-section").innerHTML = document.querySelector("#about-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
-                        }
-                *!/
-
-                // Remove irrelevant crap from image attributes
-                // because when I apply the highlight effect,
-                // if those attributes contain my keywords, it messes up the page HTML.
-                document.querySelectorAll("#experience-section img").forEach(function (value) {
-                    // console.log("img title: ", value.getAttribute('title'));
-                    value.setAttribute("title", "--");
-                    value.setAttribute("alt", "--");
-                });
-
-                document.querySelectorAll("div[id^=similar-leads-account-insights-outlet]").forEach(function(el) { el.remove(); });
-                document.querySelectorAll("section[class^=_search-links-section]").forEach(function(el) { el.remove(); });
-
-                //document.querySelector("#experience-section").innerHTML = document.querySelector("#experience-section").innerHTML.replace(keyword1Regex,`<mark style="font-weight: normal;">${keyword1Replacement}</mark>`);
-
-            }
-        */
-
-        var timeBeforeAboutBtnClick,
-            timeAfterAboutBtnClick;
 
         async function fillJobList() {
             jobList = []; // Need to empty it in case I clicked the copy button before but then decided to choose a different set of emails.
@@ -1798,24 +1361,12 @@ waitFor(experienceSectionHeadline).then((el) => {
                                 .cleanUpString();
                             console.log("current multiPosition job title: ");
                             console.log(job["titles"][index]);
-
-                            /*
-                                                    let titleElements = posEl.querySelectorAll("li[class^=_position-entry]");
-                                                    titleElements.forEach(function (titleEl, index) {
-                                                        job["titles"][index] = (titleEl.querySelector("h3[data-anonymize=job-title]")?.textContent || "")
-                                                            .cleanUpString();
-                                                    });
-                            */
-
-
                         });
 
                         job["company"] = (jobEl.querySelector("h2[data-anonymize=company-name]")?.textContent || "").cleanUpString();
                         console.log(`multi job title array:`);
                         console.log(job["titles"]);
-                        // console.log(job["company"]);
                         multiTitleJobList.push(job);
-                        // console.log(jobList);
 
                         jobList = jobList.concat(multiTitleJobList);
 
@@ -1836,9 +1387,7 @@ waitFor(experienceSectionHeadline).then((el) => {
             console.log(jobList);
         }
     }
-    /////////////////////////////
 
-    ///// Page visibility wrapper
     document.addEventListener("visibilitychange", () => {
         console.log(`page visible now?...`);
         console.log(!document.hidden);
@@ -1879,16 +1428,10 @@ waitFor(experienceSectionHeadline).then((el) => {
         }
     }
     runScriptsOnce();
-    ///// Page visibility wrapper END
 
 });
-// End of the waitFor(experienceSectionHeadline) wrapper.
-
 
 }
-// End of the salesLeadPage functions
-
-
 
 if (searchPageMatch) {
     waitFor("#search-results-container ol li:nth-of-type(1)").then((el) => {
@@ -1906,10 +1449,7 @@ if (searchPageMatch) {
                 // Check if "Coach" (case-insensitive) is in the text
                 if (/project/i.test(spanText)) {
                     // Replace all variations of "Coach" (case-insensitive) with the correctly formatted span
-                    //const highlightedText = spanText.replace(/coach/gi, '<span style="background-color: peachpuff;">Coach</span>');
                     const highlightedText = spanText.replace(/project/gi, '<span style="background-color: peachpuff;">Project</span>');
-                    //const highlightedText = spanText.replace(/founder/gi, '<span style="background-color: peachpuff;">Founder</span>');
-                    //const highlightedText = spanText.replace(/scientist/gi, '<span style="background-color: peachpuff;">Scientist</span>');
 
                     // Set the new HTML back into the span element
                     spanElement.innerHTML = highlightedText;
@@ -1928,28 +1468,18 @@ if (searchPageMatch) {
             if (element.querySelector("span[data-anonymize=person-name]") !== null
                 && element.querySelector("li-icon[type=linkedin-premium-gold-icon]") === null
                 && element.querySelector(".SNF-non-premium") === null) {
-                // element.style.backgroundColor = "#0073b1";
-                // element.style.backgroundColor = "aqua";
                 element.classList.add("SNF-non-premium");
             }
 
 
             if (element.querySelector("li-icon[aria-label^=Viewed]") !== null && element.querySelector(".SNF-viewed-premium") === null) {
-                //element.style.backgroundColor = "cornsilk";
                 element.classList.add("SNF-viewed-premium");
             }
 
             // most "out-of-network" profiles are useless for me
             if (element.querySelector("div[class^=_out-of-network]") !== null && element.querySelector(".SNF-out-of-network") === null) {
-                // element.style.backgroundColor = "pink";
                 element.classList.add("SNF-out-of-network");
             }
-
-            // Collected profile highlighter (highlighting profiles that have already been collected into the database)
-            //document.querySelectorAll("div[data-scroll-into-view*='ACwAAACKU6sB83xV8STdawzKGaUO1Vk6WiILMNs']").forEach(function(el) {
-            //    // Find the closest li ancestor
-            //    el.closest("li").style.background = "repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)";
-            //});
 
             // Highlight list items that are already in my database
             urlsPromise.then(() => {
@@ -1971,7 +1501,6 @@ if (searchPageMatch) {
             }
 
             if (aboutSectionsArray.length) {
-                // aboutSectionsArray.forEach(hideSection);
                 aboutSectionsArray.forEach(function (el) {
                     if (el.offsetParent !== null) {
                         el.style.display = "none";
@@ -1993,15 +1522,3 @@ if (searchPageMatch) {
 }
 
 }
-
-// keywords: "investor" + TITLE > (Chief Executive Officer)(Founder)(Co-Founder)(President)(Director)(Managing Director)(Executive Director)(Principal)(General Partner)(Managing Partner)(Managing General Partner) + selectedSubFilter > CURRENT_OR_PAST + CURRENT_COMPANY > LinkedIn > EXCLUDED
-// also filter by industry
-
-/*
-https://www.linkedin.com/sales/search/people?page=1&query=(spellCorrectionEnabled%3Atrue%2CrecentSearchParam%3A
-(id%3A1907908354%2CdoLogHistory%3Atrue)%2Cfilters%3AList((type%3ACURRENT_COMPANY%2Cvalues%3AList((id%3A1337%2Ctext%3ALinkedIn%2CselectionType%3AEXCLUDED)))%2C
-(type%3ATITLE%2Cvalues%3AList((id%3A8%2Ctext%3AChief%2520Executive%2520Officer%2CselectionType%3AINCLUDED)%2C(id%3A35%2Ctext%3AFounder%2CselectionType%3AINCLUDED)%2C(id%3A103%2Ctext%3ACo-Founder%2CselectionType%3AINCLUDED)%2C(id%3A6%2Ctext%3APresident%2CselectionType%3AINCLUDED)%2C(id%3A5%2Ctext%3ADirector%2CselectionType%3AINCLUDED)%2C(id%3A16%2Ctext%3AManaging%2520Director%2CselectionType%3AINCLUDED)%2C(id%3A60%2Ctext%3AExecutive%2520Director%2CselectionType%3AINCLUDED)%2C(id%3A47%2Ctext%3APrincipal%2CselectionType%3AINCLUDED)%2C(id%3A2637%2Ctext%3AGeneral%2520Partner%2CselectionType%3AINCLUDED)%2C(id%3A154%2Ctext%3AManaging%2520Partner%2CselectionType%3AINCLUDED)%2C(id%3A17639%2Ctext%3AManaging%2520General%2520Partner%2CselectionType%3AINCLUDED))%2CselectedSubFilter%3ACURRENT_OR_PAST)
-%2C(type%3AREGION%2Cvalues%3AList((id%3A102277331%2Ctext%3ASan%2520Francisco%252C%2520California%252C%2520United%2520States%2CselectionType%3AINCLUDED)))%2C(type%3AINDUSTRY%2Cvalues%3AList((id%3A43%2Ctext%3AFinancial%2520Services%2CselectionType%3AINCLUDED))))%2Ckeywords%3A%2522investor%2522)
-
-https://www.linkedin.com/sales/search/people?query=(recentSearchParam%3A(id%3A1793808001%2CdoLogHistory%3Atrue)%2Cfilters%3AList((type%3ACURRENT_COMPANY%2Cvalues%3AList((id%3A1337%2Ctext%3ALinkedIn%2CselectionType%3AEXCLUDED)))%2C(type%3ATITLE%2Cvalues%3AList((text%3AChief%2520Executive%2520Officer%2CselectionType%3AINCLUDED))%2CselectedSubFilter%3ACURRENT_OR_PAST)%2C(type%3AREGION%2Cvalues%3AList((id%3A103300978%2Ctext%3AAlameda%252C%2520California%252C%2520United%2520States%2CselectionType%3AINCLUDED)))))&sessionId=xa%2BJ8KY6QF2qh9xeT3XXcw%3D%3D&viewAllFilters=true
-*/
