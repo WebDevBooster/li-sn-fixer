@@ -54,12 +54,12 @@ const exportStatus = document.getElementById("exportStatus");
 const exportConfirmation = document.getElementById("exportConfirmation");
 
 const csvHeaders = [
-    "Import #", "Status", "Email",
-    "First Name", "First Name 2", "Gender",
-    "Lead URL", "Full Name", "Headline", "Location",
-    "Country", "Country 2",
-    "Profile URL", "Profile URL 2",
-    "Jobs", "Connections", "Profession"
+    "LI Import Number", "LI Status", "Email",
+    "First Name", "LI First Name", "LI Gender",
+    "LI SN URL", "LI Display Name", "LI Headline", "LI Location",
+    "Country", "LI Country",
+    "LI Profile URL", "LinkedIn Profile",
+    "LI Job History", "LI Connections Count", "LI Profession"
 ];
 
 function updateExportStatus() {
