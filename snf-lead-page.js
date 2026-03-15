@@ -209,7 +209,16 @@ waitFor(experienceSectionHeadline).then((el) => {
             await getJobsToExport();
             addLeadToCounter();
 
-            await navigator.clipboard.writeText(`${capitalizedFirstName}\t${capitalizedFirstName}\t${gender}\t${leadURL}\t${name}\t${headlineClean}\t${location}\tUK\tUK\t${profileURL}\t${profileURL}\t${jobs}\t${connections}`);
+            const settings = await new Promise((resolve) => {
+                chrome.storage.local.get(["liImportNumber", "liCountry", "liProfession"], resolve);
+            });
+            const country = settings.liCountry || "UK";
+            const importNumber = Number(settings.liImportNumber || 0) + 1;
+            const profession = settings.liProfession || "";
+            const liStatus = "new";
+            const email = `itct${importNumber}@cboosted.com`;
+
+            await navigator.clipboard.writeText(`${importNumber}\t${liStatus}\t${email}\t${capitalizedFirstName}\t${capitalizedFirstName}\t${gender}\t${leadURL}\t${name}\t${headlineClean}\t${location}\t${country}\t${country}\t${profileURL}\t${profileURL}\t${jobs}\t${connections}\t${profession}`);
         }
 
         function hideRelationshipSection() {
