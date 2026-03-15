@@ -92,25 +92,40 @@ function recordToCsvRow(r) {
     ].map(escapeCsvField).join(",");
 }
 
+function downloadFile(content, filename, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function getTimestamp() {
+    const now = new Date();
+    const date = now.toISOString().slice(0, 10);
+    const time = `${String(now.getHours()).padStart(2, "0")}.${String(now.getMinutes()).padStart(2, "0")}`;
+    return `${date}_${time}`;
+}
+
 exportBtn.addEventListener("click", () => {
-    chrome.storage.local.get(["liExportRecords"], (result) => {
+    chrome.storage.local.get(["liExportRecords", "liLeadURLs"], (result) => {
         const records = result.liExportRecords || [];
+        const leadURLs = result.liLeadURLs || [];
         const newRecords = records.filter(r => !r.exported);
         if (!newRecords.length) return;
 
+        const timestamp = getTimestamp();
+
+        // Export CSV with new records
         const csvContent = csvHeaders.map(escapeCsvField).join(",") + "\n"
             + newRecords.map(recordToCsvRow).join("\n");
+        downloadFile(csvContent, `li-export-${timestamp}.csv`, "text/csv;charset=utf-8;");
 
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        const now = new Date();
-        const date = now.toISOString().slice(0, 10);
-        const time = `${String(now.getHours()).padStart(2, "0")}.${String(now.getMinutes()).padStart(2, "0")}`;
-        a.download = `li-export-${date}_${time}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        // Export all SN URLs
+        const urlsContent = leadURLs.join("\n");
+        downloadFile(urlsContent, `li-sn-urls-export-${timestamp}.txt`, "text/plain;charset=utf-8;");
 
         // Mark exported records
         records.forEach(r => { r.exported = true; });
