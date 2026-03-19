@@ -79,14 +79,6 @@ if (searchPageMatch) {
             element.classList.add("SNF-out-of-network");
         }
 
-        // Highlight list items that are already in my database
-        urlsPromise.then(() => {
-            if (idsSet) {
-                highlightMatchingListItems(idsSet);
-            } else {
-                console.warn("idsSet is undefined - JSON might not have loaded.");
-            }
-        });
     }
 
     function handleListItems() {
